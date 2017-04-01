@@ -1,0 +1,27 @@
+# My personal configuration of Bash.
+
+# It shows my public IPv4.
+# Thanks to: http://unix.stackexchange.com/a/81699
+alias myip="dig +short myip.ns1.it @resolver.ns1.it"
+
+# Colorized man pages.
+# Thanks to: https://news.ycombinator.com/item?id=12304730
+man() {
+  LESS_TERMCAP_mb=$(printf "\e[1;31m") \
+   LESS_TERMCAP_md=$(printf "\e[1;31m") \
+   LESS_TERMCAP_me=$(printf "\e[0m") \
+   LESS_TERMCAP_se=$(printf "\e[0m") \
+   LESS_TERMCAP_so=$(printf "\e[1;44;33m") \
+   LESS_TERMCAP_ue=$(printf "\e[0m") \
+   LESS_TERMCAP_us=$(printf "\e[1;32m") \
+   command man "$@"
+}
+
+# It downloads videos and then extracts the audio.
+alias music='youtube-dl -x --audio-format vorbis --audio-quality 3'
+
+# It replace spaces to underscore and convert the text in lowercase.
+alias renamefull="rename 's/ /_/g' * && rename 'y/A-Z/a-z/' *"
+
+# Needed by ssh-add.
+export SSH_AUTH_SOCK=$HOME/.gnupg/S.gpg-agent.ssh

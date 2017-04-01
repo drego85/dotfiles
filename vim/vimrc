@@ -1,0 +1,94 @@
+" My own vim settings.
+"
+" Script made by Emanuele Petriglia (ema_pe)
+
+" Basic settings.
+" ------------------------------------------------------------------------------
+" It enable line numeration.
+set number
+
+" Disable VI compatibility.
+set nocompatible
+
+" It shows information abount row and column.
+set ruler
+
+" It allows to recognize file types.
+filetype on
+
+" It shows control line.
+set laststatus=2
+
+" It shows a box with autocompletion for commands.
+set wildmenu
+
+" It automatically reads the file if it's changed outside VIM.
+set autoread
+
+" Intelligent comments for C/C++.
+set comments=sl:/*,mb:\ *,elx:\ */
+" ------------------------------------------------------------------------------
+
+" Searching settings
+" ------------------------------------------------------------------------------
+set showmatch
+
+" It starts searching as of typing.
+set incsearch
+
+" Evidenzia le occorenze trovate.
+set hlsearch
+" ------------------------------------------------------------------------------
+
+" Syntaxt settings.
+" ------------------------------------------------------------------------------
+syntax on
+
+" Set 256 color mode.
+set t_Co=256
+
+set background=dark
+
+" Allow to don't use custom terminal colors.
+let g:solarized_termcolors=256
+
+" Set color scheme (https://github.com/altercation(vim-colors-solarized)
+colorscheme solarized
+
+" It highlights initial and final spaces and tabs.
+set list lcs=trail:‧,tab:→→
+
+" Set colorline.
+set cursorline
+" ------------------------------------------------------------------------------
+
+" Line lenght settings.
+" ------------------------------------------------------------------------------
+" It enable the right margin indicator.
+set cc=81
+" It sets the color of right margin indicator.
+highlight ColorColumn ctermbg=red
+
+" It highlights text over 80 characters.
+highlight OverLength ctermbg=red ctermfg=white guibg=#592929
+match OverLength /\%81v.\+/
+" ------------------------------------------------------------------------------
+
+" Indentation settings.
+" ------------------------------------------------------------------------------
+" Use spaces against tab.
+set expandtab
+
+" Allows to insert tab with 'Shift+Tab'.
+inoremap <S-Tab> <C-V><Tab>
+
+" Set that a tab is four spaces.
+set shiftwidth=4
+set tabstop=4
+
+" Automatic indentation.
+set autoindent
+set smartindent
+
+" It uses two spaces when editing scripts.
+autocmd Filetype sh setlocal ts=2 sw=2
