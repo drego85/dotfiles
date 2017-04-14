@@ -10,3 +10,9 @@
     default = simple
 [gpg]
     program = gpg2
+[alias]
+    # It's like 'ls -l'.
+    ll = log --pretty=format:\"%C(yellow)%h %ad%Cred%d %Creset%s%Cblue\" --decorate --date=format:%Y-%m-%d\\ %H:%M
+    st = status
+    ci = commit
+    pu = push
