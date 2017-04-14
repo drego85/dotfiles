@@ -13,6 +13,7 @@ $LN ~/.dotfiles/vim/colors/solarized.vim ~/.vim/colors/solarized.vim
 $LN ~/.dotfiles/bash/bash_aliases ~/.bash_aliases
 
 $LN ~/.dotfiles/git/gitconfig ~/.gitconfig
+$LN ~/.dotfiles/git/gitignore ~/.gitignore
 
 $LN ~/.dotfiles/terminator/config ~/.config/terminator/config
 

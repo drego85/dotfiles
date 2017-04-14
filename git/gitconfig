@@ -1,5 +1,6 @@
 [core]
     editor = vim
+    excludesfile = ~/.gitignore
 [user]
     name = Emanuele Petriglia
     email = inbox@emanuelepetriglia.me
@@ -14,5 +15,5 @@
     # It's like 'ls -l'.
     ll = log --pretty=format:\"%C(yellow)%h %ad%Cred%d %Creset%s%Cblue\" --decorate --date=format:%Y-%m-%d\\ %H:%M
     st = status
-    ci = commit
+    cm = commit
     pu = push
