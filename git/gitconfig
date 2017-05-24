@@ -17,3 +17,6 @@
     st = status
     cm = commit
     pu = push
+
+    # To view the number of commits for each member.
+    stats = shortlog -sn
