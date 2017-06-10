@@ -96,3 +96,8 @@ set smartindent
 
 " It uses two spaces when editing scripts.
 autocmd Filetype sh setlocal ts=2 sw=2
+
+" ------------------------------------------------------------------------------
+" Plugin settings
+" ------------------------------------------------------------------------------
+autocmd VimEnter,BufNewFile,BufReadPost * silent! call HardMode()
