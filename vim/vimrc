@@ -9,6 +9,9 @@
 " It enable line numeration.
 set number
 
+" It enables relative number.
+set relativenumber
+
 " Disable VI compatibility.
 set nocompatible
 
