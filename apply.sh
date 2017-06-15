@@ -28,6 +28,10 @@ chmod u+x ~/.local/bin/composer-install
 mkdir -p ~/.vim/plugin
 cd ~/.vim/plugin
 
+# TODO: check if the plugins already extisted.
+
 # Hardmode (https://github.com/wikitopian/hardmode)
 wget https://raw.githubusercontent.com/wikitopian/hardmode/master/plugin/hardmode.vim
 
+# Vimwiki
+git clone https://github.com/vimwiki/vimwiki.git ~/.vim/pack/plugins/start/vimwiki

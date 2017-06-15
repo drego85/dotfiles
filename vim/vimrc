@@ -19,6 +19,7 @@ set nocompatible
 set ruler
 
 " It allows to recognize file types.
+filetype plugin on
 filetype on
 
 " It shows control line.

@@ -25,3 +25,16 @@ alias renamefull="rename 's/ /_/g' * && rename 'y/A-Z/a-z/' *"
 
 # Needed by ssh-add.
 export SSH_AUTH_SOCK=$HOME/.gnupg/S.gpg-agent.ssh
+
+# Default editor
+export EDITOR=vim
+
+# Move the selected file into the gps tracks folder (personal)
+alias mvtracks='mv -v *.gpx ~/Documenti/tracciati_bici/tracks'
+
+# Set VIM keybindings on Bash
+set -o vi
+
+# Set VIM keybindings for all programs
+set editing-mode vi
+set keymap vi
