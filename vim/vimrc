@@ -95,7 +95,10 @@ set tabstop=4
 set autoindent
 set smartindent
 
-" It uses two spaces when editing scripts.
+" For C files, use 8 spaces (Linux style) instead of 4.
+autocmd Filetype c setlocal ts=8 shiftwidth=8
+
+" For sh files, use 2 spaces insteaf of 4.
 autocmd Filetype sh setlocal ts=2 sw=2
 
 " ------------------------------------------------------------------------------
