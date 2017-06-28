@@ -20,6 +20,8 @@ man() {
 # It downloads videos and then extracts the audio.
 alias music='youtube-dl -x --audio-format vorbis --audio-quality 3'
 
+alias youtube-dl='youtube-dl https://www.youtube.com/watch?v=YkLWKAFGhNo -f "best[height=720]"'
+
 # It replace spaces to underscore and convert the text in lowercase.
 alias renamefull="rename 's/ /_/g' * && rename 'y/A-Z/a-z/' *"
 

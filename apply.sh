@@ -8,7 +8,9 @@ LN="ln -svf"
 
 # TODO: evitare di inserire i file come valori cablati.
 $LN ~/.dotfiles/vim/vimrc ~/.vimrc
-$LN ~/.dotfiles/vim/colors/solarized.vim ~/.vim/colors/solarized.vim
+mkdir -p ~/.vim/colors
+cd ~/.vim/colors
+wget https://raw.githubusercontent.com/altercation/solarized/master/vim-colors-solarized/colors/solarized.vim
 
 $LN ~/.dotfiles/bash/bash_aliases ~/.bash_aliases
 
