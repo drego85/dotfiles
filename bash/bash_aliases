@@ -20,7 +20,7 @@ man() {
 # It downloads videos and then extracts the audio.
 alias music='youtube-dl -x --audio-format vorbis --audio-quality 3'
 
-alias youtube-dl='youtube-dl https://www.youtube.com/watch?v=YkLWKAFGhNo -f "best[height=720]"'
+alias youtube-dl='youtube-dl -f "best[height=720]"'
 
 # It replace spaces to underscore and convert the text in lowercase.
 alias renamefull="rename 's/ /_/g' * && rename 'y/A-Z/a-z/' *"
@@ -32,7 +32,7 @@ export SSH_AUTH_SOCK=$HOME/.gnupg/S.gpg-agent.ssh
 export EDITOR=vim
 
 # Move the selected file into the gps tracks folder (personal)
-alias mvtracks='mv -v *.gpx ~/Documenti/tracciati_bici/tracks'
+alias mvtracks='mv -v *.gpx ~/Documenti/tracciati_bici/tracks && cd ~/Documenti/tracciati_bici'
 
 # Set VIM keybindings on Bash
 set -o vi
