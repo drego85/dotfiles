@@ -100,8 +100,3 @@ autocmd Filetype c setlocal ts=8 shiftwidth=8
 
 " For sh files, use 2 spaces insteaf of 4.
 autocmd Filetype sh setlocal ts=2 sw=2
-
-" ------------------------------------------------------------------------------
-" Plugin settings
-" ------------------------------------------------------------------------------
-autocmd VimEnter,BufNewFile,BufReadPost * silent! call HardMode()
