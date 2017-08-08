@@ -41,3 +41,6 @@ set -o vi
 # Set VIM keybindings for all programs
 set editing-mode vi
 set keymap vi
+
+# Enable core dumping
+ulimit -c 50
