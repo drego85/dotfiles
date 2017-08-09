@@ -21,6 +21,3 @@ $LN ~/.dotfiles/terminator/config ~/.config/terminator/config
 
 $LN ~/.dotfiles/gnupg/gpg.conf ~/.gnupg/gpg.conf
 $LN ~/.dotfiles/gnupg/gpg-agent.conf ~/.gnupg/gpg-agent.conf
-
-$LN ~/.dotfiles/bin/composer-install ~/.local/bin/composer-install
-chmod u+x ~/.local/bin/composer-install
