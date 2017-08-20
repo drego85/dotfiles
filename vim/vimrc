@@ -100,3 +100,22 @@ autocmd Filetype c setlocal ts=8 shiftwidth=8
 
 " For sh files, use 2 spaces insteaf of 4.
 autocmd Filetype sh setlocal ts=2 sw=2
+
+" ------------------------------------------------------------------------------
+" Netrw settings.
+" ------------------------------------------------------------------------------
+
+" Set the "tree" view (like "tree" command).
+let g:netrw_liststyle = 3
+
+" Remove the banner.
+let g:netrw_banner = 0
+
+" Open selected files to the previous window.
+let g:netrw_browse_split = 4
+
+" Set the width of the window (percent value).
+let g:netrw_winsize = 20
+
+" Open the window at right.
+let g:netrw_altv = 1
