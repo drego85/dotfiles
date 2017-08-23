@@ -32,9 +32,6 @@ export SSH_AUTH_SOCK=$HOME/.gnupg/S.gpg-agent.ssh
 # Default editor
 export EDITOR=vim
 
-# Move the selected file into the gps tracks folder (personal)
-alias mvtracks='mv -v *.gpx ~/Documenti/tracciati_bici/tracks && cd ~/Documenti/tracciati_bici'
-
 # Set VIM keybindings on Bash
 set -o vi
 
