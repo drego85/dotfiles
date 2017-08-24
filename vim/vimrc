@@ -1,10 +1,9 @@
-" My own vim settings.
+" vim:foldmethod=marker
+" Vim personal settings.
 "
-" Script made by Emanuele Petriglia (ema_pe)
+" Script made by Emanuele Petriglia (ema-pe).
 
-" ------------------------------------------------------------------------------
-" Basic settings.
-" ------------------------------------------------------------------------------
+" UI settings. {{{
 
 " It enable line numeration.
 set number
@@ -34,20 +33,43 @@ set autoread
 " Intelligent comments for C/C++.
 set comments=sl:/*,mb:\ *,elx:\ */
 
-" ------------------------------------------------------------------------------
-" Searching settings
-" ------------------------------------------------------------------------------
+" Highlight these characters when the curson is over "{[()]}".
 set showmatch
+
+" }}}
+
+" Searching settings {{{
 
 " It starts searching as of typing.
 set incsearch
 
-" Evidenzia le occorenze trovate.
+" Hightlight matches.
 set hlsearch
 
-" ------------------------------------------------------------------------------
-" Syntaxt settings.
-" ------------------------------------------------------------------------------
+" }}}
+
+" Folding settings {{{
+
+" Enable folding.
+set foldenable
+
+" Folding the code according to the syntax.
+set foldmethod=syntax
+
+" Start folding from the high level.
+set foldlevel=0
+
+" Fold olny the first level (in C code, only the functions).
+set foldnestmax=1
+
+" 'za' -> toggle (open or close) the folder at the cursor. I've add a custom
+" keybinding.
+nnoremap <space> za
+
+" }}}
+
+" Syntaxt settings {{{
+
 syntax on
 
 " Set 256 color mode.
@@ -67,33 +89,35 @@ set list lcs=trail:‧,tab:→→
 " Set colorline.
 set cursorline
 
-" ------------------------------------------------------------------------------
-" Line lenght settings.
-" ------------------------------------------------------------------------------
+" }}}
+
+" Line lenght settings {{{
 
 " It enable the right margin indicator.
 set cc=81
 " It sets the color of right margin indicator.
 highlight ColorColumn ctermbg=red
 
+" }}}
 
-" ------------------------------------------------------------------------------
-" Indentation settings.
-" ------------------------------------------------------------------------------
+" Indentation settings {{{
 
-" Use spaces against tab.
+" Tabs are spaces.
 set expandtab
 
 " Allows to insert tab with 'Shift+Tab'.
 inoremap <S-Tab> <C-V><Tab>
 
 " Set that a tab is four spaces.
-set shiftwidth=4
 set tabstop=4
+set shiftwidth=4
 
 " Automatic indentation.
 set autoindent
 set smartindent
+
+" For Makefile files, don't convert tabs into spaces.
+autocmd Filetype Makefile setlocal noexpandtab
 
 " For C files, use 8 spaces (Linux style) instead of 4.
 autocmd Filetype c setlocal ts=8 shiftwidth=8
@@ -101,9 +125,9 @@ autocmd Filetype c setlocal ts=8 shiftwidth=8
 " For sh files, use 2 spaces insteaf of 4.
 autocmd Filetype sh setlocal ts=2 sw=2
 
-" ------------------------------------------------------------------------------
-" Netrw settings.
-" ------------------------------------------------------------------------------
+" }}}
+
+" Netrw settings {{{
 
 " Set the "tree" view (like "tree" command).
 let g:netrw_liststyle = 3
@@ -120,9 +144,24 @@ let g:netrw_winsize = 20
 " Open the window at right.
 let g:netrw_altv = 1
 
-" ------------------------------------------------------------------------------
-" Other settings.
-" ------------------------------------------------------------------------------
+" }}}
 
-" In normal mode, press F9 to check for syntax errors in the current C file.
-map <F9> :!clear && gcc -fsyntax-only "%"<CR>
+" Other settings and custom functions {{{
+
+" Allow VIM to read settings from the file.
+set modelines=1
+
+" Toggle between number and relativenumber...
+function! ToggleNumber()
+    if(&relativenumber == 1)
+        set norelativenumber
+        set number
+    else
+        set relativenumber
+    endif
+endfunc
+
+" .. and bind it to a custom keybinding.
+nnoremap <Tab> :call ToggleNumber()<CR>
+
+" }}}
