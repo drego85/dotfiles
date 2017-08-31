@@ -164,6 +164,9 @@ function! MarkdownRules()
 
     " Don't break a single word.
     setlocal linebreak
+
+    " Show text in the bottom of the display.
+    setlocal display=lastline
 endfunc
 
 autocmd Filetype markdown :call MarkdownRules()
