@@ -98,6 +98,8 @@ set cc=81
 " It sets the color of right margin indicator.
 highlight ColorColumn ctermbg=red
 
+autocmd Filetype markdown setlocal cc=
+
 " }}}
 
 " Indentation settings {{{
