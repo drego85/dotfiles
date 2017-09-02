@@ -1,0 +1,14 @@
+#!/bin/sh
+# This script does a full backup of all my data in the PC. I have lots of other
+# files in the HDD, but they are archived.
+
+readonly HDD="6bada27e-026d-424c-b3f7-ad323ace4574"
+readonly RSYNC="sudo rsync -av --delete"
+readonly HOME=/home/$USER
+
+# This is temporary implementation.
+
+$RSYNC $HOME/Musica/ /media/$USER/$HDD/musica
+$RSYNC $HOME/Immagini/Sfondi/ /media/$USER/$HDD/immagini/sfondi
+$RSYNC $HOME/Documenti/tracciati_bici/ /media/$USER/$HDD/file/tracciati_bici/
+$RSYNC $HOME/Documenti/scritti/ /media/$USER/$HDD/file/scritti/
