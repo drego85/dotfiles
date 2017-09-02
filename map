@@ -1,0 +1,18 @@
+# Symlink map.
+#
+# Syntax: the first link is the origin, the second the source. They must be
+# separated by one space.
+
+vim/vimrc .vimrc
+
+vim/solarized.vim .vim/colors/solarized.vim
+
+bash/bash_aliases .bash_aliases
+
+git/gitconfig .gitconfig
+git/gitignore .gitignore
+
+terminator/config .config/termintor/config
+
+gnupg/gpg.conf .gnupg/gpg.conf
+gnupg/gpg-agent.conf .gnupg/gpg-agent.conf
