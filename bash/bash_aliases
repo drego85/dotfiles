@@ -41,3 +41,6 @@ set keymap vi
 
 # Enable core dumping
 ulimit -c 50
+
+# Python alias
+alias py="python3"

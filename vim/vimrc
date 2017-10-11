@@ -108,7 +108,10 @@ set expandtab
 " Allows to insert tab with 'Shift+Tab'.
 inoremap <S-Tab> <C-V><Tab>
 
-" Set that a tab is four spaces.
+" Default indent options:
+" - tabstop (or ts) is the number of spaces that a <Tab> is made of;
+" - shiftwidth (or sw) is the number of spaces to use when indenting.
+" I use these settings to work with Python.
 set tabstop=4
 set shiftwidth=4
 
@@ -120,9 +123,9 @@ set smartindent
 autocmd Filetype Makefile setlocal noexpandtab
 
 " For C files, use 8 spaces (Linux style) instead of 4.
-autocmd Filetype c setlocal ts=8 shiftwidth=8
+autocmd Filetype c setlocal ts=8 sw=8
 
-" For sh files, use 2 spaces insteaf of 4.
+" For sh (bash) use only 2 spaces.
 autocmd Filetype sh setlocal ts=2 sw=2
 
 " }}}
