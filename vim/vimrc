@@ -30,9 +30,6 @@ set wildmenu
 " It automatically reads the file if it's changed outside VIM.
 set autoread
 
-" Intelligent comments for C/C++.
-set comments=sl:/*,mb:\ *,elx:\ */
-
 " Highlight these characters when the curson is over "{[()]}".
 set showmatch
 
@@ -194,4 +191,5 @@ endfunc
 " .. and bind it to a custom keybinding.
 nnoremap <Tab> :call ToggleNumber()<CR>
 
+autocmd BufRead *.py nnoremap <buffer> <F9> :wa<CR> :exec '!python3' shellescape(@%, 1)<cr>
 " }}}
