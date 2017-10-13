@@ -194,5 +194,5 @@ endfunc
 " .. and bind it to a custom keybinding.
 nnoremap <Tab> :call ToggleNumber()<CR>
 
-autocmd BufRead *.py nnoremap <buffer> <F9> :wa<CR> :exec '!python3' shellescape(@%, 1)<cr>
+autocmd BufRead *.py nnoremap <buffer> <F5> :wa<CR> :exec '!python3' shellescape(@%, 1)<cr>
 " }}}
