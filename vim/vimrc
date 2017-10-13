@@ -172,7 +172,7 @@ endfunc
 autocmd Filetype markdown :call MarkdownRules()
 
 " This keybinding reset the 'cc' option.
-nnoremap <F5> :set cc=80<CR>
+nnoremap <F6> :set cc=80<CR>
 
 " }}}
 
