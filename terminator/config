@@ -1,8 +1,13 @@
 [global_config]
-  enabled_plugins = APTURLHandler, LaunchpadCodeURLHandler, LaunchpadBugURLHandler
+  enabled_plugins = TerminalShot, APTURLHandler, LaunchpadCodeURLHandler, LaunchpadBugURLHandler
+  geometry_hinting = False
+  handle_size = 0
+  inactive_color_offset = 0.68
   suppress_multiple_term_dialog = True
+  tab_position = bottom
   title_font = Hack 10
   title_use_system_font = False
+  window_state = maximise
 [keybindings]
   close_term = <Alt>q
   close_window = <Shift><Alt>q
@@ -23,6 +28,7 @@
       type = Terminal
     [[[window0]]]
       parent = ""
+      size = 1366, 742
       type = Window
 [plugins]
 [profiles]
@@ -31,4 +37,5 @@
     font = Hack 11
     scrollback_lines = 1000
     scrollbar_position = hidden
+    show_titlebar = False
     use_system_font = False

@@ -50,14 +50,14 @@ set hlsearch
 " Enable folding.
 set foldenable
 
-" Folding the code according to the syntax.
-set foldmethod=syntax
+" Folding the code according to the indentation.
+set foldmethod=indent
 
 " Start folding from the high level.
 set foldlevel=0
 
-" Fold olny the first level (in C code, only the functions).
-set foldnestmax=1
+" Fold only two levels.
+set foldnestmax=2
 
 " 'za' -> toggle (open or close) the folder at the cursor. I've add a custom
 " keybinding.
