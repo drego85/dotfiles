@@ -99,6 +99,9 @@ highlight ColorColumn ctermbg=red
 
 " Indentation settings {{{
 
+" Wrap lines longer than 80 characters.
+set textwidth=80
+
 " Tabs are spaces.
 set expandtab
 
@@ -143,36 +146,6 @@ let g:netrw_winsize = 20
 
 " Open the window at right.
 let g:netrw_altv = 1
-
-" }}}
-
-" Markdown settings {{{
-
-" This function can be called when you open a markdown formatted file. It
-" help the user to write markdown text.
-function! MarkdownRules()
-    " Disable the limit column.
-    setlocal cc=0
-
-    " Disable showing numbers (absolute and relative).
-    setlocal nonumber
-    setlocal norelativenumber
-
-    " Make movements intuitive.
-    nnoremap j gj
-    nnoremap k gk
-
-    " Don't break a single word.
-    setlocal linebreak
-
-    " Show text in the bottom of the display.
-    setlocal display=lastline
-endfunc
-
-autocmd Filetype markdown :call MarkdownRules()
-
-" This keybinding reset the 'cc' option.
-nnoremap <F6> :set cc=80<CR>
 
 " }}}
 
