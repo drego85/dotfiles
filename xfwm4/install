@@ -15,7 +15,7 @@ git submodule update --init thinble
 # Avoid to recreate the symlink.
 SYMLINK="$USERDIR/.local/share/themes/thinble"
 if [[ -L "$SYMLINK" && -d "$SYMLINK" ]]; then
-  echo "symlink of thinble xfwm4 theme is already created!"
+  echo "xfwm4 theme: thinble symlink already created!"
 else
   mkdir --parents "$USERDIR/.local/share/themes/"
   ln --symbolic -i "$SCRIPTDIR/thinble" "$USERDIR/.local/share/themes/"
