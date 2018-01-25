@@ -47,25 +47,6 @@ $RM $TMPDIR
 # Note: the theme is not enabled here, only downloated and prepared. See
 # xfce4 settings!
 
-# Icons
-# ------------------------------------------------------------------------------
-
-$MKDIR "$USER/.local/share/icons"
-
-# Switch to the last stable version of the icon pack.
-cd "$DIR/icons/papirus"
-LAST_VERSION="$(git tag | tail -n 1)"
-git checkout -q $LAST_VERSION 1>/dev/null
-cd $DIR
-
-$LN "$DIR/icons/papirus/Papirus-Adapta-Nokto/" \
-    "$USER/.local/share/icons/papirus-adapta-nokto"
-
-# Update cache
-gtk-update-icon-cache --quiet "$USER/.local/share/icons/papirus-adapta-nokto"
-
-# Note: the icon pack is not enabled here, only downloaded and prepared!
-
 # XFCE
 # ------------------------------------------------------------------------------
 
@@ -75,11 +56,6 @@ XFCONF="xfconf-query --create"
 # ------------------------------------------------------------------------------
 
 XFCONF_XFWM4="$XFCONF --channel xfwm4"
-
-# Installing theme.
-$MKDIR "$USER/.local/share/themes/"
-
-$LN "$DIR/xfwm4/borderless" "$USER/.local/share/themes/"
 
 # Appling theme.
 $XFCONF_XFWM4 -p /general/theme -t string -s borderless
