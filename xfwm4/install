@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+# This script installs thinble, that is my current xfwm4 theme. It DOESN'T
+# ACTIVATE the theme, but it only downloads it and places the files on the
+# right directory.
+
+# Full path of this script.
+SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+USERDIR="$(xdg-user-dir)"
+
+# Update or initialize the submodule
+git submodule update --init thinble
+
+# Avoid to recreate the symlink.
+SYMLINK="$USERDIR/.local/share/themes/thinble"
+if [[ -L "$SYMLINK" && -d "$SYMLINK" ]]; then
+  echo "symlink of thinble xfwm4 theme is already created!"
+else
+  mkdir --parents "$USERDIR/.local/share/themes/"
+  ln --symbolic -i "$SCRIPTDIR/thinble" "$USERDIR/.local/share/themes/"
+fi
