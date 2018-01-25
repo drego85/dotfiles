@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+# This script downloads and sets-up the icon theme that I'm using, Papirus.
+# In particular I'm using Papirus-Adapta-Nokto.
+# This script DOESN'T ACTIVATE the icon theme!
+
+# Full path of this script.
+SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# Execution directory.
+RUNDIR="$(pwd)"
+
+USERDIR="$(xdg-user-dir)"
+
+# Update or initialize the submodule.
+git submodule update --init "$SCRIPTDIR/papirus"
+
+# Switch to the last stable version of the icon pack.
+cd "$SCRIPTDIR/papirus"
+LAST_VERSION="$(git tag | tail -n 1)"
+git checkout "$LAST_VERSION"
+cd "$RUNDIR"
+
+# Avoid to recreate the symlink.
+DESTDIR="$USERDIR/.local/share/icons/papirus-adapta-nokto"
+if [[ -L "$DESTDIR" && -d "$DESTDIR" ]]; then
+  echo "xfwm4 theme: thinble symlink already created!"
+else
+  mkdir --parents "$USERDIR/.local/share/icons/"
+  ln --symbolic -i "$SCRIPTDIR/papirus/Papirus-Adapta-Nokto" "$DESTDIR"
+fi
+
+# Update cache.
+gtk-update-icon-cache "$DESTDIR"
