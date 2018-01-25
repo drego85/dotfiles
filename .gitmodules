@@ -1,6 +1,3 @@
 [submodule "icons"]
 	path = icons/papirus
 	url = https://github.com/PapirusDevelopmentTeam/papirus-icon-theme.git
-[submodule "gtk/osx-arc-darker"]
-	path = gtk/osx-arc-darker
-	url = https://github.com/LinxGem33/OSX-Arc-Darker.git
