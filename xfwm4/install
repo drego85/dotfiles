@@ -9,8 +9,8 @@ SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 USERDIR="$(xdg-user-dir)"
 
-# Update or initialize the submodule
-git submodule update --init thinble
+# Update or initialize the submodule.
+git submodule update --init "$SCRIPTDIR/thinble"
 
 # Avoid to recreate the symlink.
 SYMLINK="$USERDIR/.local/share/themes/thinble"

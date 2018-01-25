@@ -72,13 +72,17 @@ syntax on
 " Set 256 color mode.
 set t_Co=256
 
+set termguicolors
+
+let g:gruvbox_italic=1
+
 set background=dark
 
 " Allow to don't use custom terminal colors.
-let g:solarized_termcolors=256
+" let g:solarized_termcolors=256
 
 " Set color scheme (https://github.com/altercation(vim-colors-solarized)
-colorscheme solarized
+" colorscheme solarized
 
 " It highlights initial and final spaces and tabs.
 set list lcs=trail:‧,tab:→→
