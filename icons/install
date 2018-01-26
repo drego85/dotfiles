@@ -24,7 +24,7 @@ cd "$RUNDIR"
 # Avoid to recreate the symlink.
 DESTDIR="$USERDIR/.local/share/icons/papirus-adapta-nokto"
 if [[ -L "$DESTDIR" && -d "$DESTDIR" ]]; then
-  echo "xfwm4 theme: thinble symlink already created!"
+  echo "icon pack: papirus-adapta-nokto symlink already created!"
 else
   mkdir --parents "$USERDIR/.local/share/icons/"
   ln --symbolic -i "$SCRIPTDIR/papirus/Papirus-Adapta-Nokto" "$DESTDIR"
