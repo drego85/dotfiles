@@ -1,9 +1,5 @@
 # My personal configuration of Bash.
 
-# It shows my public IPv4.
-# Thanks to: http://unix.stackexchange.com/a/81699
-alias myip="dig +short myip.ns1.it @resolver.ns1.it"
-
 # Colorized man pages.
 # Thanks to: https://news.ycombinator.com/item?id=12304730
 man() {
@@ -27,7 +23,7 @@ alias yt='youtube-dl -f "best[height=720]"'
 alias renamefull="rename 's/ /_/g' * && rename 'y/A-Z/a-z/' *"
 
 # Needed by ssh-add.
-export SSH_AUTH_SOCK=$HOME/.gnupg/S.gpg-agent.ssh
+export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
 
 # Default editor
 export EDITOR=vim

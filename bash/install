@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# This script creates the symlink of Bash configuration.
+
+# Full path of this script.
+SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+USERDIR="$(xdg-user-dir)"
+
+# Avoid to recreate the symlink.
+BASHCONF="$USERDIR/.bash_aliases"
+if [[ -L "$BASHCONF" ]]; then
+  echo "bash: bash_aliases symlink already created!"
+else
+  ln --symbolic -i "$SCRIPTDIR/bash_aliases" "$BASHCONF"
+fi
