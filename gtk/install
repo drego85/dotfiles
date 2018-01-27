@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+# This script downloads and installs Adapta and Adapta-Nokto theme into
+# local folder. It downloads the files from Arch repository. Thi script
+# DOESN'T ACTIVATE the theme!
+
+# Original directory (it may be different with $DIR).
+ORIDIR="$(pwd)"
+
+# User directory.
+USERDIR="$(xdg-user-dir)"
+
+# Create a temporary directory.
+TMPDIR="$(mktemp --directory)"
+cd "$TMPDIR"
+
+# Download the latest stable version of the theme.
+wget --content-disposition --no-verbose \
+     https://www.archlinux.org/packages/community/any/adapta-gtk-theme/download/
+
+FILE="$(ls)"
+
+# GNU tar recognizes the format by itself.
+tar --warning=no-unknown-keyword -xf "$FILE"
+
+# Create and copy all things.
+mkdir --parents "$USERDIR/.local/share/themes"
+
+CP="cp --recursive"
+
+# GTK+ theme must be located in /usr/share/themes directory. I can't place it
+# on local directory, otherwise the theme will not work.
+echo "root requested to install GTK+ theme"
+sudo mv "$TMPDIR/usr/share/themes/Adapta" "/usr/share/themes/Adapta"
+sudo mv "$TMPDIR/usr/share/themes/Adapta-Nokto" "/usr/share/themes/Adapta-Nokto"
+
+# Go back to original directory and remove the tmp directory.
+cd "$ORIDIR"
+
+rm -rf "$TMPDIR"
