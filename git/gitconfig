@@ -10,7 +10,7 @@
 [push]
     default = simple
 [gpg]
-    program = gpg2
+    program = gpg
 [alias]
     # It's like 'ls -l'.
     ll = log --pretty=format:\"%C(yellow)%h %ad%Cred%d %Creset%s%Cblue\" --decorate --date=format:%Y-%m-%d\\ %H:%M
