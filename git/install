@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# This script creates the symlink of git configuration.
+
+# Full path of this script.
+SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+USERDIR="$(xdg-user-dir)"
+
+# Avoid to recreate the symlink.
+GITCONFIG="$USERDIR/.gitconfig"
+if [[ -L "$GITCONFIG" ]]; then
+  echo "git: gitconfig symlink already created!"
+else
+  ln --symbolic -i "$SCRIPTDIR/gitconfig" "$GITCONFIG"
+fi
+
+GITIGNORE="$USERDIR/.gitignore"
+if [[ -L "$GITIGNORE" ]]; then
+  echo "git: gitignore symlink already created!"
+else
+  ln --symbolic -i "$SCRIPTDIR/gitignore" "$GITIGNORE"
+fi
