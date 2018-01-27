@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# This script creates the symlink of terminator configuration.
+
+# Full path of this script.
+SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+USERDIR="$(xdg-user-dir)"
+
+# Avoid to recreate the symlink.
+TERMINATOR="$USERDIR/.config/terminator/config"
+if [[ -L "$TERMINATOR" ]]; then
+  echo "terminator: config symlink already created!"
+else
+  ln --symbolic -i "$SCRIPTDIR/config" "$TERMINATOR"
+fi
