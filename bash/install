@@ -7,10 +7,12 @@ SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 USERDIR="$(xdg-user-dir)"
 
+LN="ln --symbolic --force --verbose"
+
 # Avoid to recreate the symlink.
 BASHCONF="$USERDIR/.bash_aliases"
 if [[ -L "$BASHCONF" ]]; then
   echo "bash: bash_aliases symlink already created!"
 else
-  ln --symbolic -i "$SCRIPTDIR/bash_aliases" "$BASHCONF"
+  $LN "$SCRIPTDIR/bash_aliases" "$BASHCONF"
 fi
