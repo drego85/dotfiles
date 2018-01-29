@@ -26,8 +26,6 @@ tar --warning=no-unknown-keyword -xf "$FILE"
 # Create and copy all things.
 mkdir --parents "$USERDIR/.local/share/themes"
 
-CP="cp --recursive"
-
 # GTK+ theme must be located in /usr/share/themes directory. I can't place it
 # on local directory, otherwise the theme will not work.
 echo "root requested to install GTK+ theme"
