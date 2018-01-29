@@ -18,5 +18,6 @@ if [[ -L "$SYMLINK" && -d "$SYMLINK" ]]; then
   echo "xfwm4 theme: thinble symlink already created!"
 else
   mkdir --parents "$USERDIR/.local/share/themes/"
-  ln --symbolic -i "$SCRIPTDIR/thinble" "$USERDIR/.local/share/themes/"
+  ln --symbolic --force --verbose "$SCRIPTDIR/thinble" \
+                                  "$USERDIR/.local/share/themes/"
 fi
