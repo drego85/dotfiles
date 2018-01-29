@@ -7,13 +7,15 @@
 # Full path of this script.
 SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+LN="ln --verbose --symbolic --force"
+
 # Avoid to recreate the symlink.
 LIGHTDM="/usr/share/lightdm/lightdm.conf.d/02_ema-pe.conf"
 if [[ -L "$LIGHTDM" ]]; then
   echo "lightdm: config symlink already created!"
 else
   echo "root required to create lightdm config symlink"
-  sudo ln --symbolic -i "$SCRIPTDIR/lightdm.conf" "$LIGHTDM"
+  sudo $LN "$SCRIPTDIR/lightdm.conf" "$LIGHTDM"
 fi
 
 LIGHTDMGTK="/usr/share/lightdm/lightdm-gtk-greeter.conf.d/02_ema-pe.conf"
@@ -21,5 +23,5 @@ if [[ -L "$LIGHTDMGTK" ]]; then
   echo "lightdm-gtk-greeter: config symlink already created!"
 else
   echo "root required to create lightdm-gtk-greeter config symlink"
-  sudo ln --symbolic -i "$SCRIPTDIR/lightdm-gtk-greeter.conf" "$LIGHTDMGTK"
+  sudo $LN "$SCRIPTDIR/lightdm-gtk-greeter.conf" "$LIGHTDMGTK"
 fi
