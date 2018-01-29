@@ -7,24 +7,30 @@ SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 USERDIR="$(xdg-user-dir)"
 
+LN="ln --verbose --symbolic --force"
+
+if [[ ! -d "$USERDIR/.gnupg" ]]; then
+  mkdir --verbose "$USERDIR/.gnupg"
+fi
+
 # Avoid to recreate the symlink.
 GPGCONF="$USERDIR/.gnupg/gpg.conf"
 if [[ -L "$GPGCONF" ]]; then
   echo "gpg: gpg.conf symlink already created!"
 else
-  ln --symbolic -i "$SCRIPTDIR/gpg.conf" "$GPGCONF"
+  $LN "$SCRIPTDIR/gpg.conf" "$GPGCONF"
 fi
 
 GPGAGENT="$USERDIR/.gnupg/gpg-agent.conf"
 if [[ -L "$GPGAGENT" ]]; then
   echo "gpg: gpg-agent.conf symlink already created!"
 else
-  ln --symbolic -i "$SCRIPTDIR/gpg-agent.conf" "$GPGAGENT"
+  $LN "$SCRIPTDIR/gpg-agent.conf" "$GPGAGENT"
 fi
 
 SSHCONTROL="$USERDIR/.gnupg/sshcontrol"
 if [[ -L "$SSHCONTROL" ]]; then
   echo "gpg: sshcontrol symlink already created!"
 else
-  ln --symbolic -i "$SCRIPTDIR/sshcontrol" "$SSHCONTROL"
+  $LN -i "$SCRIPTDIR/sshcontrol" "$SSHCONTROL"
 fi
