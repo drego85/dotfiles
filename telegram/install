@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+
+# This script installs Telegram Desktop (64 bit).
+
+# Original directory (it may be different with $DIR).
+ORIDIR="$(pwd)"
+
+# User directory.
+USERDIR="$(xdg-user-dir)"
+
+if [[ -d "$USERDIR/.local/opt/telegram" ]]; then
+  echo "telegram: telegram binaries are already installed!"
+else
+  # Create a temporary directory.
+  TMPDIR="$(mktemp --directory)"
+  cd "$TMPDIR"
+
+  # Download the latest stable version of the theme.
+  wget --no-verbose https://telegram.org/dl/desktop/linux
+
+  FILE="linux"
+
+  # GNU tar recognizes the format by itself.
+  tar -xf "$FILE"
+
+  # Create and copy all things.
+  mkdir --parents "$USERDIR/.local/opt/telegram"
+
+  # Move the application.
+  mv Telegram/* "$USERDIR/.local/opt/telegram/"
+
+  # Go back to original directory and remove the tmp directory.
+  cd "$ORIDIR"
+
+  rm -rf "$TMPDIR"
+fi
+
+# All symlink creation are relative to this path.
+cd "$USERDIR/.local/bin"
+
+# Avoid to recreate the symlink.
+TELEGRAM="telegram"
+if [[ -L "$TELEGRAM" ]]; then
+  echo "telegram: telegram symlink already created!"
+else
+  ln --symbolic -i "../opt/telegram/Telegram" "$TELEGRAM"
+fi
+
+# Avoid to recreate the symlink.
+TG_UPDATER="telegram-updater"
+if [[ -L "$TG_UPDATER" ]]; then
+  echo "telegram: telegram symlink already created!"
+else
+  ln --symbolic -i "../opt/telegram/Updater" "$TG_UPDATER"
+fi
