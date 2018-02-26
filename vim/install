@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+# This script sets up vim configuraion.
+
+# Full path of this script.
+SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+USERDIR="$(xdg-user-dir)"
+
+# Vimrc settings.
+VIMRC="$USERDIR/.vimrc"
+if [[ -L "$VIMRC" ]]; then
+  echo "vim: vimrc symlink already created!"
+else
+  ln --symbolic -i "$SCRIPTDIR/vimrc" "$VIMRC"
+fi
+
+# Color scheme settings.
+COLOR_SCHEME="$USERDIR/.vim/colors/PaperColor.vim"
+SRC_COLOR_SCHEME="$SCRIPTDIR/papercolor-theme/colors/PaperColor.vim"
+if [[ -L "$COLOR_SCHEME" ]]; then
+  echo "vim: color scheme (PaperColor.vim) symlink already created!"
+else
+  mkdir --parents "$USERDIR/.vim/colors/"
+
+  ln --symbolic -i "$SRC_COLOR_SCHEME" "$COLOR_SCHEME"
+fi
