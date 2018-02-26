@@ -53,3 +53,20 @@ if [[ -L "$TG_UPDATER" ]]; then
 else
   ln --symbolic -i "../opt/telegram/Updater" "$TG_UPDATER"
 fi
+
+OLD_DESKTOP_FILE="$USERDIR/.local/share/applications/telegramdesktop.desktop"
+if [[ -f "$OLD_DESKTOP_FILE" ]]; then
+  rm "$OLD_DESKTOP_FILE"
+else
+  echo "telegram: old telegram.desktop file already removed!"
+fi
+
+cd "$ORIDIR"
+
+NEW_DESKTOP_FILE="$USERDIR/.local/share/applications/telegram.desktop"
+
+if [[ -L "$NEW_DESKTOP_FILE" ]]; then
+  echo "telegram: new telegram.desktop file already created!"
+else
+  ln --symbolic -i "$ORIDIR/telegram.desktop" "$NEW_DESKTOP_FILE"
+fi
