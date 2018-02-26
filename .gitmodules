@@ -7,3 +7,6 @@
 [submodule "xfwm4/backup-thinble-xfwm4-theme"]
 	path = xfwm4/backup-thinble-xfwm4-theme
 	url = https://gitlab.com/ema-pe/backup-thinble-xfwm4-theme.git
+[submodule "vim/papercolor-theme"]
+	path = vim/papercolor-theme
+	url = https://github.com/NLKNguyen/papercolor-theme.git
