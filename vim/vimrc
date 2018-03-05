@@ -149,6 +149,64 @@ let g:netrw_altv = 1
 
 " }}}
 
+" Snippets {{{
+" You can call a snippet with leading character ',' and typing the name of
+" the snippet. The first letter is usually the programming language
+" identification of the snippet.
+"
+" A snippet has this form:
+"       nnoremap ,<language><keys> :-1read $HOME/.vim/snippets/<file><CR><cs>
+" Where:
+"   - <language>: is the character that identifies the language (es. 'j' is
+"     for Java.
+"   - <keys>: name of the snippet.
+"   - <file> name of the snippet's file.
+"   - <cs> additional commands (optional). Two common commands are:
+"        1. =20 -> Indents text (useful for programming languages), in this
+"                 case two lines;
+"        2. A  -> go to the end and change mode to insertion.
+
+" Disable tiemout to allow typing of snippets' keybindings without hurry.
+set notimeout
+
+" Java snippets (start with 'j'): {{{
+
+" Import a skeleton of a class.
+nnoremap ,jclass :-1read $HOME/.vim/snippets/java-class<CR>=100 2j2ela
+
+" Import a skeleton of a class with main method.
+nnoremap ,jmain :-1read $HOME/.vim/snippets/java-main<CR>=100 2j2ela
+
+" Import statements for Java's class Scanner and move the cursto to last line.
+nnoremap ,jscanner :-1read $HOME/.vim/snippets/java-scanner<CR>3j
+
+" Import method 'print' of System.out.
+nnoremap ,jprint :-1read $HOME/.vim/snippets/java-print<CR>=0 $2hi
+
+" Import method 'printf' of System.out.
+nnoremap ,jprintf :-1read $HOME/.vim/snippets/java-printf<CR>=0 $2hi
+
+" Import method 'println' of System.out.
+nnoremap ,jprintln :-1read $HOME/.vim/snippets/java-println<CR>=0 $2hi
+
+" Import simple try-catch statements.
+nnoremap ,jtry :-1read $HOME/.vim/snippets/java-try<CR>=40 w
+
+" Import method 'System.err.println' with 'System.exit(1)'.
+nnoremap ,jerror :-1read $HOME/.vim/snippets/java-error<CR>=30 $2hi
+
+" Import a skeleton of a custom exception.
+nnoremap ,jexception :-1read $HOME/.vim/snippets/java-exception<CR>=230 3j2ela
+
+" Import a skeleton of a getter method.
+nnoremap ,jget :-1read $HOME/.vim/snippets/java-get<CR>=90 5j3ea
+
+" Import a skeleton of a setter method.
+nnoremap ,jset :-1read $HOME/.vim/snippets/java-set<CR>=90 5j3ea
+" }}}
+
+" }}}
+
 " Other settings and custom functions {{{
 
 " Allow VIM to read settings from the file.
