@@ -1,0 +1,22 @@
+/**
+ * Thrown WHEN-AND-WHY
+ */
+public class Exception extends Exception {
+
+    /**
+     * Constructs a {@code NAMEException} with no detail message.
+     */
+    public NAMEException() {
+        super();
+    }
+
+    /**
+     * Constructs a {@code NAMException} with the specified detail message.
+     * The message can be retrieved with {@link #getMessage()} method.
+     *
+     * @param message that explains the reason of the throw
+     */
+    public NAMEException(String message) {
+        super(message);
+    }
+}
