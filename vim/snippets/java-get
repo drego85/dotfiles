@@ -1,0 +1,8 @@
+/**
+ * Gets X
+ *
+ * @return X
+ */
+public TYPE get() {
+    return X;
+}
