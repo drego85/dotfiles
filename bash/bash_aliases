@@ -46,3 +46,8 @@ alias snippets="ls $HOME/.vim/snippets"
 
 # A simple shortcut for 'snippets'.
 alias snips="snippets"
+
+# Enable ls aliases
+alias ll="ls -l"
+alias la="ls -A"
+alias l="ls -CF"
