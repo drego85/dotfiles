@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+# This script create all symlinks for all bash script located in this directory.
+
+# Full path of this script.
+SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+USERDIR="$(xdg-user-dir)"
+
+LN="ln --verbose --symbolic --force"
+
+BINDIR="$USERDIR/.local/bin"
+
+if [[ ! -d "$BINDIR" ]]; then
+  mkdir --verbose "$BINDIR"
+fi
+
+# Avoid to recreate the symlink.
+JAVA_DEV="$BINDIR/java-dev"
+if [[ -L "$JAVA_DEV" ]]; then
+  echo "bin: java-dev symlink already created!"
+else
+  $LN "$SCRIPTDIR/java-dev" "$JAVA_DEV"
+fi
