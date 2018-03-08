@@ -1,0 +1,109 @@
+#!/usr/bin/env bash
+#
+# This script manages a systemd-nspawn container names exactly same as this
+# script.
+#
+# Copyright (C) 2018 Emanuele Petriglia (ema-pe) <inbox@emanuelepetriglia.me>.
+# This file is licensed under the MIT license.
+
+# If the user has "sudo" installed and no root privileges the script tries to
+# use sudo.
+SUDO=""
+
+#
+# BEGIN helper functions
+#
+
+error() {
+  echo "$@" >&2
+  exit 1
+}
+
+check_root() {
+  if [[ $EUID != 0 ]]; then
+    if [[ -z "$(which sudo)" ]]; then
+      error "Please run as root"
+    else
+      SUDO="sudo"
+    fi
+  fi
+}
+
+#
+# END helper functions
+
+cmd_usage() {
+  cat <<-_EOF
+Usage:
+    $PROGRAM on
+        Starts the systemd-nspawn's container named with $PROGRAM.
+        It is a wrapper to "machinectl start $PROGRAM".
+    $PROGRAM off
+        Poweroffs the systemd-nspawn's container named with $PROGRAM.
+        It is a wrapper to "machinectl poweroff $PROGRAM".
+    $PROGRAM status
+        Prints to the standard output the status of systemd-nspawn's container
+        named with $PROGRAM. It prints "active" if it is started, otherwise
+        "inactive".
+        It is a wrapper to "systemctl is-active
+        systemd-nspawn@$PROGRAM.service".
+    $PROGRAM shell <user>
+        Open an interactive Bash shell session in $PROGRAM container. If no
+        arguments are passed, it uses the default user called "user",
+        otherwiser uses the given user name.
+        If $PROGRAM is not started the script starts it.
+        It is a wrapper to "machinectl shell $PROGRAM --uid=user /bin/bash".
+    $PROGRAM help
+        Shows this text.
+_EOF
+}
+
+cmd_on() {
+  check_root
+
+  $SUDO machinectl start $PROGRAM
+}
+
+cmd_off() {
+  check_root
+
+  $SUDO machinectl poweroff $PROGRAM
+}
+
+cmd_status() {
+  check_root
+
+  systemctl is-active systemd-nspawn@$PROGRAM.service
+}
+
+cmd_shell() {
+  check_root
+
+  local user="$1"
+
+  if [[ -z "$user" ]]; then
+    user="user"
+  fi
+
+  local is_active="$(cmd_status)"
+
+  if [[ "$is_active" = "inactive" ]]; then
+    cmd_on
+  fi
+
+  $SUDO systemd-run --quiet --machine=$PROGRAM --pty --uid=$user /bin/bash
+}
+
+PROGRAM="${0##*/}"
+COMMAND="$1"
+
+case "$1" in
+  help|--help) shift;       cmd_usage "$@" ;;
+  off) shift;               cmd_off "$@" ;;
+  on) shift;                cmd_on "$@" ;;
+  status) shift;            cmd_status "$@" ;;
+  shell) shift;             cmd_shell "$@" ;;
+  *) COMMAND="shell"        cmd_shell "$@" ;;
+esac
+
+exit 0
