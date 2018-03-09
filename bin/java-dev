@@ -14,11 +14,14 @@ SUDO=""
 # BEGIN helper functions
 #
 
+# Prints a message to stderr and quit with error status 1.
 error() {
   echo "$@" >&2
   exit 1
 }
 
+# Quit with error status 1 if no root privileges available or can't user
+# sudo.
 check_root() {
   if [[ $EUID != 0 ]]; then
     if [[ -z "$(which sudo)" ]]; then
@@ -29,9 +32,24 @@ check_root() {
   fi
 }
 
+# Run a commant if the container is active.
+if_active() {
+  if [[ "$(cmd_status)" == "active" ]]; then
+    "$@"
+  fi
+}
+
+# Run a commant if the container is inactive.
+if_inactive() {
+  if [[ "$(cmd_status)" == "inactive" ]]; then
+    "$@"
+  fi
+}
+
 #
 # END helper functions
 
+# Shows help usage on standard output.
 cmd_usage() {
   cat <<-_EOF
 Usage:
@@ -58,24 +76,30 @@ Usage:
 _EOF
 }
 
+# Starts the container.
 cmd_on() {
   check_root
 
-  $SUDO machinectl start $PROGRAM
+  if_inactive $SUDO machinectl start $PROGRAM
 }
 
+# Poweroffs the container.
 cmd_off() {
   check_root
 
-  $SUDO machinectl poweroff $PROGRAM
+  if_active $SUDO machinectl poweroff $PROGRAM
 }
 
+# Prints to standard output "active" if the container is active, otherwise
+# "inactive".
 cmd_status() {
   check_root
 
   systemctl is-active systemd-nspawn@$PROGRAM.service
 }
 
+# Open a shell in the container. It takes an optional argument that is the user
+# used to open the shell; default value is "user".
 cmd_shell() {
   check_root
 
@@ -85,11 +109,7 @@ cmd_shell() {
     user="user"
   fi
 
-  local is_active="$(cmd_status)"
-
-  if [[ "$is_active" = "inactive" ]]; then
-    cmd_on
-  fi
+  if_inactive cmd_on
 
   # Delay is necessary to wait that the container is ready.
   sleep 0.5
