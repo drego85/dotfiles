@@ -91,6 +91,9 @@ cmd_shell() {
     cmd_on
   fi
 
+  # Delay is necessary to wait that the container is ready.
+  sleep 0.5
+
   $SUDO systemd-run --quiet --machine=$PROGRAM --pty --uid=$user /bin/bash
 }
 
