@@ -16,3 +16,21 @@ if [[ -L "$BASHCONF" ]]; then
 else
   $LN "$SCRIPTDIR/bash_aliases" "$BASHCONF"
 fi
+
+# Add Bash completion scripts.
+
+COMPLETION_INIT_SRC="$SCRIPTDIR/bash_completion"
+COMPLETION_INIT_DST="$USERDIR/.bash_completion"
+if [[ -L "$COMPLETION_INIT_DST" ]]; then
+  echo "bash: completion init script symlink already created!"
+else
+  $LN "$COMPLETION_INIT_SRC" "$COMPLETION_INIT_DST"
+fi
+
+COMPLETION_SRC="$SCRIPTDIR/bash_completion.d"
+COMPLETION_DST="$USERDIR/.bash_completion.d"
+if [[ -L "$COMPLETION_DST" ]]; then
+  echo "bash: completion scripts symlink already created!"
+else
+  $LN "$COMPLETION_SRC" "$COMPLETION_DST"
+fi
