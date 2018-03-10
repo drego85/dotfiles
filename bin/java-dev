@@ -71,6 +71,14 @@ Usage:
         otherwiser uses the given user name.
         If $PROGRAM is not started the script starts it.
         It is a wrapper to "machinectl shell $PROGRAM --uid=user /bin/bash".
+    $PROGRAM copy-to <src> <dst>
+        Copy a file (or directory) from the local folder to the container. If
+        "dest" starts with a slash "/" it is considered as an absolute path,
+        otherwise the default prefix is "/home/user".
+    $PROGRAM copy-from <src> <dst>
+        Copy a file (or directory) from the container to the local folder. If
+        "srd" starts with a slash "/" it is considered as an absolute path,
+        otherwise the default prefix is "/home/user".
     $PROGRAM help
         Shows this text.
 _EOF
@@ -81,6 +89,9 @@ cmd_on() {
   check_root
 
   if_inactive $SUDO machinectl start $PROGRAM
+
+  # Delay is necesary to wait until the container is ready.
+  sleep 0.5
 }
 
 # Poweroffs the container.
@@ -111,10 +122,51 @@ cmd_shell() {
 
   if_inactive cmd_on
 
-  # Delay is necessary to wait that the container is ready.
-  sleep 0.5
-
   $SUDO systemd-run --quiet --machine=$PROGRAM --pty --uid=$user /bin/bash
+}
+
+# Allow to copy a file (or directory) from the local folder to the container. If
+# the destination path starts with a slash "/" it is considered an absolute
+# path, otherwise the default folder is "/home/user/".
+cmd_copy_to() {
+  check_root
+
+  if_inactive cmd_on
+
+  local src="$1"
+  local dst="$2"
+
+  if [[ -z "$src" || -z "$dst" ]]; then
+    error "Required two arguments"
+  fi
+
+  if [[ "$dst" =~ ^[^/] ]]; then
+    dst="/home/user/$dst"
+  fi
+
+  $SUDO machinectl copy-to $PROGRAM $src $dst
+}
+
+# Allow to copy a file (or directory) from the container to the local folder. If
+# the source path starts with a slash "/" it is considered an absolute path,
+# otherwise the default folder is "/home/user/".
+cmd_copy_from() {
+  check_root
+
+  if_inactive cmd_on
+
+  local src="$1"
+  local dst="$2"
+
+  if [[ -z "$src" || -z "$dst" ]]; then
+    error "Required two arguments"
+  fi
+
+  if [[ "$src" =~ ^[^/] ]]; then
+    src="/home/user/$src"
+  fi
+
+  $SUDO machinectl copy-from $PROGRAM $src $dst
 }
 
 PROGRAM="${0##*/}"
@@ -126,6 +178,8 @@ case "$1" in
   on) shift;                cmd_on "$@" ;;
   status) shift;            cmd_status "$@" ;;
   shell) shift;             cmd_shell "$@" ;;
+  copy-to) shift;           cmd_copy_to "$@" ;;
+  copy-from) shift;         cmd_copy_from "$@" ;;
   *) COMMAND="shell"        cmd_shell "$@" ;;
 esac
 
