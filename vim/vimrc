@@ -1,5 +1,5 @@
 " vim:foldmethod=marker
-" Vim personal settings.
+" Vim personal configuration. I also document here some tips and tricks.
 "
 " Script made by Emanuele Petriglia (ema-pe).
 
@@ -165,7 +165,20 @@ let g:netrw_altv = 1
 
 " }}}
 
+" Autocompletion {{{
+"
+" Most used commands:
+"
+"   - ^x^n for JUST this file;
+"   - ^x^f for filenames;
+"   - ^x^] for tags only;
+"   - ^n for anything specified by the 'complete' option;
+"
+" Note: use ^n and ^p to go back and forth in the suggestion list.
+" }}}
+
 " Snippets {{{
+"
 " You can call a snippet with leading character ',' and typing the name of
 " the snippet. The first letter is usually the programming language
 " identification of the snippet.
