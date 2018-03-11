@@ -43,6 +43,22 @@ set incsearch
 " Hightlight matches.
 set hlsearch
 
+" Include all subdirectories when searching file (for example with "find
+" <name>")
+set path+=**
+
+" }}}
+
+" Tag jumping {{{
+
+" Create "tags" file (ctags required).
+command! MakeTags !ctags -R .
+
+" Now I can:
+" - Use ^] to jump to tag under cursor
+" - Use g] to resolve ambigous tags
+" - Use ^t to jump back up the tag stack
+
 " }}}
 
 " Folding settings {{{
