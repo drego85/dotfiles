@@ -50,9 +50,5 @@ alias ll="ls -l"
 alias la="ls -A"
 alias l="ls -CF"
 
-# Change directory to HOME directory (same as "cd ~").
-alias home="cd $HOME"
-alias h="home"
-
 # Alias for personal script that manages a systemd-nspawn container.
 alias j="java-dev"
