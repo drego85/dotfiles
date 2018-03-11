@@ -28,7 +28,7 @@ export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
 # Starts gpg-agent ONLY if there is not a GUI enviroment (for example on a
 # server or container). In the main host with a GUI gpg-agent is started
 # automatically.
-if [[ -z "$(dpkg -l | grep xserver)" ]]; then
+if [[ -z "$(dpkg -l | grep xserver)" && -z "$(pidof gpg-agent)" ]]; then
   eval $(gpg-agent --daemon)
 fi
 
