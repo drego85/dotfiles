@@ -128,6 +128,8 @@ cmd_shell() {
 # Allow to copy a file (or directory) from the local folder to the container. If
 # the destination path starts with a slash "/" it is considered an absolute
 # path, otherwise the default folder is "/home/user/".
+# If no destination path is inserted, default is "/home/user/" and the file or
+# directory has the same name of source file.
 cmd_copy_to() {
   check_root
 
@@ -136,8 +138,13 @@ cmd_copy_to() {
   local src="$1"
   local dst="$2"
 
-  if [[ -z "$src" || -z "$dst" ]]; then
-    error "Required two arguments"
+  if [[ -z "$src" ]]; then
+    error "It is required at least the source path"
+  fi
+
+  # Take the last argument of a path.
+  if [[ -z "$dst" ]]; then
+    dst="$(echo "$src" | grep -o [^/]*$)"
   fi
 
   if [[ "$dst" =~ ^[^/] ]]; then
@@ -158,8 +165,13 @@ cmd_copy_from() {
   local src="$1"
   local dst="$2"
 
-  if [[ -z "$src" || -z "$dst" ]]; then
-    error "Required two arguments"
+  if [[ -z "$src" ]]; then
+    error "It is required at least the source path"
+  fi
+
+  # Take the last argument of a path.
+  if [[ -z "$dst" ]]; then
+    dst="$(echo "$src" | grep -o [^/]*$)"
   fi
 
   if [[ "$src" =~ ^[^/] ]]; then
