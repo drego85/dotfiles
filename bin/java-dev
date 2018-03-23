@@ -6,9 +6,17 @@
 # Copyright (C) 2018 Emanuele Petriglia (ema-pe) <inbox@emanuelepetriglia.me>.
 # This file is licensed under the MIT license.
 
+set -e
+
+#
+# BEGIN global variables
+#
+
 # If the user has "sudo" installed and no root privileges the script tries to
 # use sudo.
 SUDO=""
+
+PROGRAM="${0##*/}" # Script name without path.
 
 #
 # BEGIN helper functions
@@ -47,7 +55,8 @@ if_inactive() {
 }
 
 #
-# END helper functions
+# BEGIN command functions
+#
 
 # Shows help usage on standard output.
 cmd_usage() {
@@ -181,8 +190,11 @@ cmd_copy_from() {
   $SUDO machinectl copy-from $PROGRAM $src $dst
 }
 
-PROGRAM="${0##*/}"
 COMMAND="$1"
+
+if [[ -z "$COMMAND" ]]; then
+  cmd_shell "$@" # Default command if no arguments are given.
+fi
 
 case "$1" in
   help|--help) shift;       cmd_usage "$@" ;;
@@ -192,7 +204,7 @@ case "$1" in
   shell) shift;             cmd_shell "$@" ;;
   copy-to) shift;           cmd_copy_to "$@" ;;
   copy-from) shift;         cmd_copy_from "$@" ;;
-  *) COMMAND="shell"        cmd_shell "$@" ;;
+  *)                        error "Unrecognized option \"$1\"" ;;
 esac
 
 exit 0
