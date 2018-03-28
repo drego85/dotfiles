@@ -47,6 +47,9 @@ set hlsearch
 " <name>")
 set path+=**
 
+" Clear hightlighted text.
+nnoremap \q :nohlsearch<CR>
+
 " }}}
 
 " Tag jumping {{{
@@ -237,6 +240,11 @@ nnoremap ,jset :-1read $HOME/.vim/snippets/java-set<CR>=90 5j3ea
 " }}}
 
 " Other settings and custom functions {{{
+
+" Allow to move up and down by a single row on the screen, and not linewise
+" basis.
+nnoremap j gj
+nnoremap k gk
 
 " Allow VIM to read settings from the file.
 set modelines=1
