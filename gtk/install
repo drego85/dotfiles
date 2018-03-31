@@ -29,6 +29,8 @@ mkdir --parents "$USERDIR/.local/share/themes"
 # GTK+ theme must be located in /usr/share/themes directory. I can't place it
 # on local directory, otherwise the theme will not work.
 echo "root requested to install GTK+ theme"
+sudo rm -rf "/usr/share/themes/Adapta"
+sudo rm -rf "/usr/share/themes/Adapta-Nokto"
 sudo mv "$TMPDIR/usr/share/themes/Adapta" "/usr/share/themes/Adapta"
 sudo mv "$TMPDIR/usr/share/themes/Adapta-Nokto" "/usr/share/themes/Adapta-Nokto"
 
