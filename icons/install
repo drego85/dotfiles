@@ -15,6 +15,9 @@ USERDIR="$(xdg-user-dir)"
 # Update or initialize the submodule.
 git submodule update --init "$SCRIPTDIR/papirus"
 
+# Update submodule.
+git fetch
+
 # Switch to the last stable version of the icon pack.
 cd "$SCRIPTDIR/papirus"
 LAST_VERSION="$(git tag | tail -n 1)"
