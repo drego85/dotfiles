@@ -59,3 +59,6 @@ alias l="ls -CF"
 
 # Alias for personal script that manages a systemd-nspawn container.
 alias j="java-dev"
+
+# Don't use less, instead use view (readonly file opened with vim).
+alias less="view"
