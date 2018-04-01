@@ -7,7 +7,7 @@ SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 USERDIR="$(xdg-user-dir)"
 
-LN="ln --verbose --symbolic --force"
+LN="ln --symbolic --force"
 
 BINDIR="$USERDIR/.local/bin"
 
@@ -21,4 +21,13 @@ if [[ -L "$JAVA_DEV" ]]; then
   echo "bin: java-dev symlink already created!"
 else
   $LN "$SCRIPTDIR/java-dev" "$JAVA_DEV"
+fi
+
+# This script must be installed on /usr/local/bin.
+echo "root requested to install background-selector"
+BACKGROUND_SELECTOR="/usr/local/bin/background-selector"
+if [[ -L "$BACKGROUND_SELECTOR" ]]; then
+  echo "/usr/local/bin: background-selector symlink already created!"
+else
+  sudo $LN "$SCRIPTDIR/background-selector" "$BACKGROUND_SELECTOR"
 fi
