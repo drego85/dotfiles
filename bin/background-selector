@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+# Copyright (C) 2018 Emanuele Petriglia <inbox@emanuelepetriglia.me>. All right
+# are reserved. This file is licensed under the MIT license.
+
+# What this script does:
+#    It choices a random wallapaper from "backgrounds" folder located in
+#    "/home/$USER/$PICTURES/". The script tries to locate that folder.
+#    After it creates a symlink on "$PICTURES" folder, with the name
+#    "background-selector.jpg".
+#
+# What to do manually:
+#    You should sets LightDM (or any other display manager) and your session
+#    manager (for example Xfce) to use
+#    "/home/$USER/$PICTURES/background-selector.jpg" as default wallpaper.
+#
+# Dependencies:
+#    This script uses option '-P' for Grep, available for GNU Grep. All
+#    others command are portable.
+#
+# For more informations see the Wiki page of this script, located on my
+# personal wiki on GitLab.
+
+# Takes only the first user that has an home directory. Usally there is only
+# one user.
+USER="/home/$(ls /home/ | head -n 1)"
+
+# Take the $PICTURES directory of $USER. It is necessary because users with
+# different locales can have $PICTURES folder with different names.
+PICTURES_DIR="$USER/$(cat $USER/.config/user-dirs.dirs \
+                | grep -Po '(?<=XDG_PICTURES_DIR="\$HOME/)\w+')"
+
+BACKGROUNDS="$PICTURES_DIR/backgrounds"
+
+BACKGROUND="$(ls -1 $PICTURES_DIR/backgrounds | shuf -n 1)"
+
+ln -sf $BACKGROUNDS/$BACKGROUND $PICTURES_DIR/background-selector.jpg
