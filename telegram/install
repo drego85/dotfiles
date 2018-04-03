@@ -68,5 +68,13 @@ NEW_DESKTOP_FILE="$USERDIR/.local/share/applications/telegram.desktop"
 if [[ -L "$NEW_DESKTOP_FILE" ]]; then
   echo "telegram: new telegram.desktop file already created!"
 else
-  ln --symbolic -i "$ORIDIR/telegram.desktop" "$NEW_DESKTOP_FILE"
+  ln --symbolic --force "$ORIDIR/telegram.desktop" "$NEW_DESKTOP_FILE"
+fi
+
+# Custom keyboard shortcuts.
+SHORTCUTS="$USERDIR/.local/share/TelegramDesktop/tdata/shortcuts-custom.json"
+if [[ -L "$SHORTCUTS" ]]; then
+   echo "telegram: shortcuts file already created!"
+else
+  ln --symbolic --force "$ORIDIR/shortcuts.json" "$SHORTCUTS"
 fi
