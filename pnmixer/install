@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# This script installs pnmixer configuration on the system.
+
+# Full path of this script.
+SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+USERDIR="$(xdg-user-dir)"
+
+LN="ln --symbolic --force"
+
+PNMIXER="$USERDIR/.config/pnmixer/config"
+if [[ -L "$PNMIXER" ]]; then
+  echo "pnmixer: config symlink already created!"
+else
+  mkdir --parents "$USERDIR/.config/pnmixer"
+  ln --symbolic --force "$SCRIPTDIR/config" "$PNMIXER"
+fi
