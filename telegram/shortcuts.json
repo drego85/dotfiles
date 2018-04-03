@@ -1,0 +1,22 @@
+// This is a list of default shortcuts for Telegram Desktop
+// Please don't modify it, its content is not used in any way
+// You can place your own shortcuts in the 'shortcuts-custom.json' file
+
+[
+    {
+        "command": "search",
+        "keys": "alt+f"
+    },
+    {
+        "command": "close_telegram",
+        "keys": "alt+q"
+    },
+    {
+        "command": "next_chat",
+        "keys": "alt+j"
+    },
+    {
+        "command": "previous_chat",
+        "keys": "alt+k"
+    }
+]
