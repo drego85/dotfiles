@@ -1,14 +1,44 @@
-#!/bin/sh
-# This script does a full backup of all my data in the PC. I have lots of other
-# files in the HDD, but they are archived.
+#!/usr/bin/env bash
 
-readonly HDD="6bada27e-026d-424c-b3f7-ad323ace4574"
-readonly RSYNC="sudo rsync -av --delete"
-readonly HOME=/home/$USER
+# Copyright (C) 2018 Emanuele Petriglia <inbox@emanuelepetriglia.me>. All rigts
+# reserved. This file is licensed under the MIT license.
 
-# This is temporary implementation.
+# This script does a backup of some directories from my home folder.
 
-$RSYNC $HOME/Musica/ /media/$USER/$HDD/musica
-$RSYNC $HOME/Immagini/Sfondi/ /media/$USER/$HDD/immagini/sfondi
-$RSYNC $HOME/Documenti/tracciati_bici/ /media/$USER/$HDD/file/tracciati_bici/
-$RSYNC $HOME/Documenti/scritti/ /media/$USER/$HDD/file/scritti/
+readonly HDD_ID="6bada27e-026d-424c-b3f7-ad323ace4574"
+readonly HDD="/media/$USER/$HDD_ID"
+
+readonly HOME="/home/$USER"
+
+# Program used to do the backup. Archive mode enabled with verbosity. It does an
+# exact mirror (it deletes file from destination folder that aren't in the
+# source folder).
+RSYNC="rsync --archive --delete"
+
+# Runs rsync with the first arguments as source folder and second as destination
+# folder.
+backup_folder() {
+  SRC="$1"
+  DST="$2"
+
+  $RSYNC $SRC $DST
+}
+
+ls $HDD &> /dev/null
+if [[ "$?" != 0 ]]; then
+  echo "No destination device found (it is plugged?)" >&2
+  exit 1
+fi
+
+if [[ "$1" == "--verbose" || "$1" == "-v" ]]; then
+  RSYNC="$RSYNC $1"
+fi
+
+#
+# Backup objectives
+#
+
+backup_folder $HOME/Music/                $HDD/music/
+backup_folder $HOME/Pictures/backgrounds/ $HDD/immagini/backgrounds/
+backup_folder $HOME/Documents/gps_tracks/ $HDD/file/gps_tracks/
+backup_folder $HOME/Documents/writing/    $HDD/file/writing/

@@ -23,11 +23,18 @@ else
   $LN "$SCRIPTDIR/java-dev" "$JAVA_DEV"
 fi
 
+BACKUP="$BINDIR/backup"
+if [[ -L "$BACKUP" ]]; then
+  echo "bin: backup symlink already created!"
+else
+  $LN "$SCRIPTDIR/backup" "$BACKUP"
+fi
+
 # This script must be installed on /usr/local/bin.
-echo "root requested to install background-selector"
 BACKGROUND_SELECTOR="/usr/local/bin/background-selector"
 if [[ -L "$BACKGROUND_SELECTOR" ]]; then
   echo "/usr/local/bin: background-selector symlink already created!"
 else
+  echo "root requested to install background-selector"
   sudo $LN "$SCRIPTDIR/background-selector" "$BACKGROUND_SELECTOR"
 fi
