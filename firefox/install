@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+# This script installs Firefox configuration. It also update custom user.js
+# file.
+
+# Full path of this script.
+readonly SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+readonly USERDIR="$(xdg-user-dir)"
+
+die() {
+  echo "$@" >&2
+  exit 1
+}
+
+# Use the Firefox profile with "emanuele" suffix.
+FIREFOX_PROFILES="$USERDIR/.mozilla/firefox"
+if [[ ! -d "$FIREFOX_PROFILES" ]]; then
+  die "No Firefox folder found"
+fi
+
+PROFILE="$(ls $USERDIR/.mozilla/firefox -1 | grep emanuele)"
+if [[ -z "$PROFILE" ]]; then
+  die "No *.emanuele profile found"
+fi
+
+# Install custom user.js.
+GHACKS_USER_JS="$SCRIPTDIR/ghacks-user.js"
+git_js="git -C $GHACKS_USER_JS"
+
+git submodule update --init "$GHACKS_USER_JS"
+
+# Use only the last stable version of user.js
+LAST_VERSION="$($git_js tag --list  "*.0" | tail -n 1)"
+$git_js checkout --quiet "$LAST_VERSION"
+
+# Copy Ghacks user.js to my profile and append custom preferences.
+GHACKS_USER_JS_FILE="$SCRIPTDIR/ghacks-user.js/user.js"
+CUSTOM_USER_JS="$SCRIPTDIR/user.js"
+DESTINATION_USER_JS="$USERDIR/.mozilla/firefox/$PROFILE/user.js"
+
+cat "$GHACKS_USER_JS_FILE" > "$DESTINATION_USER_JS"
+cat "$CUSTOM_USER_JS" >> "$DESTINATION_USER_JS"
+
+echo "firefox: user.js created (ghacks-user.js plus custom preferences)"
+
+# TODO: install Saka Key shortcuts
