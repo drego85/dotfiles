@@ -62,3 +62,7 @@ alias j="java-dev"
 
 # Don't use less, instead use view (readonly file opened with vim).
 alias less="view"
+
+# Allows to create a Java application project with Gradle using a modern
+# version.
+alias java-setup="gradle wrapper --gradle-version 4.6; ./gradlew init --type java-application"
