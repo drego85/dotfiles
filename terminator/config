@@ -27,6 +27,10 @@
   go_right = <Alt>l
   go_up = <Alt>k
   layout_launcher = <Primary><Shift><Alt>p
+  resize_down = <Primary><Shift>j
+  resize_left = <Primary><Shift>h
+  resize_right = <Primary><Shift>l
+  resize_up = <Primary><Shift>k
   split_horiz = <Alt>w
   split_vert = <Alt>e
 [layouts]
