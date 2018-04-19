@@ -209,6 +209,9 @@ nnoremap ,jclass :-1read $HOME/.vim/snippets/java-class<CR>=100 2j2ela
 " Import a skeleton of a interface.
 nnoremap ,jinterface :-1read $HOME/.vim/snippets/java-interface<CR>=100 5j2ela
 
+" Import a skeleton of a test class that uses JUnit.
+nnoremap ,jtest :-1read $HOME/.vim/snippets/java-test<CR>=100 8j2wi
+
 " Import a skeleton of a class with main method.
 nnoremap ,jmain :-1read $HOME/.vim/snippets/java-main<CR>=100 2j2ela
 
