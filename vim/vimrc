@@ -204,7 +204,7 @@ set notimeout
 " Java snippets (start with 'j'): {{{
 
 " Import a skeleton of a class.
-nnoremap ,jclass :-1read $HOME/.vim/snippets/java-class<CR>=100 2j2ela
+nnoremap ,jclass :-1read $HOME/.vim/snippets/java-class<CR>=100 5j2whi
 
 " Import a skeleton of a interface.
 nnoremap ,jinterface :-1read $HOME/.vim/snippets/java-interface<CR>=100 5j2ela
