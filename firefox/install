@@ -23,25 +23,54 @@ PROFILE="$(ls $USERDIR/.mozilla/firefox -1 | grep emanuele)"
 if [[ -z "$PROFILE" ]]; then
   die "No *.emanuele profile found"
 fi
+PROFILE="$USERDIR/.mozilla/firefox/$PROFILE"
 
-# Install custom user.js.
-GHACKS_USER_JS="$SCRIPTDIR/ghacks-user.js"
-git_js="git -C $GHACKS_USER_JS"
+# Installs custom user.js
+USER_JS="$PROFILE/user.js"
+if [[ -L "$USER_JS" ]]; then
+  echo "firefox: user.js created (ghacks-user.js plus custom preferences)!"
+else
+  # Git repository.
+  GHACKS_USER_JS="$SCRIPTDIR/ghacks-user.js"
 
-git submodule update --init "$GHACKS_USER_JS"
+  git submodule update --init "$GHACKS_USER_JS"
 
-# Use only the last stable version of user.js
-LAST_VERSION="$($git_js tag --list  "*.0" | tail -n 1)"
-$git_js checkout --quiet "$LAST_VERSION"
+  git_js="git -C $GHACKS_USER_JS"
+  # Use only the last stable version of user.js
+  LAST_VERSION="$($git_js tag --list  "*.0" | tail -n 1)"
+  $git_js checkout --quiet "$LAST_VERSION"
 
-# Copy Ghacks user.js to my profile and append custom preferences.
-GHACKS_USER_JS_FILE="$SCRIPTDIR/ghacks-user.js/user.js"
-CUSTOM_USER_JS="$SCRIPTDIR/user.js"
-DESTINATION_USER_JS="$USERDIR/.mozilla/firefox/$PROFILE/user.js"
+  # Copy Ghacks user.js to my profile and append custom preferences.
+  GHACKS_USER_JS_FILE="$SCRIPTDIR/ghacks-user.js/user.js"
+  CUSTOM_USER_JS="$SCRIPTDIR/user.js"
+  DESTINATION_USER_JS="$PROFILE/user.js"
 
-cat "$GHACKS_USER_JS_FILE" > "$DESTINATION_USER_JS"
-cat "$CUSTOM_USER_JS" >> "$DESTINATION_USER_JS"
+  cat "$GHACKS_USER_JS_FILE" > "$USER_JS"
+  cat "$CUSTOM_USER_JS" >> "$USER_JS"
+fi
 
-echo "firefox: user.js created (ghacks-user.js plus custom preferences)"
+# Installs custom CSS.
+USER_CONTENT="$PROFILE/chrome/userContent.css"
+USER_CHROME="$PROFILE/chrome/userChrome.css"
+if [[ -L "$USER_CHROME" && -L "$USER_CONTENT" ]]; then
+  echo "firefox: userContent.css and userChrome.css  already symlinked!"
+else
+  # Git repository.
+  SHADOWFOX="$SCRIPTDIR/shadowfox"
+
+  git submodule update --init "$SHADOWFOX"
+
+  git_css="git -C $SHADOWFOX"
+  # Use only the last stable version of user.js
+  LAST_VERSION="$($git_css tag --list "[!v]*" | tail -n 1)"
+  $git_css checkout --quiet "$LAST_VERSION"
+
+  if [[ ! -d "$PROFILE/chrome" ]]; then
+    mkdir --parents "$PROFILE/chrome"
+  fi
+
+  ln --symbolic --force "$SHADOWFOX/userChrome.css" "$USER_CHROME"
+  ln --symbolic --force "$SHADOWFOX/userContent.css" "$USER_CONTENT"
+fi
 
 # TODO: install Saka Key shortcuts
