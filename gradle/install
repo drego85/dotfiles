@@ -7,12 +7,22 @@ SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 USERDIR="$(xdg-user-dir)"
 
+GRADLE_FOLDER="$USERDIR/.gradle"
+if [[ ! -d "$GRADLE_FOLDER" ]]; then
+  mkdir --parent "$GRADLE_FOLDER"
+fi
+
 # Avoid to recreate the symlink.
 GRADLE="$USERDIR/.gradle/gradle.properties"
 if [[ -L "$GRADLE" ]]; then
   echo "gradle: gradle.properties symlink already created!"
 else
-  mkdir --parent "$USERDIR/.gradle"
-
   ln --symbolic --force "$SCRIPTDIR/gradle.properties" "$GRADLE"
+fi
+
+TEMPLATES="$USERDIR/.gradle/templates"
+if [[ -L "$TEMPLATES" ]]; then
+  echo "gradle: skeleton templates symlink already created!"
+else
+  ln --symbolic --force "$SCRIPTDIR/templates" "$TEMPLATES"
 fi

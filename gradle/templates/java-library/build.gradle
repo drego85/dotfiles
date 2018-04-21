@@ -1,0 +1,24 @@
+/*
+ * Custom basic build configuration for Java library projects.
+ */
+
+plugins {
+    // Support for Java library.
+    id 'java-library'
+}
+
+dependencies {
+    // This dependency is exported to consumers.
+    // api '...'
+
+    // This dependency is used only internally in this project.
+    // implementation '...'
+
+    // JUnit test framework.
+    testImplementation 'junit:junit:4.12'
+}
+
+repositories {
+    // jcente for resolving dependencies.
+    jcenter()
+}

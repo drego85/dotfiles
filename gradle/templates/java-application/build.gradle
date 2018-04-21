@@ -1,0 +1,24 @@
+/*
+ * Custom basic build configuration for Java application projects.
+ */
+
+plugins {
+    // Support for Java.
+    id 'java'
+
+    // Support for building an application.
+    id 'application'
+}
+
+// Main class with entry point.
+mainClassName = ''
+
+dependencies {
+    // JUnit test framework.
+    testCompile 'junit:junit:4.12'
+}
+
+repositories {
+    // jcente for resolving dependencies.
+    jcenter()
+}

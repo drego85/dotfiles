@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+
+# Copyright (C) 2018 Emanuele Petriglia <inbox@emanuelepetriglia.me>. All rights
+# reserved. This file is licensed under the MIT license.
+
+# This script allows to create simple skeleton projects for Java using Gradle.
+# For more informations run the script with '--help' as argument.
+
+set -e
+
+#
+# BEGIN global variables
+#
+
+PROGRAM="${0##*/}"
+
+# Last part of folder path.
+LAST_FOLDER="${PWD##*/}"
+
+#
+# BEGIN helper functions
+#
+
+# Prints all arguments given as arguments and exits with error code 1.
+error() {
+  echo "$@" >&2
+  exit 1
+}
+
+
+#
+# BEGIN subcommand functions
+#
+
+# Shows help informations.
+cmd_usage() {
+  cat <<-_EOF
+Usage:
+    $PROGRAM application
+        Creates a skeleton of a Java application project (it has a main class).
+        It is the default task if no one is given.
+    $PROGRAM library
+        Create a skeleton of a Java library project.
+    $PROGRAM help
+        Shows this text.
+
+Gradle build system is used. It must be installed, it is not important which
+version, because 'gradle wrapper' task is used to download and use the latest
+version.
+_EOF
+}
+
+# Terminate execution with an error if the user calls this script with wrong
+# arguments. But if he calls it without arguments the script will create a
+# skeleton of a Java application.
+cmd_error() {
+  if [[ "$2" == "0" ]]; then
+    apply_template "java-application"
+  else
+    error "Unrecognized option: $1"
+  fi
+}
+
+apply_template() {
+  if [[ -z $(which gradle) ]]; then
+    error "No Gradle binary found"
+  fi
+
+  TYPE="$1"
+
+  gradle wrapper --gradle-version 4.6 1>>/dev/null
+
+  mkdir --parents "src/main/java"
+  mkdir --parents "src/test/java"
+
+  cp "$HOME/.gradle/templates/$TYPE/build.gradle" "build.gradle"
+  cp "$HOME/.gradle/templates/$TYPE/settings.gradle" "settings.gradle"
+
+  sed -i -e "s/PROJECTNAME/$LAST_FOLDER/g" settings.gradle
+}
+
+if [[ -z "$HOME" ]]; then
+  if [[ -z "$(which xdg-user-dir)" ]]; then
+    error "Can't extabilish home directory"
+  else
+    HOME="$(xdg-user-dir)"
+  fi
+fi
+
+COMMAND="$1"
+
+case "$1" in
+  application)    apply_template "java-application" ;;
+  library)        apply_template "java-library"  ;;
+  help|--help)    cmd_usage ;;
+  *)              cmd_error "$1" "$#" ;;
+esac
+
+exit 0

@@ -1,0 +1,5 @@
+/*
+ * Settings for a basic configuration of a Java library project.
+ */
+
+rootProject.name = 'PROJECTNAME'
