@@ -14,7 +14,7 @@ man() {
 }
 
 # Add custom PATH if necessary.
-if [[ ! "$PATH" =~ "\/home\/$USER\/.local\/bin" ]]; then
+if [[ ! "$PATH" =~ "/home/$USER/.local/bin" ]]; then
   export PATH="$HOME/.local/bin:$PATH"
 fi
 
