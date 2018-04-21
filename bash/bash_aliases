@@ -13,6 +13,11 @@ man() {
    command man "$@"
 }
 
+# Add custom PATH if necessary.
+if [[ ! "$PATH" =~ "\/home\/$USER\/.local\/bin" ]]; then
+  export PATH="$HOME/.local/bin:$PATH"
+fi
+
 # It downloads videos and then extracts the audio.
 alias music='youtube-dl -x --audio-format vorbis --audio-quality 3'
 
