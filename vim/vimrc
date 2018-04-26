@@ -243,6 +243,13 @@ nnoremap ,jget :-1read $HOME/.vim/snippets/java-get<CR>=90 5j3ea
 nnoremap ,jset :-1read $HOME/.vim/snippets/java-set<CR>=90 5j3ea
 " }}}
 
+" Xml snippets (start with 'x'): {{{
+
+" Classic string for translations.
+nnoremap ,xstr :-1read $HOME/.vim/snippets/xml-string<CR>=10 ee2la
+
+" }}}
+
 " }}}
 
 " Other settings and custom functions {{{
