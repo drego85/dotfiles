@@ -86,8 +86,10 @@ Usage:
         otherwise the default prefix is "/home/user".
     $PROGRAM copy-from <src> <dst>
         Copy a file (or directory) from the container to the local folder. If
-        "srd" starts with a slash "/" it is considered as an absolute path,
+        "src" starts with a slash "/" it is considered as an absolute path,
         otherwise the default prefix is "/home/user".
+        If "dst" is not provided, it is used last part of path (filename) as
+        the file namw of new file.
     $PROGRAM help
         Shows this text.
 _EOF
