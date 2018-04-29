@@ -54,6 +54,31 @@ if_inactive() {
   fi
 }
 
+# Quit with error status 1 if the given absolute path doesn't exist on the 
+# container.
+check_path_container() {
+  local path="$1"
+
+  $SUDO systemd-run --quiet --unit=path-check --machine $PROGRAM /bin/bash -c \
+                    "cd / && if [[ -e $path ]]; then echo yes; else echo no; fi"
+
+  local result="$($SUDO journalctl --machine $PROGRAM -u path-check \
+                 -n 1 -b -q -o cat)"
+
+  if [[ "$result" = "no" ]]; then
+    error "Invalid path for container: $path"
+  fi
+}
+
+# Quit with error status 1 if the given path doesn't exist on the local folder.
+check_path_local() {
+  local path="$1"
+
+  if [[ ! -e "$path" ]]; then
+    error "Invalid path for local folder: $path"
+  fi
+}
+
 #
 # BEGIN command functions
 #
@@ -153,6 +178,8 @@ cmd_copy_to() {
     error "It is required at least the source path"
   fi
 
+  check_path_local "$src"
+
   # Take the last argument of a path.
   if [[ -z "$dst" ]]; then
     dst="$(echo "$src" | grep -o [^/]*$)"
@@ -188,6 +215,8 @@ cmd_copy_from() {
   if [[ "$src" =~ ^[^/] ]]; then
     src="/home/user/$src"
   fi
+
+  check_path_container "$src"
 
   $SUDO machinectl copy-from $PROGRAM $src $dst
 }
