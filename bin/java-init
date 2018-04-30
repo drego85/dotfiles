@@ -27,20 +27,33 @@ error() {
   exit 1
 }
 
-
 #
 # BEGIN subcommand functions
 #
+
+# Shows a proper error message and quits with error code -1.
+cmd_error() {
+  local option="$1"
+
+  if [[ -z "$1" ]]; then
+    error "No option given. Try '$PROGRAM help' for a list of options."
+  else
+    error "Unrecognized option: $option"
+  fi
+}
 
 # Shows help informations.
 cmd_usage() {
   cat <<-_EOF
 Usage:
-    $PROGRAM application
+    $PROGRAM application folder
         Creates a skeleton of a Java application project (it has a main class).
-        It is the default task if no one is given.
-    $PROGRAM library
+        You can specify a folder on which the project will be boostrapped,
+        otherwise it will done on the current position.
+    $PROGRAM library folder
         Create a skeleton of a Java library project.
+        You can specify a folder on which the project will be boostrapped,
+        otherwise it will done on the current position.
     $PROGRAM help
         Shows this text.
 
@@ -50,23 +63,28 @@ version.
 _EOF
 }
 
-# Terminate execution with an error if the user calls this script with wrong
-# arguments. But if he calls it without arguments the script will create a
-# skeleton of a Java application.
-cmd_error() {
-  if [[ "$2" == "0" ]]; then
-    apply_template "java-application"
-  else
-    error "Unrecognized option: $1"
-  fi
-}
-
+# Bootstraps a Java template with Gradle as build system. The user can specify
+# two types of Java projects (application and library), and can optionally
+# specify a folder on which the project will be bootstrapped.
 apply_template() {
   if [[ -z $(which gradle) ]]; then
     error "No Gradle binary found"
   fi
 
   TYPE="$1"
+
+  # Allows to give a custom folder.
+  local folder="$2"
+  if [[ -n "$folder" ]]; then
+    LAST_FOLDER="$folder"
+
+    if [[ -d "$LAST_FOLDER" ]]; then
+      error "'$LAST_FOLDER' directory already exist."
+    fi
+
+    mkdir --parents $LAST_FOLDER
+    cd $LAST_FOLDER
+  fi
 
   gradle wrapper --gradle-version 4.6 1>>/dev/null
 
@@ -90,10 +108,10 @@ fi
 COMMAND="$1"
 
 case "$1" in
-  application)    apply_template "java-application" ;;
-  library)        apply_template "java-library"  ;;
-  help|--help)    cmd_usage ;;
-  *)              cmd_error "$1" "$#" ;;
+  application) shift;   apply_template "java-application" "$@" ;;
+  library) shift;       apply_template "java-library" "$@" ;;
+  help|--help)          cmd_usage ;;
+  *)                    cmd_error "$1" ;;
 esac
 
 exit 0
