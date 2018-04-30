@@ -18,7 +18,6 @@ else
 fi
 
 # Add Bash completion scripts.
-
 COMPLETION_INIT_SRC="$SCRIPTDIR/bash_completion"
 COMPLETION_INIT_DST="$USERDIR/.bash_completion"
 if [[ -L "$COMPLETION_INIT_DST" ]]; then
