@@ -46,11 +46,11 @@ cmd_error() {
 cmd_usage() {
   cat <<-_EOF
 Usage:
-    $PROGRAM application folder
+    $PROGRAM application [folder]
         Creates a skeleton of a Java application project (it has a main class).
         You can specify a folder on which the project will be boostrapped,
         otherwise it will done on the current position.
-    $PROGRAM library folder
+    $PROGRAM library [folder]
         Create a skeleton of a Java library project.
         You can specify a folder on which the project will be boostrapped,
         otherwise it will done on the current position.
