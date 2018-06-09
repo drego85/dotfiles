@@ -42,6 +42,52 @@
     [[[window0]]]
       parent = ""
       type = Window
+  [[java]]
+    [[[child0]]]
+      fullscreen = False
+      last_active_term = e712a462-4421-4e44-9292-0d29742e2577
+      last_active_window = True
+      maximised = True
+      order = 0
+      parent = ""
+      position = 0:0
+      size = 1920, 1080
+      title = user@thinkpad: ~
+      type = Window
+    [[[child1]]]
+      order = 0
+      parent = child0
+      position = 960
+      ratio = 0.5
+      type = HPaned
+    [[[child3]]]
+      order = 1
+      parent = child1
+      position = 540
+      ratio = 0.5
+      type = VPaned
+    [[[terminal2]]]
+      command = bash -ic j && cd /home/user/Projects/
+      directory = ""
+      order = 0
+      parent = child1
+      profile = default
+      type = Terminal
+      uuid = e712a462-4421-4e44-9292-0d29742e2577
+    [[[terminal4]]]
+      command = bash -ic j && cd /home/user/Projects/
+      order = 0
+      parent = child3
+      profile = default
+      type = Terminal
+      uuid = e5a1bdbd-061a-49db-a492-fc78585c9534
+    [[[terminal5]]]
+      command = bash -ic j && cd /home/user/Projects/
+      order = 1
+      parent = child3
+      profile = default
+      type = Terminal
+      uuid = 630caa73-0e7c-4514-82b9-65902c22b428
 [plugins]
 [profiles]
   [[default]]
