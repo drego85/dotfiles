@@ -10,9 +10,6 @@
 [submodule "vim/papercolor-theme"]
 	path = vim/papercolor-theme
 	url = https://github.com/NLKNguyen/papercolor-theme.git
-[submodule "firefox/ghacks-user.js"]
-	path = firefox/ghacks-user.js
-	url = https://github.com/ghacksuserjs/ghacks-user.js.git
 [submodule "firefox/ShadowFox"]
 	path = firefox/shadowfox
 	url = https://github.com/overdodactyl/ShadowFox.git
