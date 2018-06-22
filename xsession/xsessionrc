@@ -2,3 +2,6 @@
 if [ -d $HOME/.local/bin ]; then
     export PATH="$HOME/.local/bin:$PATH"
 fi
+
+# Fix UI scaling for VLC 3.0.2.
+export QT_AUTO_SCREEN_SCALE_FACTOR=0
