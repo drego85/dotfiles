@@ -10,6 +10,3 @@
 [submodule "vim/papercolor-theme"]
 	path = vim/papercolor-theme
 	url = https://github.com/NLKNguyen/papercolor-theme.git
-[submodule "firefox/ShadowFox"]
-	path = firefox/shadowfox
-	url = https://github.com/overdodactyl/ShadowFox.git
