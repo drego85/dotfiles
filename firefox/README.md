@@ -19,17 +19,10 @@ download them the first time.
 
 ### Extentions configuration
 
-WIP
+Some extentions have a configuration file.
 
-
-
-
-
-
-
-
-
-
+* **uBlock Origin**: just go to `Settings` -> `Restore from file` and load the
+  file `ublock_config.txt`.
 
 
 [0]: https://www.mozilla.org/en-US/firefox/features/sync/
