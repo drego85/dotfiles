@@ -54,6 +54,9 @@ user_pref("extensions.update.autoUpdateDefault", true);
  * 0800: LOCATION BAR / SEARCH BAR / SUGGESTIONS / HISTORY / FORMS [SETUP]
  */
 
+/* 0801: enable location bar using search. **/
+user_pref("keyword.enabled", false);
+
 /** 0850a: enable location bar autocomplete and suggestion types. **/
 user_pref("browser.urlbar.autocomplete.enabled", true);
 user_pref("browser.urlbar.suggest.bookmark", true);
