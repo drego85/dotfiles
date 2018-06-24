@@ -55,7 +55,7 @@ user_pref("extensions.update.autoUpdateDefault", true);
  */
 
 /* 0801: enable location bar using search. **/
-user_pref("keyword.enabled", false);
+user_pref("keyword.enabled", true);
 
 /** 0850a: enable location bar autocomplete and suggestion types. **/
 user_pref("browser.urlbar.autocomplete.enabled", true);
