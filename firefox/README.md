@@ -25,6 +25,23 @@ Some extentions have a configuration file.
   file `ublock_config.txt`.
 
 
+## user.js
+
+The `user.js` file is a file with all options to customize Firefox behaviour.
+Many options can be selected from the graphical interface, but lots are hidden.
+
+I use [ghacks' `user.js`][13], an `user.js` enhanced for privacy. I don't like
+some options, so I have also a custom [`user.js`][14] that overrides some
+options.
+
+The script I've created, [`install`][15], download the latest version of
+ghacks' `user.js` and move that file to the Firefox profile with suffix
+`emanuele` (my name). At the end it append my custom options to `user.js` file
+on the profile.
+
+## User Interface
+
+
 [0]: https://www.mozilla.org/en-US/firefox/features/sync/
 [1]: https://addons.mozilla.org/en-US/firefox/addon/canvasblocker/
 [2]: https://github.com/kkapsner/CanvasBlocker
@@ -38,3 +55,6 @@ Some extentions have a configuration file.
 [10]: https://github.com/cmcaine/tridactyl
 [11]: https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/
 [12]: https://github.com/gorhill/uBlock
+[13]: https://github.com/ghacksuserjs/ghacks-user.js
+[14]: user.js
+[15]: install
