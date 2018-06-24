@@ -7,12 +7,12 @@ This folder contains all files used to customize my Firefox experience.
 Extentions can't be installed from command line, so you need to install them
 manually (or use [Firefox Sync][0]). I use these extentions:
 
-* **CanvasBlocker**: prevent Canvas fingerprinting; [FA][1] [Sources][2]
-* **CSS Exfil Protection**: prevent CSS Exfil attacks; [FA][3] [Source][4]
-* **Decentraleyes**: local emulation of CDN; [FA][5] [Source][6]
-* **HTTPS Everywhere**: force HTTPS on sites; [FA][7] [Source][8]
-* **Tridactyl**: VIM keybindings on Firefox; [FA][9] [Source][10]
-* **uBlock Origin**: general blocker; [FA][11] [Source][12]
+* **CanvasBlocker**: prevent Canvas fingerprinting; [[FA]][1] [[Sources]][2]
+* **CSS Exfil Protection**: prevent CSS Exfil attacks; [[FA]][3] [[Source]][4]
+* **Decentraleyes**: local emulation of CDN; [[FA]][5] [[Source]][6]
+* **HTTPS Everywhere**: force HTTPS on sites; [[FA]][7] [[Source]][8]
+* **Tridactyl**: VIM keybindings on Firefox; [[FA]][9] [[Source]][10]
+* **uBlock Origin**: general blocker; [[FA]][11] [[Source]][12]
 
 All these extentions are automatically updated via Firefox, so you only need to
 download them the first time.
@@ -34,7 +34,7 @@ I use [ghacks' `user.js`][13], an `user.js` enhanced for privacy. I don't like
 some options, so I have also a custom [`user.js`][14] that overrides some
 options.
 
-The script I've created, [`install`][15], download the latest version of
+The script I've created, [`install`][15], downloads the latest version of
 ghacks' `user.js` and move that file to the Firefox profile with suffix
 `emanuele` (my name). At the end it append my custom options to `user.js` file
 on the profile.
