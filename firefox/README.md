@@ -2,6 +2,8 @@
 
 This folder contains all files used to customize my Firefox experience.
 
+## Installer script
+
 ## Extentions
 
 Extentions can't be installed from command line, so you need to install them
@@ -24,7 +26,6 @@ Some extentions have a configuration file.
 * **uBlock Origin**: just go to `Settings` -> `Restore from file` and load the
   file `ublock_config.txt`.
 
-
 ## user.js
 
 The `user.js` file is a file with all options to customize Firefox behaviour.
@@ -39,7 +40,14 @@ ghacks' `user.js` and move that file to the Firefox profile with suffix
 `emanuele` (my name). At the end it append my custom options to `user.js` file
 on the profile.
 
+## Firefox sync
+
+I use [Firefox Sync][0] to syncronize only installed extentions and bookmarks.
+All other settings are ignored (such as extentions, `user.js` and UI settings).
+
 ## User Interface
+
+## Custom graphic style
 
 
 [0]: https://www.mozilla.org/en-US/firefox/features/sync/
