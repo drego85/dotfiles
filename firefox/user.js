@@ -107,6 +107,14 @@ user_pref("privacy.userContext.enabled", true);
 
 
 /**
+ * 2200: WINDOW MEDDLING & LEAKS / POPUPS
+ */
+
+/** 2204: enable Fullscreen API (YouTube). **/
+user_pref("full-screen-api.enabled", true);
+
+
+/**
  * 2500: HARDWARE FINGERPRINTING
  */
 
