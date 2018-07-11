@@ -71,3 +71,9 @@ alias less="view"
 # Allows to create a Java application project with Gradle using a modern
 # version.
 alias java-setup="gradle wrapper --gradle-version 4.6; ./gradlew init --type java-application"
+
+# Allows to see why a package is installed (using APT).
+alias why="apt-cache rdepends --installed"
+
+# Shows all installed packages on the system (using APT).
+alias installed="apt list --installed"
