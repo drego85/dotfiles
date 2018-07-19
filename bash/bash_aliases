@@ -19,7 +19,7 @@ if [[ ! "$PATH" =~ "/home/$USER/.local/bin" ]]; then
 fi
 
 # It downloads videos and then extracts the audio.
-alias music='youtube-dl -x --audio-format vorbis --audio-quality 3'
+alias music='youtube-dl -x --audio-format vorbis'
 
 # It download videos form YouTube at HD format (because my bandwith is limited).
 alias yt='youtube-dl -f "best[height=720]"'
