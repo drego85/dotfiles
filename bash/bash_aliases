@@ -77,9 +77,6 @@ fi
 
 # }}}
 
-# Enable core dumping
-ulimit -c 50
-
 # Aliases {{{
 # Here there are my custom aliases. Some aliases can call functions in this
 # file.
