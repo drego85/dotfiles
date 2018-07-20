@@ -1,4 +1,9 @@
-# My personal configuration of Bash.
+# vim:foldmethod=marker
+# My personal configuration of Bash. It contains my settings and some useful
+# scripts that I use ofter.
+#
+# Copyright (c) Emanuele Petriglia <inbox@emanuelepetriglia.me> 2018
+# This file is lincensed under the MIT license.
 
 # Colorized man pages.
 # Thanks to: https://news.ycombinator.com/item?id=12304730
@@ -11,6 +16,22 @@ man() {
    LESS_TERMCAP_ue=$(printf "\e[0m") \
    LESS_TERMCAP_us=$(printf "\e[1;32m") \
    command man "$@"
+}
+
+# Convert a JPEG image to PNG and delete the original one. The JPEG image must
+# end with '.jpg' or '.jpeg'.
+jpeg-to-png() {
+  if [[ ! -z "$1" ]]; then
+    local JPEG="$1"
+    local PNG="${JPEG/%.jp*g/.png}"
+
+    # ImageMagick command line tool is used.
+    convert $JPEG $PNG
+
+    rm $JPEG
+  else
+    echo "Missing JPEG source image to convert!"
+  fi
 }
 
 # Add custom PATH if necessary.
@@ -47,6 +68,7 @@ set -o vi
 set editing-mode vi
 set keymap vi
 
+
 # Enable core dumping
 ulimit -c 50
 
@@ -77,3 +99,6 @@ alias why="apt-cache rdepends --installed"
 
 # Shows all installed packages on the system (using APT).
 alias installed="apt list --installed"
+
+# Converts a single JPEG image to PNG and delete the first one.
+alias jtp="jpeg-to-png"
