@@ -5,6 +5,36 @@
 # Copyright (c) Emanuele Petriglia <inbox@emanuelepetriglia.me> 2018
 # This file is lincensed under the MIT license.
 
+# Bash settings {{{
+
+# Set VIM keybindings on Bash
+set -o vi
+
+# Set VIM keybindings for all programs.
+set editing-mode vi
+set keymap vi
+
+# }}}
+
+# Global variables {{{
+
+# Add custom PATH if necessary.
+if [[ ! "$PATH" =~ "/home/$USER/.local/bin" ]]; then
+  export PATH="$HOME/.local/bin:$PATH"
+fi
+
+# Needed by ssh-add.
+export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+
+# Default editor
+export EDITOR=vim
+
+# }}}
+
+# Small scripts {{{
+# Here there are my custom script that I often use. They are small and simple to
+# understand. More complex scripts are located separately on dedicated files.
+
 # Colorized man pages.
 # Thanks to: https://news.ycombinator.com/item?id=12304730
 man() {
@@ -34,10 +64,25 @@ jpeg-to-png() {
   fi
 }
 
-# Add custom PATH if necessary.
-if [[ ! "$PATH" =~ "/home/$USER/.local/bin" ]]; then
-  export PATH="$HOME/.local/bin:$PATH"
+# }}}
+
+# Other settings {{{
+
+# Starts gpg-agent ONLY if there is not a GUI enviroment (for example on a
+# server or container). In the main host with a GUI gpg-agent is started
+# automatically.
+if [[ -z "$(dpkg -l | grep xserver)" && -z "$(pidof gpg-agent)" ]]; then
+  eval $(gpg-agent --daemon)
 fi
+
+# }}}
+
+# Enable core dumping
+ulimit -c 50
+
+# Aliases {{{
+# Here there are my custom aliases. Some aliases can call functions in this
+# file.
 
 # It downloads videos and then extracts the audio.
 alias music='youtube-dl -x --audio-format vorbis'
@@ -47,30 +92,6 @@ alias yt='youtube-dl -f "best[height=720]"'
 
 # It replace spaces to underscore and convert the text in lowercase.
 alias renamefull="rename 's/ /_/g' * && rename 'y/A-Z/a-z/' *"
-
-# Needed by ssh-add.
-export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
-
-# Starts gpg-agent ONLY if there is not a GUI enviroment (for example on a
-# server or container). In the main host with a GUI gpg-agent is started
-# automatically.
-if [[ -z "$(dpkg -l | grep xserver)" && -z "$(pidof gpg-agent)" ]]; then
-  eval $(gpg-agent --daemon)
-fi
-
-# Default editor
-export EDITOR=vim
-
-# Set VIM keybindings on Bash
-set -o vi
-
-# Set VIM keybindings for all programs
-set editing-mode vi
-set keymap vi
-
-
-# Enable core dumping
-ulimit -c 50
 
 # Python alias
 alias py="python3"
@@ -102,3 +123,5 @@ alias installed="apt list --installed"
 
 # Converts a single JPEG image to PNG and delete the first one.
 alias jtp="jpeg-to-png"
+
+# }}}
