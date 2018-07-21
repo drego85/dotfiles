@@ -1,15 +1,17 @@
 #!/usr/bin/env bash
-
-# This script installs pnmixer configuration on the system.
+# This script installs PNMixer configuration on GNU/Linux systems. It is
+# intended to be used with Debian 9, so it may not work on other distributions.
+#
+# Copyright (c) Emanuele Petriglia <inbox@emanuelepetriglia.me> 2018
+# This file is licensed under the MIT license.
 
 # Full path of this script.
 SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 USERDIR="$(xdg-user-dir)"
 
-LN="ln --symbolic --force"
-
 PNMIXER="$USERDIR/.config/pnmixer/config"
+
 if [[ -L "$PNMIXER" ]]; then
   echo "pnmixer: config symlink already created!"
 else
