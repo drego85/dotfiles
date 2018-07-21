@@ -49,15 +49,15 @@ man() {
 }
 
 # Convert a JPEG image to PNG and delete the original one. The JPEG image must
-# end with '.jpg' or '.jpeg'.
+# ends with '.jpg' or '.jpeg'.
+# It is required ImageMagick to convert images.
 jpeg-to-png() {
-  if [[ ! -z "$1" ]]; then
-    local JPEG="$1"
+  local JPEG="$1"
+
+  if [[ ! -z "$JPEG" ]]; then
     local PNG="${JPEG/%.jp*g/.png}"
 
-    # ImageMagick command line tool is used.
     convert $JPEG $PNG
-
     rm $JPEG
   else
     echo "Missing JPEG source image to convert!"
