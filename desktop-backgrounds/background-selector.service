@@ -1,0 +1,9 @@
+[Unit]
+Description=Randomly change desktop background
+
+[Service]
+# Default if 'Type' is not specified.
+#Type=Simple
+
+# %h -> user's home directory.
+ExecStart=/usr/local/bin/background-selector
