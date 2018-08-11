@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+#
+# Copyright (c) Emanuele Petriglia <inbox@emanuelepetriglia.me>
+# This file is licensed under the MIT license.
+#
+# This script create symlinks of `background-selector` script,
+# `background-selector.unit` and `background-selector.service` to the right
+# locations (please see `README.md`).
+#
+# Root is required because the script is places outside the user home directory.
+
+readonly SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" 
+
+readonly USERDIR="$(xdg-user-dir)"
+
+LN="ln --symbolic --force --verbose"
+
+# Create symlinks of files necessary to enable the timer the enable it.
+systemd-timer() {
+  local SYSTEMD_HOME_CONFIG="$USERDIR/.config/systemd/user"
+  local SERVICE="background-selector.service"
+  local TIMER="background-selector.timer"
+
+  # First try to create the necessary directories.
+  if [[ ! -d "$SYSTEMD_HOME_CONFIG" ]]; then
+    mkdir --verbose --parents "$SYSTEMD_HOME_CONFIG"
+  else
+    echo "$SYSTEMD_HOME_CONFIG directory already created!"
+  fi
+
+  local SYMLINK_SERVICE="$SYSTEMD_HOME_CONFIG/$SERVICE"
+  if [[ ! -L "$SYMLINK_SERVICE" ]]; then
+    $LN "$SCRIPTDIR/$SERVICE" "$SYMLINK_SERVICE"
+  else
+    echo "$SYMLINK_SERVICE is already a symlink!"
+  fi
+
+  local SYMLINK_TIMER="$SYSTEMD_HOME_CONFIG/$TIMER"
+  if [[ ! -L "$SYMLINK_TIMER" ]]; then
+    $LN "$SCRIPTDIR/$TIMER" "$SYMLINK_TIMER"
+  else
+    echo "$SYMLINK_TIMER is already a symlink!"
+  fi
+
+  local TIMER_ENABLED="$(systemctl --user is-enabled $TIMER)"
+  if [[ $TIMER_ENABLED == "disabled" ]]; then
+    systemctl --user enable "$TIMER"
+  else
+    echo "$TIMER is already enabled!"
+  fi
+
+  local TIMER_ACTIVATED="$(systemctl --user is-active $TIMER)"
+  if [[ $TIMER_ACTIVATED == "inactive" ]]; then
+    systemctl --user start "$TIMER"
+  else
+    echo "$TIMER is already activated!"
+  fi
+}
+
+systemd-timer

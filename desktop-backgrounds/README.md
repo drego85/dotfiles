@@ -12,7 +12,7 @@ wallpaper is changed.
 ## background-selector
 
 This script choices a random wallpaper from
-`$USER/$XFG_PICTURES_DIR/backgrounds`. The wallpapers must be a **JPG** or
+`HOME/$XDG_PICTURES_DIR/backgrounds`. The wallpapers must be a **JPG** or
 **JPEG** image!
 
 Because it will be run by LightDM as root, the script is placed on
@@ -29,7 +29,7 @@ change the wallpaper, it runs `background-selector` as user
 (`background-selector.unit`). Because root privileges are not required, I run it
 in `--user` mode.
 
-Both `.timer` and `.unit` files must be placed on `$USER/.config/systemd/user`.
+Both `.timer` and `.unit` files must be placed on `$HOME/.config/systemd/user`.
 The you must activate the timer:
 
     systemctl --user start background-selector.timer
