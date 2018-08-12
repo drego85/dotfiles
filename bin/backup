@@ -13,7 +13,7 @@ readonly HOME="/home/$USER"
 # Program used to do the backup. Archive mode enabled with verbosity. It does an
 # exact mirror (it deletes file from destination folder that aren't in the
 # source folder).
-RSYNC="rsync --archive --delete"
+RSYNC="rsync --archive --delete --verbose"
 
 # Runs rsync with the first arguments as source folder and second as destination
 # folder.
@@ -28,10 +28,6 @@ ls $HDD &> /dev/null
 if [[ "$?" != 0 ]]; then
   echo "No destination device found (it is plugged?)" >&2
   exit 1
-fi
-
-if [[ "$1" == "--verbose" || "$1" == "-v" ]]; then
-  RSYNC="$RSYNC $1"
 fi
 
 #
