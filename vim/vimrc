@@ -102,9 +102,6 @@ colorscheme PaperColor
 " It highlights initial and final spaces and tabs.
 set list lcs=trail:‧,tab:→→
 
-" Set colorline.
-set cursorline
-
 " }}}
 
 " Line lenght settings {{{
