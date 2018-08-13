@@ -38,3 +38,4 @@ backup_folder $HOME/Music/                $HDD/music/
 backup_folder $HOME/Pictures/backgrounds/ $HDD/immagini/backgrounds/
 backup_folder $HOME/Documents/gps_tracks/ $HDD/file/gps_tracks/
 backup_folder $HOME/Documents/writing/    $HDD/file/writing/
+backup_folder $HOME/Pictures/gif/         $HDD/immagini/gif/
