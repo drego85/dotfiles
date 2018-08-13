@@ -51,3 +51,19 @@ if [[ ! -L "$DST_SNIPPETS" ]]; then
 else
   echo "vim: snippets directory is already created!"
 fi
+
+# Install plugins.
+git submodule update --init $SCRIPTDIR/plugins/start/goyo.vim
+git submodule update --init $SCRIPTDIR/plugins/start/vim-pencil
+
+PLUGINS="$USERDIR/.vim/pack/"
+SRC_PLUGINS="$SCRIPTDIR/plugins"
+
+if [[ -L "$PLUGINS/plugins" ]]; then
+  echo "vim: plugins are already installed!"
+else
+  mkdir --parents "$USERDIR/.vim/pack/"
+
+  ln --symbolic "$SRC_PLUGINS" "$PLUGINS"
+fi
+

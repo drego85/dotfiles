@@ -10,3 +10,9 @@
 [submodule "vim/papercolor-theme"]
 	path = vim/papercolor-theme
 	url = https://github.com/NLKNguyen/papercolor-theme.git
+[submodule "vim/plugins/start/goyo.vim"]
+	path = vim/plugins/start/goyo.vim
+	url = https://github.com/junegunn/goyo.vim.git
+[submodule "vim/plugins/start/vim-pencil"]
+	path = vim/plugins/start/vim-pencil
+	url = https://github.com/reedes/vim-pencil.git

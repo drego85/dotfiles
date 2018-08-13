@@ -121,4 +121,7 @@ alias installed="apt list --installed"
 # Converts a single JPEG image to PNG and delete the first one.
 alias jtp="jpeg-to-png"
 
+# Run VIM in writing mode (see my .vimrc for more informations).
+alias writing="vim -c Writing"
+
 # }}}

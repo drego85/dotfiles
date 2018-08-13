@@ -273,4 +273,56 @@ endfunc
 nnoremap <Tab> :call ToggleNumber()<CR>
 
 autocmd BufRead *.py nnoremap <buffer> <F5> :wa<CR> :exec '!python3' shellescape(@%, 1)<cr>
+
+" }}}
+
+" Writing mode {{
+" This mode helps to write prose with VIM. It can be enabled using "Writing"
+" command.
+"
+" Plugins required:
+"   - Pencil: https://github.com/reedes/vim-pencil
+"   - Goyo: https://github.com/junegunn/goyo.vim
+
+" It starts writing mode.
+function! WritingActivate()
+    " Soft line wrap for writing by default.
+    let g:pencil#wrapModeDefault = 'soft'
+
+    " Textwidth used in hard line breaks.
+    let g:pencil#textwidth = 80
+
+    " Disable conceal, I like to see formatting.
+    let g:pencil#conceallevel = 0
+
+    call pencil#init()
+
+    Goyo 140x50
+endfunc
+
+command! Writing call WritingActivate()
+
+" The two next functions allow to exit VIM correclty when using ":q". Thanks to
+" https://github.com/junegunn/goyo.vim/wiki/Customization
+function! s:goyo_enter()
+  let b:quitting = 0
+  let b:quitting_bang = 0
+  autocmd QuitPre <buffer> let b:quitting = 1
+  cabbrev <buffer> q! let b:quitting_bang = 1 <bar> q!
+endfunction
+
+function! s:goyo_leave()
+  " Quit Vim if this is the only remaining buffer
+  if b:quitting && len(filter(range(1, bufnr('$')), 'buflisted(v:val)')) == 1
+    if b:quitting_bang
+      qa!
+    else
+      qa
+    endif
+  endif
+endfunction
+
+autocmd! User GoyoEnter call <SID>goyo_enter()
+autocmd! User GoyoLeave call <SID>goyo_leave()
+
 " }}}
