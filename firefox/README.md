@@ -21,10 +21,10 @@ download them the first time.
 
 ### Extentions configuration
 
-Some extentions have a configuration file.
 
-* **uBlock Origin**: just go to `Settings` -> `Restore from file` and load the
-  file `ublock_config.txt`.
+Right now I have only the configuration for uBlock Origin, it can be installed
+going to `Settings` -> `Restore from file` and load the file
+`ublock_config.txt`.
 
 ## user.js
 
@@ -47,7 +47,18 @@ All other settings are ignored (such as extentions, `user.js` and UI settings).
 
 ## User Interface
 
+The user interface can be modified only directly, it can't be reproduced via
+command line options or using a configuration file like `user.js`. The notable
+edits that I've done are:
+
+* Theme: Dark;
+* Toolbars: only bookmarks toolbar;
+* Density: Touch;
+* Main toolbar: reload button, home button, search bar and uBlock Origin icon.
+
 ## Custom graphic style
+
+
 
 
 [0]: https://www.mozilla.org/en-US/firefox/features/sync/
