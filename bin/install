@@ -45,3 +45,10 @@ else
   echo "root requested to install background-selector"
   sudo $LN "$SCRIPTDIR/background-selector" "$BACKGROUND_SELECTOR"
 fi
+
+SAPIENZA_WIFI="$BINDIR/sapienza-wifi"
+if [[ -L "$SAPIENZA_WIFI" ]]; then
+  echo "bin: sapienza-wifi symlink already created!"
+else
+  $LN "$SCRIPTDIR/sapienza-wifi" "$SAPIENZA_WIFI"
+fi

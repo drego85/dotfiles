@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# Copyright (C) 2018 Emanuele Petriglia <inbox@emanuelepetriglia.me>. All rights
+# reserved. This file is licensed under the MIT license.
+
+# This script is used to open a Firefox window with the login page of
+# Sapienza's Wifi. It uses a "default" profile, it is a custom profile without
+# any extentions and with default settings. The profile I usually use is heavily
+# customizzated, and it can't open the login page (Why? I don't know!).
+
+PROFILE="default"
+
+SAPIENZA_WIFI_URL="https://wifi-cont1.uniroma1.it:8003/index.php?zone=wifi_sapienza"
+
+# -P -> Open Firefox with a custom profile.
+firefox -P $PROFILE $SAPIENZA_WIFI_URL
