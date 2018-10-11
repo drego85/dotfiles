@@ -15,14 +15,6 @@ if [[ ! -d "$BINDIR" ]]; then
   mkdir --parents "$BINDIR"
 fi
 
-# Avoid to recreate the symlink.
-JAVA_DEV="$BINDIR/java-dev"
-if [[ -L "$JAVA_DEV" ]]; then
-  echo "bin: java-dev symlink already created!"
-else
-  $LN "$SCRIPTDIR/java-dev" "$JAVA_DEV"
-fi
-
 JAVA_INIT="$BINDIR/java-init"
 if [[ -L "$JAVA_INIT" ]]; then
   echo "bin: java-init symlink already created!"
