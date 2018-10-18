@@ -18,7 +18,7 @@ PASSWORD_LOCATION="university/uniroma1.it"
 
 # Login details.
 USERNAME="1798177"
-PASSWORD="$(pass $PASSWORD_LOCATION | head -n 1)"
+#PASSWORD="" # The password is retrieved only when login command is given.
 
 # Path and name of the file with logout ID, used to logout.
 LOGOUT_ID_FILE="/tmp/sapienza-wifi-logout-id"
@@ -63,7 +63,7 @@ cmd_login() {
 
   # POST parameters.
   local auth_user="auth_user=$USERNAME"
-  local auth_pass="auth_pass=$PASSWORD"
+  local auth_pass="auth_pass=$(pass $PASSWORD_LOCATION | head -n 1)"
   local zone="zone=wifi_sapienza"
   local redirurl="redirurl=wifi_sapienza"
   local accept="accept=Accetto+-+Accept"
