@@ -41,6 +41,30 @@ error() {
 # BEGIN subcommand functions
 #
 
+# It shows usage informations.
+cmd_help() {
+  cat <<-_EOF
+Usage:
+    $PROGRAM <command>
+
+  If no command is given, the default command is 'login'.
+
+Available commands:
+    login
+        It connects to Sapienza's Wifi network, using the username and password
+        coded in the script (the password is retrieved with 'pass').
+
+    logout
+        It disconnects from Sapienza's Wifi network.
+
+    check
+        It prints "connected" or "disconnected" if there is an Internet
+        connection. By default is tries to open Sapienza's Web home page.
+
+This script uses 'wget' and 'pass', they must be installed on the system.
+_EOF
+}
+
 # It prints to the standard output "conncted" or "disconnected" if there is an
 # Internet connection or not.
 cmd_check_network() {
@@ -117,7 +141,8 @@ COMMAND="$1"
 case "$1" in
   login)                cmd_login ;;
   logout)               cmd_logout ;;
-  check)                cmd_check_network;;
+  check)                cmd_check_network ;;
+  help)                 cmd_help ;;
   *) COMMAND="login";   cmd_login ;;
 esac
 
