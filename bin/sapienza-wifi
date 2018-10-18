@@ -21,14 +21,67 @@ PASSWORD_LOCATION="university/uniroma1.it"
 USERNAME="1798177"
 PASSWORD="$(pass $PASSWORD_LOCATION | head -n 1)"
 
-# POST parameters.
-AUTH_USER="auth_user=$USERNAME"
-AUTH_PASS="auth_pass=$PASSWORD"
-REDIRURL="redirurl=wifi_sapienza"
-ACCEPT="accept=Accetto+-+Accept"
+# Path and name of the file with logout ID, used to logout.
+LOGOUT_ID_FILE="/tmp/sapienza-wifi-logout-id"
 
-DATA="$AUTH_USER&$AUTH_PASS&$REDIRURL&$ACCEPT"
+#
+# BEGIN subcommand functions
+#
 
-WGET_OPTIONS="--quiet"
+# It logins to the Sapienza's Wifi network, using the username and the password.
+# It also save in a temporary file the logout ID, it will be used to logout.
+cmd_login() {
+  local login_url="https://wifi-cont1.uniroma1.it:8003/index.php?zone=wifi_sapienza"
 
-wget $WGET_OPTIONS --post-data "$DATA" $URL
+  # POST parameters.
+  local auth_user="auth_user=$USERNAME"
+  local auth_pass="auth_pass=$PASSWORD"
+  local zone="zone=wifi_sapienza"
+  local redirurl="redirurl=wifi_sapienza"
+  local accept="accept=Accetto+-+Accept"
+
+  local data="$auth_user&$auth_pass&$zone&$redirurl&$accept"
+
+  # Temporary file to store HTML result of the request.
+  local html_result="$(mktemp)"
+
+  wget --output-document="$html_result" --quiet --post-data "$data" "$login_url"
+
+  # Extract the logout ID from the HTML response.
+  # It filters the 17th line (the one with login ID), then extracts all words
+  # and the last is the ID.
+  cat "$html_result" | sed -n 17p | grep -oE '[[:alnum:]]+' | \
+                                                     tail -n 1 > $LOGOUT_ID_FILE
+
+  rm "$html_result"
+}
+
+# It logouts from the Sapienza's Wifi network. It uses the ID provided by the
+# login function.
+cmd_logout() {
+  local logout_url="https://wifi-cont1.uniroma1.it:8003/"
+
+  # POST parameters.
+  local logout_id="logout_id=$(cat $LOGOUT_ID_FILE)"
+  local zone="zone=wifi_sapienza"
+  local logout_command="logout=Logout"
+
+  local data="$logout_id&$zone&$logout_command"
+
+  wget --quiet --post-data "$data" "$logout_url"
+}
+
+#
+# END subcommands functions
+#
+
+PROGRAM="${0##*/}"
+COMMAND="$1"
+
+case "$1" in
+  login)                cmd_login ;;
+  logout)               cmd_logout ;;
+  *) COMMAND="login";   cmd_login ;;
+esac
+
+exit 0
