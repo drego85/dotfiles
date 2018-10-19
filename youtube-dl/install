@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+# This script installs youtube-dl from its repository on GitHub. It is always
+# better to install it through system's package manager (in my case apt), but it
+# has an old version that doesn't work.
+#
+# This script installs youtube-dl in ~/.local/bin directory.
+#
+# To run this script is needed wget.
+#
+# Copyright (c) Emanuele Petriglia 2018 <inbox@emanuelepetrigia.me>
+# All right reserved. This file is licensed under the MIT license.
+
+BINDIR="$HOME/.local/bin"
+YOUTUBE_DL_BIN="$BINDIR/youtube-dl"
+
+YOUTUBE_DL_GITHUB="https://yt-dl.org/downloads/latest/youtube-dl"
+
+TEST_YOUTUBE_DL="$(which youtube-dl)"
+if [[ "$TEST_YOUTUBE_DL" == "$YOUTUBE_DL_BIN" ]]; then
+  echo "youtube-dl is already installed on $BINDIR"
+  exit 0
+elif [[ -z "$TEST_YOUTUBE_DL" ]]; then
+  echo "No youtube-dl installation found, installing it..."
+
+  WGET_OPTIONS="--quiet --show-progress"
+  wget $WGET_OPTIONS "$YOUTUBE_DL_GITHUB" --output-document="$YOUTUBE_DL_BIN"
+
+  chmod a+rx "YOUTUBE_DL_BIN"
+
+  echo "youtube-dl succesfully installed, version: $(youtube-dl --version)"
+else
+  echo "youtube-dl is already installed, but not in $BINDIR"
+  exit 1
+fi
