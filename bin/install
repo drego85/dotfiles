@@ -2,45 +2,18 @@
 
 # This script create all symlinks for all bash script located in this directory.
 
+. ../.common/utils.sh
+
 # Full path of this script.
 SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-USERDIR="$(xdg-user-dir)"
+BINDIR="$(xdg-user-dir)/.local/bin"
 
-LN="ln --symbolic --force"
+mkdir --parents --verbose "$BINDIR"
 
-BINDIR="$USERDIR/.local/bin"
-
-if [[ ! -d "$BINDIR" ]]; then
-  mkdir --parents "$BINDIR"
-fi
-
-JAVA_INIT="$BINDIR/java-init"
-if [[ -L "$JAVA_INIT" ]]; then
-  echo "bin: java-init symlink already created!"
-else
-  $LN "$SCRIPTDIR/java-init" "$JAVA_INIT"
-fi
-
-BACKUP="$BINDIR/backup"
-if [[ -L "$BACKUP" ]]; then
-  echo "bin: backup symlink already created!"
-else
-  $LN "$SCRIPTDIR/backup" "$BACKUP"
-fi
+ed_make_symlink "$SCRIPTDIR/java-init" "$BINDIR/java-init"
+ed_make_symlink "$SCRIPTDIR/backup" "$BINDIR/backup"
+ed_make_symlink "$SCRIPTDIR/sapienza-wifi" "$BINDIR/sapienza-wifi"
 
 # This script must be installed on /usr/local/bin.
-BACKGROUND_SELECTOR="/usr/local/bin/background-selector"
-if [[ -L "$BACKGROUND_SELECTOR" ]]; then
-  echo "/usr/local/bin: background-selector symlink already created!"
-else
-  echo "root requested to install background-selector"
-  sudo $LN "$SCRIPTDIR/background-selector" "$BACKGROUND_SELECTOR"
-fi
-
-SAPIENZA_WIFI="$BINDIR/sapienza-wifi"
-if [[ -L "$SAPIENZA_WIFI" ]]; then
-  echo "bin: sapienza-wifi symlink already created!"
-else
-  $LN "$SCRIPTDIR/sapienza-wifi" "$SAPIENZA_WIFI"
-fi
+ed_make_symlink "$SCRIPTDIR/background-selector" "/usr/local/bin/background-selector"
