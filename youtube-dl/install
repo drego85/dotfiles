@@ -6,10 +6,13 @@
 #
 # This script installs youtube-dl in ~/.local/bin directory.
 #
-# To run this script is needed wget.
+# To run this script you need wget and my small Bash library, that can be found
+# in '.common/utils.sh'.
 #
 # Copyright (c) Emanuele Petriglia 2018 <inbox@emanuelepetrigia.me>
 # All right reserved. This file is licensed under the MIT license.
+
+. ../.common/utils.sh
 
 BINDIR="$HOME/.local/bin"
 YOUTUBE_DL_BIN="$BINDIR/youtube-dl"
@@ -18,18 +21,19 @@ YOUTUBE_DL_GITHUB="https://yt-dl.org/downloads/latest/youtube-dl"
 
 TEST_YOUTUBE_DL="$(which youtube-dl)"
 if [[ "$TEST_YOUTUBE_DL" == "$YOUTUBE_DL_BIN" ]]; then
-  echo "youtube-dl is already installed on $BINDIR"
+  ed_log "youtube-dl is already installed on $BINDIR"
   exit 0
 elif [[ -z "$TEST_YOUTUBE_DL" ]]; then
-  echo "No youtube-dl installation found, installing it..."
+  ed_log "No youtube-dl installation found, installing it..."
+
+  mkdir --parents --verbose "$BINDIR"
 
   WGET_OPTIONS="--quiet --show-progress"
   wget $WGET_OPTIONS "$YOUTUBE_DL_GITHUB" --output-document="$YOUTUBE_DL_BIN"
 
   chmod a+rx "YOUTUBE_DL_BIN"
 
-  echo "youtube-dl succesfully installed, version: $(youtube-dl --version)"
+  ed_log "youtube-dl succesfully installed, version: $(youtube-dl --version)"
 else
-  echo "youtube-dl is already installed, but not in $BINDIR"
-  exit 1
+  ed_elog "youtube-dl is already installed, but not in $BINDIR"
 fi
