@@ -56,17 +56,42 @@ ed_elog() {
 
 # }}}
 
-# Create a simlink of a directory or file.
+# It creates a simlink of a directory or file.
 #
 # Parameters:
 #     $1 -> source path (a file or a directory);
 #     $2 -> destination path;
-#     $3 -> if 'true' enables verbose informations, default is 'false'.
+#     $3 -> if 'sudo' it creates a symlink using root permissions.
 #
 # Example:
 #     ed_make_symlink path/to/source path/to/dst
 ed_make_symlink() {
-  echo "WIP"
+  local src="$1"
+  local dst="$2"
+
+  if [[ "$3" == "sudo" ]]; then
+    local sudo="sudo"
+  fi
+
+  if [[ -z "$src" ]]; then
+    ed_elog "Error: source path is empty"
+  fi
+
+  if [[ -z "$dst" ]]; then
+    ed_elog "Error: destination path is empty"
+  fi
+
+  if [[ -L "$dst" ]]; then
+    local real_dst_path="$(readlink -f $dst)"
+
+    if [[ "$real_dst_path" != "$src" ]]; then
+      ed_elog "Error: $dst is a symlink to $real_dst_path, not to $src"
+    else
+      ed_log "$dst is already a symlink to $src"
+    fi
+  else
+    $sudo ln --symbolic --force --verbose "$src" "$dst"
+  fi
 }
 
 # vim:foldmethod=marker
