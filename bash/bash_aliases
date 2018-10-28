@@ -73,6 +73,28 @@ list-dreams() {
   done
 }
 
+# This commands allows you to change directory via shortcuts. You can see a list
+# of available shortcuts with `jump list`.
+jump() {
+  local dest="$1"
+
+  if [[ -z "$dest" ]]; then
+    echo "error: you must give an argument"
+  else
+    case "$dest" in
+      list)
+        echo "novels -> ~/Documents/writing/novels/nanowrimo-2018"
+        ;;
+      novels)
+        cd ~/Documents/writing/novels/nanowrimo-2018
+        ;;
+      *)
+        echo "error: $dest is not a shortcut"
+        ;;
+    esac
+  fi
+}
+
 # }}}
 
 # Other settings {{{
