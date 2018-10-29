@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-complete -W "on off status shell copy-to copy-from help" java-dev j
