@@ -75,6 +75,7 @@ list-dreams() {
 
 # This commands allows you to change directory via shortcuts. You can see a list
 # of available shortcuts with `jump list`.
+# TODO: create a dedicated script.
 jump() {
   local dest="$1"
 
@@ -83,9 +84,9 @@ jump() {
   else
     case "$dest" in
       list)
-        echo "novels -> ~/Documents/writing/novels/nanowrimo-2018"
+        echo "nano -> ~/Documents/writing/novels/nanowrimo-2018"
         ;;
-      novels)
+      nano)
         cd ~/Documents/writing/novels/nanowrimo-2018
         ;;
       *)
