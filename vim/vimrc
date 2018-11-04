@@ -131,7 +131,7 @@ set shiftwidth=4
 
 " Automatic indentation.
 set autoindent
-set smartindent
+filetype plugin indent on
 
 augroup SpecificIndentations
     " For Makefile files, don't convert tabs into spaces.
