@@ -1,7 +1,8 @@
 " vim:foldmethod=marker
-" Vim personal configuration. I also document here some tips and tricks.
+" 
+" My own VIM configuration.
 "
-" Script made by Emanuele Petriglia (ema-pe).
+" Script made by Emanuele Petriglia (ema-pe) <inbox@emanuelepetriglia.me>.
 
 " UI settings. {{{
 
@@ -12,7 +13,8 @@ set number
 set relativenumber
 
 " Disable VI compatibility.
-set nocompatible
+" Useless because VIM automatically sets this option if it finds a vimrc file.
+" set nocompatible
 
 " It shows information abount row and column.
 set ruler
@@ -276,7 +278,8 @@ autocmd BufRead *.py nnoremap <buffer> <F5> :wa<CR> :exec '!python3' shellescape
 
 " }}}
 
-" Writing mode {{
+" Writing mode {{{
+"
 " This mode helps to write prose with VIM. It can be enabled using "Writing"
 " command.
 "
