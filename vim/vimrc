@@ -12,10 +12,6 @@ set number
 " It enables relative number.
 set relativenumber
 
-" Disable VI compatibility.
-" Useless because VIM automatically sets this option if it finds a vimrc file.
-" set nocompatible
-
 " It shows information abount row and column.
 set ruler
 
