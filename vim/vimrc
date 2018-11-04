@@ -133,14 +133,16 @@ set shiftwidth=4
 set autoindent
 set smartindent
 
-" For Makefile files, don't convert tabs into spaces.
-autocmd Filetype Makefile setlocal noexpandtab
+augroup SpecificIndentations
+    " For Makefile files, don't convert tabs into spaces.
+    autocmd Filetype Makefile setlocal noexpandtab
 
-" For C files, use 8 spaces (Linux style) instead of 4.
-autocmd Filetype c setlocal ts=8 sw=8
+    " For C files, use 8 spaces (Linux style) instead of 4.
+    autocmd Filetype c setlocal ts=8 sw=8
 
-" For sh (bash) use only 2 spaces.
-autocmd Filetype sh setlocal ts=2 sw=2
+    " For sh (bash) use only 2 spaces.
+    autocmd Filetype sh setlocal ts=2 sw=2
+augroup END
 
 " }}}
 
@@ -270,8 +272,6 @@ endfunc
 " .. and bind it to a custom keybinding.
 nnoremap <Tab> :call ToggleNumber()<CR>
 
-autocmd BufRead *.py nnoremap <buffer> <F5> :wa<CR> :exec '!python3' shellescape(@%, 1)<cr>
-
 " }}}
 
 " Writing mode {{{
@@ -321,7 +321,9 @@ function! s:goyo_leave()
   endif
 endfunction
 
-autocmd! User GoyoEnter call <SID>goyo_enter()
-autocmd! User GoyoLeave call <SID>goyo_leave()
+augroup GoyoCommands
+    autocmd! User GoyoEnter call <SID>goyo_enter()
+    autocmd! User GoyoLeave call <SID>goyo_leave()
+augroup END
 
 " }}}
