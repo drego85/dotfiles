@@ -31,7 +31,7 @@ elif [[ -z "$TEST_YOUTUBE_DL" ]]; then
   WGET_OPTIONS="--quiet --show-progress"
   wget $WGET_OPTIONS "$YOUTUBE_DL_GITHUB" --output-document="$YOUTUBE_DL_BIN"
 
-  chmod a+rx "YOUTUBE_DL_BIN"
+  chmod u+x "$YOUTUBE_DL_BIN"
 
   ed_log "youtube-dl succesfully installed, version: $(youtube-dl --version)"
 else
