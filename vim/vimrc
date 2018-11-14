@@ -296,7 +296,7 @@ function! WritingActivate()
 
     call pencil#init()
 
-    Goyo 140x50
+    Goyo 100x50
 endfunc
 
 command! Writing call WritingActivate()
