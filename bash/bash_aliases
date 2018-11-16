@@ -85,9 +85,13 @@ jump() {
     case "$dest" in
       list)
         echo "nano -> ~/Documents/writing/novels/nanowrimo-2018"
+        echo "writing -> ~/Documents/writing"
         ;;
       nano)
         cd ~/Documents/writing/novels/nanowrimo-2018
+        ;;
+      writing)
+        cd ~/Documents/writing
         ;;
       *)
         echo "error: $dest is not a shortcut"
