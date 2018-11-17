@@ -186,10 +186,4 @@ alias jtp="jpeg-to-png"
 # Run VIM in writing mode (see my .vimrc for more informations).
 alias writing="vim -c Writing"
 
-# Starts Docker's daemon. Useful because I don't use Docker continuously.
-alias dup="sudo systemctl start docker"
-
-# Stops Docker's daemon. Useful because I don't use Docker continuously.
-alias down="sudo systemctl stop docker"
-
 # }}}
