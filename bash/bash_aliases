@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # vim:foldmethod=marker
 # My personal configuration of Bash. It contains my settings and some useful
 # scripts that I use ofter.
