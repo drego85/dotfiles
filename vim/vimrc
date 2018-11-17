@@ -287,7 +287,7 @@ nnoremap <Tab> :call ToggleNumber()<CR>
 function! WritingActivate()
 
     " Disable syntax hightlighting, because it may cause lag with large docs.
-    set syntax off
+    syntax off
 
     " Soft line wrap for writing by default.
     let g:pencil#wrapModeDefault = 'soft'
