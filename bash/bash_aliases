@@ -20,7 +20,7 @@ set keymap vi
 # Global variables {{{
 
 # Add custom PATH if necessary.
-if [[ ! "$PATH" =~ "/home/$USER/.local/bin" ]]; then
+if [[ ! "$PATH" =~ /home/$USER/.local/bin ]]; then
   export PATH="$HOME/.local/bin:$PATH"
 fi
 
@@ -58,8 +58,8 @@ jpeg-to-png() {
   if [[ ! -z "$JPEG" ]]; then
     local PNG="${JPEG/%.jp*g/.png}"
 
-    convert $JPEG $PNG
-    rm $JPEG
+    convert "$JPEG" "$PNG"
+    rm "$JPEG"
   else
     echo "Missing JPEG source image to convert!"
   fi
@@ -70,7 +70,7 @@ jpeg-to-png() {
 # the first line of the dream is the title.
 list-dreams() {
   for dream in *.md; do
-    printf "%s\t- %s\n" "${dream##*/}" "$(head -n 1 $dream)"
+    printf "%s\t- %s\n" "${dream##*/}" "$(head -n 1 "$dream")"
   done
 }
 
@@ -109,7 +109,7 @@ jump() {
 # server or container). In the main host with a GUI gpg-agent is started
 # automatically.
 if [[ -z "$(dpkg -l | grep xserver)" && -z "$(pidof gpg-agent)" ]]; then
-  eval $(gpg-agent --daemon)
+  eval "$(gpg-agent --daemon)"
 fi
 
 # Bash history {{{
