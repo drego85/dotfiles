@@ -42,6 +42,11 @@ cheat() {
   wget --quiet --output-document - cht.sh/$1
 }
 
+# Starts a temporary Firefox instance.
+firefox-tmp() {
+  firefox --new-instance --profile $(mktemp -d)
+}
+
 # Colorized man pages.
 # Thanks to: https://news.ycombinator.com/item?id=12304730
 man() {
