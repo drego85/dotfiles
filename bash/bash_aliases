@@ -198,4 +198,7 @@ alias jtp="jpeg-to-png"
 # Run VIM in writing mode (see my .vimrc for more informations).
 alias writing="vim -c Writing"
 
+# Quickly change directory.
+alias ..="cd .."
+
 # }}}
