@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+# This script launchs a temporary Firefox instance.
+#
+# How it works: it uses `mktemp` to create a temporary directory and give it to
+# Firefox. When the user closes Firefox, that directory is destroyed.
+#
+# Copyright (C) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.me>. All right
+# reserved. This file is licensed under the MIT license.
+
+readonly program="${0##*/}"
+
+# This small function checks if a given command exists; if it doesn't exists, it
+# stops the script with error code 1.
+check_command() {
+  local command_to_check="$1"
+
+  if [[ -z "$(command -v $command_to_check)" ]]; then
+    echo "$command_to_check not found." >&2
+    exit 1
+  fi
+}
+
+case "$1" in
+  --help|-h)
+    cat <<-_EOF
+Usage:
+    $program [--help]
+
+It launchs a temporary Firefox instance.
+
+Options:
+  --help, -h    display this help and exit.
+
+'mktemp' and 'firefox' must be installed on the system.
+_EOF
+  ;;
+  *)
+  readonly temp_dir="$(mktemp --directory)"
+
+  firefox --new-instance --profile $temp_dir
+
+  rm --force --recursive $temp_dir
+  ;;
+esac
+
+exit 0

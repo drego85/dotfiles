@@ -14,6 +14,7 @@ mkdir --parents --verbose "$BINDIR"
 ed_make_symlink "$SCRIPTDIR/java-init" "$BINDIR/java-init"
 ed_make_symlink "$SCRIPTDIR/backup" "$BINDIR/backup"
 ed_make_symlink "$SCRIPTDIR/sapienza-wifi" "$BINDIR/sapienza-wifi"
+ed_make_symlink "$SCRIPTDIR/firefox-tmp" "$BINDIR/firefox-tmp"
 
 # This script must be installed on /usr/local/bin.
 ed_make_symlink "$SCRIPTDIR/background-selector" "/usr/local/bin/background-selector"
