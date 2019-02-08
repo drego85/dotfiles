@@ -1,23 +1,19 @@
 #!/usr/bin/env bash
+#
+# This script installs git configurations.
+#
+# This script uses 'utils.sh', my custom library for manager dotfiles.
+#
+# Copyright (c) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.me>. All
+# right reserved. This file is license under the MIT license. See LICENSE for
+# more informations.
 
-# This script creates the symlink of git configuration.
+. ../.common/utils.sh
 
-# Full path of this script.
-SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ed_exists "xdg-user-dir"
+ed_exists "readlink"
 
-USERDIR="$(xdg-user-dir)"
+dest_dir="$(xdg-user-dir)"
 
-# Avoid to recreate the symlink.
-GITCONFIG="$USERDIR/.gitconfig"
-if [[ -L "$GITCONFIG" ]]; then
-  echo "git: gitconfig symlink already created!"
-else
-  ln --symbolic -i "$SCRIPTDIR/gitconfig" "$GITCONFIG"
-fi
-
-GITIGNORE="$USERDIR/.gitignore"
-if [[ -L "$GITIGNORE" ]]; then
-  echo "git: gitignore symlink already created!"
-else
-  ln --symbolic -i "$SCRIPTDIR/gitignore" "$GITIGNORE"
-fi
+ed_make_symlink "$(readlink -f gitconfig)" "$dest_dir/.gitconfig"
+ed_make_symlink "$(readlink -f gitignore)" "$dest_dir/.gitignore"
