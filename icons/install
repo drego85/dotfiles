@@ -15,7 +15,6 @@ installed=$?
 
 if [[ $installed == "0" ]]; then
   ed_wlog "icon: Papirus icon packs are already installed!"
-  exit 0
 else
   ed_wlog "icon: root requested to install Papirus icon packs"
 
