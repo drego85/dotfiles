@@ -1,40 +1,31 @@
 #!/usr/bin/env bash
+#
+# This script activates Arc Dark GTK+ theme, that is preinstalled on Fedora 29.
+#
+# This script uses 'utils.sh', my custom library for manager dotfiles.
+#
+# Copyright (c) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.me>. All
+# right reserved. This file is license under the MIT license. See LICENSE for
+# more informations.
 
-# This script downloads and installs Adapta and Adapta-Nokto theme into
-# local folder. It downloads the files from Arch repository. Thi script
-# DOESN'T ACTIVATE the theme!
+. ../.common/utils.sh
 
-# Original directory (it may be different with $DIR).
-ORIDIR="$(pwd)"
+# Check if it is installed Arc theme.
+output="$(dnf list --installed arc-theme)"
+installed=$?
 
-# User directory.
-USERDIR="$(xdg-user-dir)"
+if [[ $installed == "0" ]]; then
+  ed_wlog "gtk: Arc themes are already installed!"
+else
+  ed_wlog "gtk: root requested to install Arc themes"
 
-# Create a temporary directory.
-TMPDIR="$(mktemp --directory)"
-cd "$TMPDIR"
+  sudo dnf install arc-theme
+fi
 
-# Download the latest stable version of the theme.
-wget --content-disposition --no-verbose \
-     https://www.archlinux.org/packages/community/any/adapta-gtk-theme/download/
-
-FILE="$(ls)"
-
-# GNU tar recognizes the format by itself.
-tar --warning=no-unknown-keyword -xf "$FILE"
-
-# Create and copy all things.
-mkdir --parents "$USERDIR/.local/share/themes"
-
-# GTK+ theme must be located in /usr/share/themes directory. I can't place it
-# on local directory, otherwise the theme will not work.
-echo "root requested to install GTK+ theme"
-sudo rm -rf "/usr/share/themes/Adapta"
-sudo rm -rf "/usr/share/themes/Adapta-Nokto"
-sudo mv "$TMPDIR/usr/share/themes/Adapta" "/usr/share/themes/Adapta"
-sudo mv "$TMPDIR/usr/share/themes/Adapta-Nokto" "/usr/share/themes/Adapta-Nokto"
-
-# Go back to original directory and remove the tmp directory.
-cd "$ORIDIR"
-
-rm -rf "$TMPDIR"
+# Activate the theme.
+current="$(xfconf-query --channel xsettings --property /Net/ThemeName)"
+if [[ "$current" == "Arc-Dark" ]]; then
+  ed_wlog "gtk: Arc Dark theme is already activated!"
+else
+  xfconf-query --channel xsettings --property /Net/IconThemeName --set Arc-Dark
+fi
