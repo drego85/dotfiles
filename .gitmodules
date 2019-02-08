@@ -1,6 +1,3 @@
-[submodule "icons"]
-	path = icons/papirus
-	url = https://github.com/PapirusDevelopmentTeam/papirus-icon-theme.git
 [submodule "xfwm4/thinble"]
 	path = xfwm4/thinble
 	url = https://gitlab.com/ema-pe/backup-thinble-xfwm4-theme.git

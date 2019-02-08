@@ -11,12 +11,13 @@
 
 . ../.common/utils.sh
 
+# Check if Telegram Desktop is already installed.
 output="$(dnf list --installed telegram-desktop)"
 installed=$?
 
 if [[ $installed == "0" ]]; then
   ed_wlog "telegram: Telegram Desktop is already installed!"
-  #exit 0
+  exit 0
 fi
 
 # Install RPM Fusion (free) repository.
