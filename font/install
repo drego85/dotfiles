@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+#
+# I love Hack Font as monospace font for my system. Unfortunately this font is
+# not packaged in Fedora, so I need to install it manually. This script
+# do the things automatically.
+#
+# Warning: this script download a fixed verson of the font.
+#
+# This script uses 'utils.sh', my custom library for manager dotfiles.
+#
+# Copyright (c) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.me>. All
+# right reserved. This file is license under the MIT license. See LICENSE for
+# more informations.
+
+. ../.common/utils.sh
+
+# Check if some used commands exist.
+ed_exists "xdg-user-dir"
+ed_exists "wget"
+ed_exists "fc-cache"
+ed_exists "fc-list"
+ed_exists "unzip"
+
+hack_version="v3.003"
+
+tmpdir="$(mktemp --directory)"
+
+# It deletes $tmpdir, prints an error message and quits.
+clean_quit() {
+  rm --recursive --force "$tmpdir"
+
+  ed_elog "$@"
+}
+
+# Download and unzip of Hack font.
+hack_dl_url="https://github.com/source-foundry/Hack/releases/download/$hack_version/Hack-$hack_version-ttf.zip"
+hack_dl_file="Hack-$hack_version-ttf.zip"
+
+wget_params="--no-verbose --show-progress --directory-prefix=$tmpdir"
+
+wget $wget_params "$hack_dl_url" ||
+  clean_quit "font: failed to download Hack font $hack_version."
+
+unzip "$tmpdir/$hack_dl_file" -d "$tmpdir" ||
+  clean_quit "font: failed to extract \"$hack_dl_file\"."
+
+# Installation of Hack font.
+hack_install_path="$(xdg-user-dir)/.local/share/fonts"
+ed_make_dir "$hack_install_path"
+
+hack_prefix_src="$tmpdir/ttf"
+
+mv_params="--force --verbose"
+mv $mv_params "$hack_prefix_src/Hack-Bold.ttf"         "$hack_install_path/Hack-Bold.ttf"
+mv $mv_params "$hack_prefix_src/Hack-BoldItalic.ttf"   "$hack_install_path/Hack-BoldItalic.ttf"
+mv $mv_params "$hack_prefix_src/Hack-Italic.ttf"       "$hack_install_path/Hack-Italic.ttf"
+mv $mv_params "$hack_prefix_src/Hack-Regular.ttf"      "$hack_install_path/Hack-Regular.ttf"
+
+# Clear and regenerate font cache.
+ed_log "font: clearing and rigenerating font cache..."
+fc-cache -f
+ed_log "font: done!"
+
+rm --recursive --force "$tmpdir"
