@@ -1,80 +1,33 @@
 #!/usr/bin/env bash
+#
+# This script installs Telegram Desktop on Fedora 29. See README.md for more
+# informations.
+#
+# It is required "util.sh", my custom library for manage dotfiles.
+#
+# Copyright (c) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.me>. All
+# right reserved. This file is licensed under the MIT license. See LICENSE for
+# more informations.
 
-# This script installs Telegram Desktop (64 bit).
+. ../.common/utils.sh
 
-# Original directory (it may be different with $DIR).
-ORIDIR="$(pwd)"
+output="$(dnf list --installed telegram-desktop)"
+installed=$?
 
-# User directory.
-USERDIR="$(xdg-user-dir)"
-
-if [[ -d "$USERDIR/.local/opt/telegram" ]]; then
-  echo "telegram: telegram binaries are already installed!"
-else
-  # Create a temporary directory.
-  TMPDIR="$(mktemp --directory)"
-  cd "$TMPDIR"
-
-  # Download the latest stable version of the theme.
-  wget --no-verbose https://telegram.org/dl/desktop/linux
-
-  FILE="linux"
-
-  # GNU tar recognizes the format by itself.
-  tar -xf "$FILE"
-
-  # Create and copy all things.
-  mkdir --parents "$USERDIR/.local/opt/telegram"
-
-  # Move the application.
-  mv Telegram/* "$USERDIR/.local/opt/telegram/"
-
-  # Go back to original directory and remove the tmp directory.
-  cd "$ORIDIR"
-
-  rm -rf "$TMPDIR"
+if [[ $installed == "0" ]]; then
+  ed_wlog "telegram: Telegram Desktop is already installed!"
+  #exit 0
 fi
 
-# All symlink creation are relative to this path.
-cd "$USERDIR/.local/bin"
-
-# Avoid to recreate the symlink.
-TELEGRAM="telegram"
-if [[ -L "$TELEGRAM" ]]; then
-  echo "telegram: telegram symlink already created!"
+# Install RPM Fusion (free) repository.
+if [[ "$(find /etc/yum.repos.d/ -name rpmfusion-free.repo)" ]]; then
+  ed_wlog "telegram: RPM Fusion free repository is already added!"
 else
-  ln --symbolic -i "../opt/telegram/Telegram" "$TELEGRAM"
+  ed_wlog "telegram: root requested to install RPM Fusion free repository"
+
+  sudo dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
 fi
 
-# Avoid to recreate the symlink.
-TG_UPDATER="telegram-updater"
-if [[ -L "$TG_UPDATER" ]]; then
-  echo "telegram: telegram symlink already created!"
-else
-  ln --symbolic -i "../opt/telegram/Updater" "$TG_UPDATER"
-fi
-
-OLD_DESKTOP_FILE="$USERDIR/.local/share/applications/telegramdesktop.desktop"
-if [[ -f "$OLD_DESKTOP_FILE" ]]; then
-  rm "$OLD_DESKTOP_FILE"
-else
-  echo "telegram: old telegram.desktop file already removed!"
-fi
-
-cd "$ORIDIR"
-
-NEW_DESKTOP_FILE="$USERDIR/.local/share/applications/telegram.desktop"
-
-if [[ -L "$NEW_DESKTOP_FILE" ]]; then
-  echo "telegram: new telegram.desktop file already created!"
-else
-  ln --symbolic --force "$ORIDIR/telegram.desktop" "$NEW_DESKTOP_FILE"
-fi
-
-# Custom keyboard shortcuts.
-SHORTCUTS="$USERDIR/.local/share/TelegramDesktop/tdata/shortcuts-custom.json"
-if [[ -L "$SHORTCUTS" ]]; then
-   echo "telegram: shortcuts file already created!"
-else
-  ln --symbolic --force "$ORIDIR/shortcuts.json" "$SHORTCUTS"
-fi
+# Install Telegram Desktop.
+ed_wlog "telegram: root requested to install Telegram Desktop"
+sudo dnf install telegram-desktop

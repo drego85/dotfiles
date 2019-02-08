@@ -2,20 +2,27 @@
 
 I use [Telegram Desktop][0] as my main client on my computer.
 
+Telegram Desktop is not in Fedora official repositories, but it can be found
+on RPM Fusion. So it is necessary first to install this repository, and then
+install Telegram Desktop.
+
+If you don't want to do a manual installation, I created a small script file
+`install`, that requires my custom Bash library for the dotfiles.
+
 ## Installation
 
-TODO
+First you need to add RPM Fusion:
 
-* Downloading and unpacking
-* New position + desktop file + icon
+    sudo dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
 
-## Theme
+Then you can simply install `telegram-desktop`
 
-I use [Adapta Nokto's][1] Telegram theme. The dark version is very charming.
+    sudo dnf install telegram-desktop
 
-## Custom keybindings
+Start chatting!
 
-TODO
+## Automatic installation
+
+Run `install` script.
 
 [0]: https://desktop.telegram.org/
-[1]: https://github.com/adapta-project/adapta-gtk-theme
