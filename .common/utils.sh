@@ -56,6 +56,27 @@ ed_elog() {
 
 # }}}
 
+# Check if a given program (the command) exists. If it doesn't
+# exist, it prints an error message and exits.
+#
+# Parameters:
+#     $1 -> the command to check.
+#
+# Example:
+#     ed_exists "curl"
+ed_exists() {
+  local command_to_check="$1"
+
+  if [[ -z "$command_to_check" ]]; then
+     ed_elog "ed_exists: no given command to check."
+  fi
+
+  if [[ -z "$(command -v $command_to_check)" ]]; then
+    ed_elog "Error: $command_to_check is not installed on the system."
+  fi
+}
+
+
 # It creates a simlink of a directory or file.
 #
 # Parameters:
