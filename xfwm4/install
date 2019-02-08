@@ -1,23 +1,22 @@
 #!/usr/bin/env bash
+#
+# This script installs Thinble XFWM theme, my custom theme.
+#
+# This script uses 'utils.sh', my custom library for manager dotfiles.
+#
+# Copyright (c) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.me>. All
+# right reserved. This file is license under the MIT license. See LICENSE for
+# more informations.
 
-# This script installs thinble, that is my current xfwm4 theme. It DOESN'T
-# ACTIVATE the theme, but it only downloads it and places the files on the
-# right directory.
+. ../.common/utils.sh
 
-# Full path of this script.
-SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
-USERDIR="$(xdg-user-dir)"
+ed_exists "xdg-user-dir"
+ed_exists "readlink"
 
 # Update or initialize the submodule.
-git submodule update --init "$SCRIPTDIR/thinble"
+git submodule update --init "thinble"
 
-# Avoid to recreate the symlink.
-SYMLINK="$USERDIR/.local/share/themes/thinble"
-if [[ -L "$SYMLINK" && -d "$SYMLINK" ]]; then
-  echo "xfwm4 theme: thinble symlink already created!"
-else
-  mkdir --parents "$USERDIR/.local/share/themes/"
-  ln --symbolic --force --verbose "$SCRIPTDIR/thinble" \
-                                  "$USERDIR/.local/share/themes/"
-fi
+dest_dir="$(xdg-user-dir)/.local/share/themes"
+ed_make_dir "$dest_dir"
+
+ed_make_symlink "$(readlink -f thinble)" "$dest_dir/thinble"
