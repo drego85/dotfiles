@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# This script installs Thinble XFWM theme, my custom theme.
+# This script installs Thinble Xfwm theme, my custom theme.
 #
 # This script uses 'utils.sh', my custom library for manager dotfiles.
 #
