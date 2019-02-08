@@ -76,6 +76,29 @@ ed_exists() {
   fi
 }
 
+# Check if a given directory exists, if it doesn't exist it will create
+# the path with the directory.
+#
+# At the end of this function the path is certainly created.
+#
+# Parameters:
+#	$1 -> directory to check and create.
+ed_make_dir() {
+  local directory="$1"
+
+  if [[ -z "$directory" ]]; then
+    ed_elog "ed_make_dir: no given directory to create."
+  fi
+
+  # $directory may exist but it is not necessary a directory.
+  if [[ -e "$directory" ]]; then
+    if [[ ! -d "$directory" ]]; then
+      ed_elog "Error: ed_make_dir: \"$directory\" already exists and it is not a directory"
+    fi
+  else
+    mkdir --parents --verbose "$directory"
+  fi
+}
 
 # It creates a simlink of a directory or file.
 #
