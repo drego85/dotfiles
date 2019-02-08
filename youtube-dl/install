@@ -1,39 +1,22 @@
 #!/usr/bin/env bash
-
-# This script installs youtube-dl from its repository on GitHub. It is always
-# better to install it through system's package manager (in my case apt), but it
-# has an old version that doesn't work.
 #
-# This script installs youtube-dl in ~/.local/bin directory.
+# This script installs youtube-dl.
 #
-# To run this script you need wget and my small Bash library, that can be found
-# in '.common/utils.sh'.
+# This script uses 'utils.sh', my custom library for manager dotfiles.
 #
-# Copyright (c) Emanuele Petriglia 2018 <inbox@emanuelepetrigia.me>
-# All right reserved. This file is licensed under the MIT license.
+# Copyright (c) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.me>. All
+# right reserved. This file is license under the MIT license. See LICENSE for
+# more informations.
 
 . ../.common/utils.sh
 
-BINDIR="$HOME/.local/bin"
-YOUTUBE_DL_BIN="$BINDIR/youtube-dl"
+output="$(dnf list --installed youtube-dl)"
+installed=$?
 
-YOUTUBE_DL_GITHUB="https://yt-dl.org/downloads/latest/youtube-dl"
-
-TEST_YOUTUBE_DL="$(which youtube-dl)"
-if [[ "$TEST_YOUTUBE_DL" == "$YOUTUBE_DL_BIN" ]]; then
-  ed_log "youtube-dl is already installed on $BINDIR"
-  exit 0
-elif [[ -z "$TEST_YOUTUBE_DL" ]]; then
-  ed_log "No youtube-dl installation found, installing it..."
-
-  mkdir --parents --verbose "$BINDIR"
-
-  WGET_OPTIONS="--quiet --show-progress"
-  wget $WGET_OPTIONS "$YOUTUBE_DL_GITHUB" --output-document="$YOUTUBE_DL_BIN"
-
-  chmod u+x "$YOUTUBE_DL_BIN"
-
-  ed_log "youtube-dl succesfully installed, version: $(youtube-dl --version)"
+if [[ $installed == "0" ]]; then
+  ed_wlog "youtube-dl: youtube-dl already installed!"
 else
-  ed_elog "youtube-dl is already installed, but not in $BINDIR"
+  ed_wlog "youtube-dl: root requested to install youtube-dl"
+
+  sudo dnf install youtube-dl
 fi
