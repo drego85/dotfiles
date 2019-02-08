@@ -1,36 +1,22 @@
 #!/usr/bin/env bash
+#
+# This script installs GnuPG v2 configurations.
+#
+# This script uses 'utils.sh', my custom library for manager dotfiles.
+#
+# Copyright (c) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.me>. All
+# right reserved. This file is license under the MIT license. See LICENSE for
+# more informations.
 
-# This script creates the symlink of GnuPG 2 configuration.
+. ../.common/utils.sh
 
-# Full path of this script.
-SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ed_exists "xdg-user-dir"
+ed_exists "readlink"
 
-USERDIR="$(xdg-user-dir)"
+dest_dir="$(xdg-user-dir)/.gnupg"
 
-LN="ln --verbose --symbolic --force"
+ed_make_dir "$dest_dir"
 
-if [[ ! -d "$USERDIR/.gnupg" ]]; then
-  mkdir --verbose "$USERDIR/.gnupg"
-fi
-
-# Avoid to recreate the symlink.
-GPGCONF="$USERDIR/.gnupg/gpg.conf"
-if [[ -L "$GPGCONF" ]]; then
-  echo "gpg: gpg.conf symlink already created!"
-else
-  $LN "$SCRIPTDIR/gpg.conf" "$GPGCONF"
-fi
-
-GPGAGENT="$USERDIR/.gnupg/gpg-agent.conf"
-if [[ -L "$GPGAGENT" ]]; then
-  echo "gpg: gpg-agent.conf symlink already created!"
-else
-  $LN "$SCRIPTDIR/gpg-agent.conf" "$GPGAGENT"
-fi
-
-SSHCONTROL="$USERDIR/.gnupg/sshcontrol"
-if [[ -L "$SSHCONTROL" ]]; then
-  echo "gpg: sshcontrol symlink already created!"
-else
-  $LN -i "$SCRIPTDIR/sshcontrol" "$SSHCONTROL"
-fi
+ed_make_symlink "$(readlink -f gpg.conf)" "$dest_dir/gpg.conf"
+ed_make_symlink "$(readlink -f gpg-agent.conf)" "$dest_dir/gpg-agent.conf"
+ed_make_symlink "$(readlink -f sshcontrol)" "$dest_dir/sshcontrol"
