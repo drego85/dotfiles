@@ -134,6 +134,10 @@ ed_make_symlink() {
       ed_log "$dst is already a symlink to $src"
     fi
   else
+    if [[ "$sudo" ]]; then
+      ed_wlog "root required to create symlink \"$src\" -> \"$dst\""
+    fi
+
     $sudo ln --symbolic --force --verbose "$src" "$dst"
   fi
 }
