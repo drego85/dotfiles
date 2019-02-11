@@ -82,12 +82,17 @@ ed_exists() {
 # At the end of this function the path is certainly created.
 #
 # Parameters:
-#	$1 -> directory to check and create.
+#	$1 -> directory to check and create;
+#	$2 -> if "sudo" it creates the directory with root permissions.
 ed_make_dir() {
-  local directory="$1"
-
-  if [[ -z "$directory" ]]; then
+  if [[ -z "$1" ]]; then
     ed_elog "ed_make_dir: no given directory to create."
+  else
+    local directory="$1"
+  fi
+
+  if [[ "$2" == "sudo" ]]; then
+    local sudo="sudo"
   fi
 
   # $directory may exist but it is not necessary a directory.
@@ -96,7 +101,11 @@ ed_make_dir() {
       ed_elog "Error: ed_make_dir: \"$directory\" already exists and it is not a directory"
     fi
   else
-    mkdir --parents --verbose "$directory"
+    if [[ "$sudo" ]]; then
+      ed_wlog "root required to create directory \"$directory\""
+    fi
+
+    $sudo mkdir --parents --verbose "$directory"
   fi
 }
 
