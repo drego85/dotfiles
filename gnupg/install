@@ -2,6 +2,9 @@
 #
 # This script installs GnuPG v2 configurations.
 #
+# Note that it is necessary to add manual lines on `.bashrc` and
+# `.bash_profiles`. See `README.md` for more information.
+#
 # This script uses 'utils.sh', my custom library for manager dotfiles.
 #
 # Copyright (c) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.me>. All
@@ -20,3 +23,19 @@ ed_make_dir "$dest_dir"
 ed_make_symlink "$(readlink -f gpg.conf)" "$dest_dir/gpg.conf"
 ed_make_symlink "$(readlink -f gpg-agent.conf)" "$dest_dir/gpg-agent.conf"
 ed_make_symlink "$(readlink -f sshcontrol)" "$dest_dir/sshcontrol"
+
+# Manage gpg-agent via systemd --user
+
+readonly systemd_user="$(xdg-user-dir)/.config/systemd/user"
+readonly systemd_files="/usr/share/doc/gnupg2/examples/systemd-user"
+
+ed_make_dir "$systemd_user"
+
+cd "$systemd_files"
+
+cp *.{socket,service} "$systemd_user"
+
+systemctl --user daemon-reload
+
+systemctl --user enable *.socket
+systemctl --user start *.socket
