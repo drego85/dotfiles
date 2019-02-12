@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-complete -W "application library help" java-init
