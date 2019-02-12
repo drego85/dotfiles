@@ -15,6 +15,10 @@ set -o vi
 set editing-mode vi
 set keymap vi
 
+if [[ -f "/etc/profile.d/bash_completion.sh" ]]; then
+  . /etc/profile.d/bash_completion.sh
+fi
+
 # }}}
 
 # Global variables {{{
