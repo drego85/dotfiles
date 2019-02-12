@@ -1,35 +1,19 @@
 #!/usr/bin/env bash
+#
+# This script installs my Bash configuration.
+#
+# This script uses 'utils.sh', my custom library for manager dotfiles.
+#
+# Copyright (c) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.me>. All
+# right reserved. This file is license under the MIT license. See LICENSE for
+# more informations.
 
-# This script creates the symlink of Bash configuration.
+. ../.common/utils.sh
 
-# Full path of this script.
-SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ed_exists "xdg-user-dir"
+ed_exists "readlink"
 
-USERDIR="$(xdg-user-dir)"
+readonly dst_dir="$(xdg-user-dir)"
 
-LN="ln --symbolic --force --verbose"
-
-# Avoid to recreate the symlink.
-BASHCONF="$USERDIR/.bash_aliases"
-if [[ -L "$BASHCONF" ]]; then
-  echo "bash: bash_aliases symlink already created!"
-else
-  $LN "$SCRIPTDIR/bash_aliases" "$BASHCONF"
-fi
-
-# Add Bash completion scripts.
-COMPLETION_INIT_SRC="$SCRIPTDIR/bash_completion"
-COMPLETION_INIT_DST="$USERDIR/.bash_completion"
-if [[ -L "$COMPLETION_INIT_DST" ]]; then
-  echo "bash: completion init script symlink already created!"
-else
-  $LN "$COMPLETION_INIT_SRC" "$COMPLETION_INIT_DST"
-fi
-
-COMPLETION_SRC="$SCRIPTDIR/bash_completion.d"
-COMPLETION_DST="$USERDIR/.bash_completion.d"
-if [[ -L "$COMPLETION_DST" ]]; then
-  echo "bash: completion scripts symlink already created!"
-else
-  $LN "$COMPLETION_SRC" "$COMPLETION_DST"
-fi
+ed_make_symlink "$(readlink -f bashrc)" "$dst_dir/.bashrc"
+ed_make_symlink "$(readlink -f bash_profile)" "$dst_dir/.bash_profile"

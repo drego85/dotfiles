@@ -19,15 +19,13 @@ set keymap vi
 
 # Global variables {{{
 
-# Add custom PATH if necessary.
-if [[ ! "$PATH" =~ /home/$USER/.local/bin ]]; then
-  export PATH="$HOME/.local/bin:$PATH"
-fi
+# Bash prompt.
+export PS1="[\u@\h \[\e[36m\]\W\[\e[m\]]\\$ "
 
-# Needed by ssh-add.
+# Enable SSH support for gpg-agent.
 export SSH_AUTH_SOCK="/run/user/$(id -u)/gnupg/S.gpg-agent.ssh"
 
-# Default editor
+# Default editor.
 export EDITOR=vim
 
 # }}}
@@ -55,22 +53,6 @@ man() {
    command man "$@"
 }
 
-# Convert a JPEG image to PNG and delete the original one. The JPEG image must
-# ends with '.jpg' or '.jpeg'.
-# It is required ImageMagick to convert images.
-jpeg-to-png() {
-  local JPEG="$1"
-
-  if [[ ! -z "$JPEG" ]]; then
-    local PNG="${JPEG/%.jp*g/.png}"
-
-    convert "$JPEG" "$PNG"
-    rm "$JPEG"
-  else
-    echo "Missing JPEG source image to convert!"
-  fi
-}
-
 # Prints to the standard output a list of dreams in a fixed format. The list is
 # filename ordered. The format is: "FILENAME - FIRST LINE OF THE DREAM". Usually
 # the first line of the dream is the title.
@@ -80,43 +62,9 @@ list-dreams() {
   done
 }
 
-# This commands allows you to change directory via shortcuts. You can see a list
-# of available shortcuts with `jump list`.
-# TODO: create a dedicated script.
-jump() {
-  local dest="$1"
-
-  if [[ -z "$dest" ]]; then
-    echo "error: you must give an argument"
-  else
-    case "$dest" in
-      list)
-        echo "nano -> ~/Documents/writing/novels/nanowrimo-2018"
-        echo "writing -> ~/Documents/writing"
-        ;;
-      nano)
-        cd ~/Documents/writing/novels/nanowrimo-2018
-        ;;
-      writing)
-        cd ~/Documents/writing
-        ;;
-      *)
-        echo "error: $dest is not a shortcut"
-        ;;
-    esac
-  fi
-}
-
 # }}}
 
 # Other settings {{{
-
-# Starts gpg-agent ONLY if there is not a GUI enviroment (for example on a
-# server or container). In the main host with a GUI gpg-agent is started
-# automatically.
-if [[ -z "$(dpkg -l | grep xserver)" && -z "$(pidof gpg-agent)" ]]; then
-  eval "$(gpg-agent --daemon)"
-fi
 
 # Bash history {{{
 #
@@ -174,21 +122,9 @@ alias ll="ls -l"
 alias la="ls -A"
 alias l="ls -CF"
 
-# Don't use less, instead use view (readonly file opened with vim).
-alias less="view"
-
 # Allows to create a Java application project with Gradle using a modern
 # version.
 alias java-setup="gradle wrapper --gradle-version 4.6; ./gradlew init --type java-application"
-
-# Allows to see why a package is installed (using APT).
-alias why="apt-cache rdepends --installed"
-
-# Shows all installed packages on the system (using APT).
-alias installed="apt list --installed"
-
-# Converts a single JPEG image to PNG and delete the first one.
-alias jtp="jpeg-to-png"
 
 # Run VIM in writing mode (see my .vimrc for more informations).
 alias writing="vim -c Writing"

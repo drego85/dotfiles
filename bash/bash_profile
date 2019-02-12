@@ -1,0 +1,12 @@
+# .bash_profile
+
+# Get the aliases and functions
+if [ -f ~/.bashrc ]; then
+	. ~/.bashrc
+fi
+
+# User specific environment and startup programs
+
+# Because ssh-agent is automatically started by Xfce, and I don't know how to
+# disable it.
+pkill ssh-agent
