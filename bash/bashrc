@@ -117,6 +117,10 @@ alias py="python3"
 alias snippets="ls $HOME/.vim/snippets"
 alias snips="snippets"
 
+# Enable colors for varous commands.
+alias ls="ls --color=always"
+alias grep="grep --color=auto"
+
 # Enable ls aliases.
 alias ll="ls -l"
 alias la="ls -A"
