@@ -1,10 +1,29 @@
-# Firefox dotfiles
+# Firefox
 
-This folder contains all files used to customize my Firefox experience.
+I use Mozilla Firefox as my main browser. I like it because is privacy focused,
+fast and work really well in Linux. It is a big and complex software, it is not
+easy to customize it.
+
+In this file there is a tutorial to install my configuration, I also explain
+some choices. There is an installer script that does 90% of the things
+automatically, but some actions need to be performed manually.
 
 ## Installer script
 
-## Extentions
+Unfortunately Firefox needs to be customized from GUI instead on CLI, so there
+is not a real installer script. The steps to do are:
+
+1. From an active Firefox session, create a new profile with name `emanuele` (it
+   is my name, it is hardcoded in the installer script). You can access to the
+   page via `about:profiles`.
+2. Switch to the new profile and delete the old one (if you want).
+3. Login to Firefox Sync (or download all extentions you want).
+4. Customize Firefox GUI.
+5. Once uBlock Origin is installed, load the configuration from
+   `ublok_config.txt`.
+6. To set custom `user.js`, run my installer script.
+
+## Used extentions
 
 Extentions can't be installed from command line, so you need to install them
 manually (or use [Firefox Sync][0]). I use these extentions:
@@ -19,13 +38,6 @@ manually (or use [Firefox Sync][0]). I use these extentions:
 All these extentions are automatically updated via Firefox, so you only need to
 download them the first time.
 
-### Extentions configuration
-
-
-Right now I have only the configuration for uBlock Origin, it can be installed
-going to `Settings` -> `Restore from file` and load the file
-`ublock_config.txt`.
-
 ## user.js
 
 The `user.js` file is a file with all options to customize Firefox behaviour.
@@ -39,27 +51,6 @@ The script I've created, [`install`][15], downloads the latest version of
 ghacks' `user.js` and move that file to the Firefox profile with suffix
 `emanuele` (my name). At the end it append my custom options to `user.js` file
 on the profile.
-
-## Firefox sync
-
-I use [Firefox Sync][0] to syncronize only installed extentions and bookmarks.
-All other settings are ignored (such as extentions, `user.js` and UI settings).
-
-## User Interface
-
-The user interface can be modified only directly, it can't be reproduced via
-command line options or using a configuration file like `user.js`. The notable
-edits that I've done are:
-
-* Theme: Dark;
-* Toolbars: only bookmarks toolbar;
-* Density: Touch;
-* Main toolbar: reload button, home button, search bar and uBlock Origin icon.
-
-## Custom graphic style
-
-
-
 
 [0]: https://www.mozilla.org/en-US/firefox/features/sync/
 [1]: https://addons.mozilla.org/en-US/firefox/addon/canvasblocker/
