@@ -1,8 +1,10 @@
 /**
- * Custom preferences for Mozilla Firefox.
+ * My custom preferences for Mozilla Firefox.
  *
- * WARNING: this file must be appended before ghacks-userjs, because these are
- * only personal settings, but I use also default settings.
+* For Firefox 65.0.
+ *
+ * WARNING: this file must be appended after ghacks-user.js file, because I use
+ * these settings, but I also overwrite some of these.
  */
 
 user_pref("_user.js.parrot", "syntax error @ BEGIN USER CUSTOMIZATIONS");
@@ -40,7 +42,7 @@ user_pref("intl.accept_languages", "it-IT, it, en-UK, en");
  * 0300: AUTO UPDATING
  */
 
-/** 0301a: enable auto-update checks for Firefox. **/
+/** 0301b: enable auto-update checks for Firefox. **/
 user_pref("app.update.enabled", true);
 
 /* 0301b: enable auto-update checks for extensions. **/
@@ -80,6 +82,10 @@ user_pref("signon.rememberSignons", false);
  * 1000: CACHE [SETUP]
  */
 
+/** 1003: RAM cache capacity. **/
+user_pref("browser.cache.memory.capacity", 30000);
+user_pref("browser.cache.memory.max_entry_size", 30000);
+
 /** 1020: enable the Session Restore service. **/
 user_pref("browser.sessionstore.max_tabs_undo", 10);
 user_pref("browser.sessionstore.max_windows_undo", 3);
@@ -93,17 +99,6 @@ user_pref("browser.sessionstore.max_windows_undo", 3);
  * Note: I use uBlock Origin to block by default all fonts.
  */
 user_pref("browser.display.use_document_fonts", 1);
-
-
-/**
- * 1700: CONTAINERS [SETUP]
- */
-
-/** 1701: enable Container Tabs setting in preferences. **/
-user_pref("privacy.userContext.ui.enabled", true);
-
-/** 1702: enable Container Tabs. **/
-user_pref("privacy.userContext.enabled", true);
 
 
 /**
@@ -132,7 +127,7 @@ user_pref("browser.download.folderList", 1);
 /** 2651: do not ask everytime where to download a file. **/
 user_pref("browser.download.useDownloadDir", true);
 
-/** 2652: adds downloads to the system's "recent documents" list.
+/** 2652: add downloads to the system's "recent documents" list.
  * Note: thist list is cleared on exiting Firefox!
  */
 user_pref("browser.download.manager.addToRecentDocs", true);
@@ -155,8 +150,13 @@ user_pref("network.cookie.cookieBehavior", 1);
 
 /** 2803: set what history items to clear on shutdown. **/
 user_pref("privacy.clearOnShutdown.cache", false);
+user_pref("privacy.clearOnShutdown.cookies", false);
 user_pref("privacy.clearOnShutdown.sessions", false);
 user_pref("privacy.clearOnShutdown.offlineApps", false);
+user_pref("privacy.clearOnShutdown.sessions", false);
+
+//user_pref("privacy.firstparty.isolate", true);
+//user_pref("privacy.resistFingerprinting", true);
 
 
 /**
@@ -167,9 +167,11 @@ user_pref("privacy.clearOnShutdown.offlineApps", false);
 user_pref("browser.tabs.warnOnClose", false);
 user_pref("browser.tabs.warnOnCloseOtherTabs", false);
 user_pref("browser.tabs.warnOnOpen", false);
+user_pref("general.warnOnAboutConfig", false);
 
 /** Disable autocopy default. **/
 user_pref("clipboard.autocopy", false);
+
 
 /**
  * Not documented by ghacks-userjs
