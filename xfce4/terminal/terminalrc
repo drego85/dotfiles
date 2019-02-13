@@ -29,5 +29,8 @@ DropdownHeight=45
 DropdownAlwaysShowTabs=FALSE
 DropdownKeepAbove=FALSE
 FontName=Hack 12
-ColorPalette=#000000;#cc0000;#4e9a06;#c4a000;#3465a4;#75507b;#06989a;#d3d7cf;#555753;#ef2929;#8ae234;#fce94f;#739fcf;#ad7fa8;#34e2e2;#eeeeec
+ColorForeground=#e9e9f4
+ColorBackground=#282936
+ColorCursor=x
+ColorPalette=#282936;#ea51b2;#00f769;#ebff87;#62d6e8;#b45bcf;#a1efe4;#e9e9f4;#4d4f68;#ea51b2;#00f769;#ebff87;#62d6e8;#b45bcf;#a1efe4;#f7f7fb
 

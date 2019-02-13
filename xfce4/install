@@ -20,9 +20,11 @@ readonly dest_dir="$(xdg-user-dir)/.config/xfce4"
 ed_make_symlink "$(readlink -f xfce4-taskmanager.rc)" "$dest_dir/xfce4-taskmanager.rc"
 ed_wlog "If you change a setting from GUI the link will be removed! FIX in the future"
 
+# Install xfce4-termina configuration
+
 ed_make_symlink "$(readlink -f terminal/terminalrc)" "$dest_dir/terminal/terminalrc"
 ed_wlog "If you change a setting from GUI the link will be removed! FIX in the future"
 
 ed_make_dir "$dest_dir/terminal/colorschemes"
-ed_make_symlink "$(readlink -f terminal/papercolor-ema-pe.theme)" \
-  "$dest_dir/terminal/colorschemes/papercolor-ema-pe.theme"
+ed_make_symlink "$(readlink -f terminal/dracula.theme)" \
+  "$dest_dir/terminal/colorschemes/dracula.theme"
