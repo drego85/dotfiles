@@ -1,69 +1,45 @@
 #!/usr/bin/env bash
+#
+# This script installs my VIM configuration.
+#
+# This script uses 'utils.sh', my custom library for manager dotfiles.
+#
+# Copyright (c) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.me>. All
+# right reserved. This file is license under the MIT license. See LICENSE for
+# more informations.
 
-# This script sets up vim configuraion.
+. ../.common/utils.sh
 
-# Full path of this script.
-SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ed_exists "xdg-user-dir"
+ed_exists "readlink"
 
-XDG_USER_DIR="xdg-user-dir"
+readonly vim_folder="$(xdg-user-dir)/.vim"
 
-if [[ -z "$(which ctags)" ]]; then
-  echo "vim: no ctags program found so no tag jumping"
-fi
+ed_make_dir "$vim_folder"
 
-# Fallback if 'xdg-user-dir' isn't installed.
-if [[ -z $(which "$XDG_USER_DIR") ]]; then
-  USERDIR="$HOME"
-else
-  USERDIR="$( $XDG_USER_DIR )"
-fi
+# vimrc.
 
-# Vimrc settings.
-VIMRC="$USERDIR/.vimrc"
-if [[ -L "$VIMRC" ]]; then
-  echo "vim: vimrc symlink already created!"
-else
-  ln --symbolic "$SCRIPTDIR/vimrc" "$VIMRC"
-fi
+ed_make_symlink "$(readlink -f vimrc)" "$vim_folder/vimrc"
 
-# Color scheme settings.
-git submodule update --init $SCRIPTDIR/papercolor-theme
+# Color scheme.
+ed_make_dir "$vim_folder/colors"
 
-COLOR_SCHEME="$USERDIR/.vim/colors/PaperColor.vim"
-SRC_COLOR_SCHEME="$SCRIPTDIR/papercolor-theme/colors/PaperColor.vim"
+git submodule update --init papercolor-theme
 
-if [[ -L "$COLOR_SCHEME" ]]; then
-  echo "vim: color scheme (PaperColor.vim) symlink already created!"
-else
-  mkdir --parents "$USERDIR/.vim/colors/"
+ed_make_symlink "$(readlink -f papercolor-theme/colors/PaperColor.vim)" \
+  "$vim_folder/colors/PaperColor.vim"
 
-  ln --symbolic "$SRC_COLOR_SCHEME" "$COLOR_SCHEME"
-fi
+# Snippets.
 
-# Add snippets.
-SRC_SNIPPETS="$SCRIPTDIR/snippets"
-DST_SNIPPETS="$USERDIR/.vim/snippets"
+ed_make_dir "$vim_folder/snippets"
 
-if [[ ! -L "$DST_SNIPPETS" ]]; then
-  mkdir --parent "$USERDIR/.vim"
+ed_make_symlink "$(readlink -f snippets)" "$vim_folder/snippets"
 
-  ln --symbolic "$SRC_SNIPPETS" "$DST_SNIPPETS"
-else
-  echo "vim: snippets directory is already created!"
-fi
+# Plugins.
 
-# Install plugins.
-git submodule update --init $SCRIPTDIR/plugins/start/goyo.vim
-git submodule update --init $SCRIPTDIR/plugins/start/vim-pencil
+ed_make_dir "$vim_folder/pack"
 
-PLUGINS="$USERDIR/.vim/pack/"
-SRC_PLUGINS="$SCRIPTDIR/plugins"
+git submodule update --init plugins/start/goyo.vim
+git submodule update --init plugins/start/vim-pencil
 
-if [[ -L "$PLUGINS/plugins" ]]; then
-  echo "vim: plugins are already installed!"
-else
-  mkdir --parents "$USERDIR/.vim/pack/"
-
-  ln --symbolic "$SRC_PLUGINS" "$PLUGINS"
-fi
-
+ed_make_symlink "$(readlink -f plugins)" "$vim_folder/pack"
