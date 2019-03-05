@@ -1,13 +1,21 @@
 #!/usr/bin/env bash
-
-# This script logins automatically to the Sapienza's Wifi network, without open
-# a browser and insert manually the username and password.
-# It required `wget` to do the request (POST) and `pass` to get the password.
-
+#
+# This script logins automatically to the Sapienza's WiFi network, without open
+# a broswer and insert manually the username and password.
+#
+# This script requires these programs:
+#   - wget: to do the connection (POST);
+#   - mktemp: to store temporary file during the login;
+#   - notify-sent: to send notification about the login/logout operation.
+#   - pass (optional): to retrieve the password.
+#
+# I use `pass` to manage and store password, but you can insert your password
+# with the global variable `PASSWORD`.
+#
 # TODO:
-#   - Add error handling;
-
-# Copyright (c) 2018 Emanuele Petriglia <inbox@emanuelepetriglia.me>
+#   - Add error handling.
+#
+# Copyright (c) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.me>
 # All right reserved. This file is licensed under the MIT license.
 
 # Login URL.
@@ -59,9 +67,12 @@ Available commands:
 
     check
         It prints "connected" or "disconnected" if there is an Internet
-        connection. By default is tries to open Sapienza's Web home page.
+        connection. By default is tries to connect to Sapienza's Web home page.
 
-This script uses 'wget' and 'pass', they must be installed on the system.
+This script uses 'wget', 'mktemp', 'notify-send' and 'pass', they must be
+installed on the system.
+
+For more informations read the header of this script.
 _EOF
 }
 
@@ -110,6 +121,7 @@ cmd_login() {
   if [[ $(cmd_check_network) != "connected" ]]; then
     error "Failed to login"
   fi
+
 }
 
 # It logouts from the Sapienza's Wifi network. It uses the ID provided by the
