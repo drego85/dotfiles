@@ -119,9 +119,11 @@ cmd_login() {
   rm "$html_result"
 
   if [[ $(cmd_check_network) != "connected" ]]; then
+    notify-send --icon=network-error "Sapienza's Wifi" "Failed to login"
     error "Failed to login"
   fi
 
+  notify-send --icon=network-wireless "Sapienza's WiFi" "Logged"
 }
 
 # It logouts from the Sapienza's Wifi network. It uses the ID provided by the
@@ -139,8 +141,12 @@ cmd_logout() {
   wget --quiet --output-document /dev/null --post-data "$data" "$logout_url"
 
   if [[ $(cmd_check_network) != "disconnected" ]]; then
+    notify-send --icon=network-error "Sapienza's Wifi" "Failed to logout"
     error "Failed to logout"
   fi
+
+  notify-send --icon=notification-network-wireless-disconnected \
+    "Sapienza's WiFi" "Logout"
 }
 
 #
