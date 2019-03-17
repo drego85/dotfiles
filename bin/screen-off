@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+# This script turns off the screen.
+#
+# You can optionally specify a delay (default is 1 second) before the screen is
+# turned off.
+#
+# How it works: it simply run "xset dpms force off".
+#
+# Copyright (C) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.me>. All right
+# reserved. This file is licensed under the MIT license.
+
+readonly program="${0##*/}"
+
+case "$1" in
+  --help|-h)
+    cat <<-_EOF
+Usage:
+    $program [--help|-h] [DELAY]
+
+It turns off the screen. You can specify the amount of time before the screen
+goes off. If DELAY is not specified, the default value is 1 second. It follow
+the 'sleep' format (see 'man sleep').
+
+Options:
+  --help, -h
+      Display this help text and exit.
+_EOF
+  ;;
+  *)
+    delay="1s"
+
+    if [[ ! -z "$1" ]] ; then
+      delay="$1"
+    fi
+
+    sleep "$delay" && xset dpms force off
+  ;;
+esac
+
+exit 0
