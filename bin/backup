@@ -6,7 +6,7 @@
 # This script does a backup of some directories from my home folder.
 
 readonly HDD_ID="6bada27e-026d-424c-b3f7-ad323ace4574"
-readonly HDD="/media/$USER/$HDD_ID"
+readonly HDD="/run/media/$USER/$HDD_ID"
 
 readonly HOME="/home/$USER"
 
@@ -34,8 +34,8 @@ fi
 # Backup objectives
 #
 
-backup_folder $HOME/Music/                $HDD/music/
-backup_folder $HOME/Pictures/backgrounds/ $HDD/immagini/backgrounds/
+#backup_folder $HOME/Music/                $HDD/music/
+#backup_folder $HOME/Pictures/backgrounds/ $HDD/immagini/backgrounds/
 backup_folder $HOME/Documents/gps_tracks/ $HDD/file/gps_tracks/
 backup_folder $HOME/Documents/writing/    $HDD/file/writing/
-backup_folder $HOME/Pictures/gif/         $HDD/immagini/gif/
+#backup_folder $HOME/Pictures/gif/         $HDD/immagini/gif/
