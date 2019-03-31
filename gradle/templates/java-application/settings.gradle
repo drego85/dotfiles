@@ -1,5 +1,0 @@
-/*
- * Settings for a basic configuration of a Java application.
- */
-
-rootProject.name = 'PROJECTNAME'
