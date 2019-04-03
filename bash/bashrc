@@ -114,7 +114,6 @@ alias yt-dl='youtube-dl -f "best[height=720]"'
 # It replace spaces to underscore and convert the text in lowercase.
 alias renamefull="rename 's/ /_/g' * && rename 'y/A-Z/a-z/' *"
 
-# Python alias
 alias py="python3"
 
 # Show all available snippets for VIM.
@@ -130,14 +129,11 @@ alias ll="ls -l"
 alias la="ls -A"
 alias l="ls -CF"
 
-# Allows to create a Java application project with Gradle using a modern
-# version.
-alias java-setup="gradle wrapper --gradle-version 4.6; ./gradlew init --type java-application"
-
 # Run VIM in writing mode (see my .vimrc for more informations).
 alias writing="vim -c Writing"
 
-# Quickly change directory.
 alias ..="cd .."
+
+alias clr="clear"
 
 # }}}
