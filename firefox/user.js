@@ -1,7 +1,7 @@
 /**
  * My custom preferences for Mozilla Firefox.
  *
-* For Firefox 65.0.
+ * For Firefox 66.
  *
  * WARNING: this file must be appended after ghacks-user.js file, because I use
  * these settings, but I also overwrite some of these.
