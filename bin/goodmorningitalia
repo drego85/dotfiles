@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+#
+# This script creates automatically a temporary email alias, using jetable.org
+# service, then it uses that email to subscribe to goodmorningitalia.it, the
+# 30-days free trial. The temporary email forwards all incoming emails to a my
+# custom alias.
+#
+# This script requires these programs:
+#   - wget: to do the connection (POST);
+#
+# I use `pass` to manage and store password, but you can insert your password
+# with the global variable `PASSWORD`.
+#
+# Copyright (c) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.me>
+# All right reserved. This file is licensed under the MIT license.
+
+# It prints all arguments to the standard error and exits with error code 1.
+err() {
+  echo "$@" >&2
+  exit 1
+}
+
+# Temporary email creation.
+# WARNING: you need to activate you real email BEFORE you run this script!
+
+email="newsletter-goodmorningitalia@emanuelepetriglia.com"
+
+response="$(wget --output-document=- --quiet \
+  --post-data "email=$email&time=2592000" \
+  "https://www.jetable.org/en/confirm")"
+
+tmp_email="$(echo "$response" | awk 'match($0, /<span id="aliasgenerated">(.*)<\/span>/, arr) { print arr[1] }')"
+
+if [[ ! "$tmp_email" =~ ([[:alnum:]])+@jetable.org ]]; then
+  err "Failed to create temporary email at https://www.jetable.org/en/index"
+else
+  echo "Temporary email for one month: $tmp_email"
+fi
+
+# Subscription to goodmorningitalia.it
+
+readonly header='Content-Type: application/json;charset=utf-8'
+post_data=$(cat <<EOF
+{"action":"signup","email":"$tmp_email","nicename":"Mario","surName":"Rossi","giftUniqueKey":""}
+EOF
+)
+
+response="$(wget --quiet --output-document=- --header="$header" \
+  --post-data "$post_data" "https://api.goodmorningitalia.it/auth")"
+
+if [[ "$response" != '{"msg":"Success","status":1}' ]]; then
+  err "Failed to subscribe to https://app.goodmorningitalia.it/"
+fi
+
+echo "Success. Verify the new account on you email inbox!"
+
+exit 0
