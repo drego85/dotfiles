@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 #
-# This script creates automatically a temporary email alias, using jetable.org
-# service, then it uses that email to subscribe to goodmorningitalia.it, the
-# 30-days free trial. The temporary email forwards all incoming emails to a my
-# custom alias.
+# This script automatically subscribe a 30-days free trial on
+# goodmorningitalia.it, a online news service. I use to subscribe a temporary
+# email alias that forwards all emails to my personal inbox.
 #
 # This script requires these programs:
-#   - wget: to do the connection (POST);
+#   - wget: to do the connection (POST).
 #
-# I use `pass` to manage and store password, but you can insert your password
-# with the global variable `PASSWORD`.
+# WARNING: you need to activate you real email on jetable.org before run this
+# script, also use this script may break ToS on both jetable.org and
+# goodmorningitalia.it!
 #
 # Copyright (c) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.me>
 # All right reserved. This file is licensed under the MIT license.
@@ -21,12 +21,16 @@ err() {
 }
 
 # Temporary email creation.
-# WARNING: you need to activate you real email BEFORE you run this script!
 
-email="newsletter-goodmorningitalia@emanuelepetriglia.com"
+# To avoid SPAM.
+alias="newsletter-goodmorningitalia"
+domain="emanuelepetriglia.com"
+email="$alias@$domain"
+
+readonly ONE_MONTH="2592000"
 
 response="$(wget --output-document=- --quiet \
-  --post-data "email=$email&time=2592000" \
+  --post-data "email=$email&time=$ONE_MONTH" \
   "https://www.jetable.org/en/confirm")"
 
 tmp_email="$(echo "$response" | awk 'match($0, /<span id="aliasgenerated">(.*)<\/span>/, arr) { print arr[1] }')"
