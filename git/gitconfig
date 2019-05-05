@@ -3,7 +3,7 @@
     excludesfile = ~/.gitignore
 [user]
     name = Emanuele Petriglia
-    email = inbox@emanuelepetriglia.me
+    email = inbox@emanuelepetriglia.com
     signingkey = 16A43647 # My subkey for signing.
 [commit]
     gpgSign = true
