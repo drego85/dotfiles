@@ -137,8 +137,9 @@ augroup SpecificIndentations
     " For Makefile files, don't convert tabs into spaces.
     autocmd Filetype Makefile setlocal noexpandtab
 
-    " For C files, use 8 spaces (Linux style) instead of 4.
+    " For C files (also header file), use 8 spaces (Linux style) instead of 4.
     autocmd Filetype c setlocal ts=8 sw=8
+    autocmd Filetype cpp setlocal ts=8 sw=8
 
     " For sh (bash) use only 2 spaces.
     autocmd Filetype sh setlocal ts=2 sw=2
