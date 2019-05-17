@@ -31,9 +31,7 @@ ed_make_symlink "$(readlink -f papercolor-theme/colors/PaperColor.vim)" \
 
 # Snippets.
 
-ed_make_dir "$vim_folder/snippets"
-
-ed_make_symlink "$(readlink -f snippets)" "$vim_folder/snippets"
+ed_make_symlink "$(readlink -f snippets)" "$vim_folder"
 
 # Plugins.
 
