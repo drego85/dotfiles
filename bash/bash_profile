@@ -10,6 +10,9 @@ fi
 # Add home directory to PATH.
 export PATH="$PATH:/home/emanuele/.local/bin"
 
+# Add bin directory of Maven to PATH.
+export PATH="$PATH:/home/emanuele/.local/opt/apache-maven-3.6.1/bin"
+
 # Because ssh-agent is automatically started by Xfce, and I don't know how to
 # disable it.
 pkill ssh-agent
