@@ -17,3 +17,6 @@
 [submodule "vim/plugins/start/vim-syntax-extra"]
 	path = vim/plugins/start/vim-syntax-extra
 	url = https://github.com/justinmk/vim-syntax-extra.git
+[submodule "vim/plugins/start/python-syntax"]
+	path = vim/plugins/start/python-syntax
+	url = https://github.com/vim-python/python-syntax
