@@ -16,6 +16,7 @@ ed_exists "readlink"
 readonly vim_folder="$(xdg-user-dir)/.vim"
 
 ed_make_dir "$vim_folder"
+ed_make_dir "$vim_folder/pack"
 
 # vimrc.
 
@@ -24,18 +25,18 @@ ed_make_symlink "$(readlink -f vimrc)" "$vim_folder/vimrc"
 # Color scheme.
 ed_make_dir "$vim_folder/colors"
 
-git submodule update --init papercolor-theme
+git submodule update --init plugins/start/papercolor-theme
 
-ed_make_symlink "$(readlink -f papercolor-theme/colors/PaperColor.vim)" \
-  "$vim_folder/colors/PaperColor.vim"
+# Syntax extended support.
+
+git submodule update --init plugins/start/vim-syntax-extra
+git submodule update --init plugins/start/python-syntax
 
 # Snippets.
 
 ed_make_symlink "$(readlink -f snippets)" "$vim_folder"
 
 # Plugins.
-
-ed_make_dir "$vim_folder/pack"
 
 git submodule update --init plugins/start/goyo.vim
 git submodule update --init plugins/start/vim-pencil
