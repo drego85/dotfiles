@@ -332,3 +332,5 @@ augroup GoyoCommands
 augroup END
 
 " }}}
+
+let python_highlight_all = 1

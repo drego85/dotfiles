@@ -4,12 +4,16 @@
 [submodule "xfwm4/backup-thinble-xfwm4-theme"]
 	path = xfwm4/backup-thinble-xfwm4-theme
 	url = https://gitlab.com/ema-pe/backup-thinble-xfwm4-theme.git
-[submodule "vim/papercolor-theme"]
-	path = vim/papercolor-theme
-	url = https://github.com/NLKNguyen/papercolor-theme.git
+
 [submodule "vim/plugins/start/goyo.vim"]
 	path = vim/plugins/start/goyo.vim
 	url = https://github.com/junegunn/goyo.vim.git
 [submodule "vim/plugins/start/vim-pencil"]
 	path = vim/plugins/start/vim-pencil
 	url = https://github.com/reedes/vim-pencil.git
+[submodule "vim/plugins/start/papercolor-theme"]
+	path = vim/plugins/start/papercolor-theme
+	url = https://github.com/NLKNguyen/papercolor-theme.git
+[submodule "vim/plugins/start/vim-syntax-extra"]
+	path = vim/plugins/start/vim-syntax-extra
+	url = https://github.com/justinmk/vim-syntax-extra.git
