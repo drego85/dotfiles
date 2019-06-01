@@ -1,0 +1,151 @@
+#!/usr/bin/env bash
+#
+# This script is useful to get and set aliases for my email address and domain,
+# "inbox@emanuelepetriglia.com".
+#
+# Use '-h' or '--help' option to get usage information. This script requires:
+#   - pass: to get private api key;
+#   - curl: to send and get api requests;
+#   - jq: to manage JSON data.
+#
+# Copyright (c) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.com>
+# All right reserved. This file is licensed under the MIT license.
+
+readonly DOMAIN="emanuelepetriglia.com"
+readonly EMAIL="inbox@$DOMAIN"
+readonly BASE_ENDPOINT="https://api.gandi.net/v5/email/mailboxes/$DOMAIN/"
+
+#
+# BEGIN helper functions
+#
+
+# It prints all arguments to the standard error and exits with error code 1.
+error() {
+  echo "$@" >&2
+  exit 1
+}
+
+# It set 'API_KEY' and '$ENDPOINT' readonly variables to send requests to Gandi.
+get_sensible_data() {
+  # If the readonlt variables are already set, do nothing.
+  [[ -z "$API_KEY" ]] && readonly API_KEY="$(pass shop/gandi.net | sed '5p;d')"
+
+  [[ "$API_KEY" ]] || error "Failet to get api key."
+
+  local email_id="$(pass email/inbox@emanuelepetriglia.com | sed '4p;d')"
+
+  [[ "$email_id" ]] || error "Failed to get email id."
+
+  [[ -z "$ENDPOINT" ]] && readonly ENDPOINT="$BASE_ENDPOINT$email_id"
+}
+
+#
+# END helper functions
+#
+
+#
+# BEGIN subcommand functions
+#
+
+# It shows usage informations.
+cmd_help() {
+  cat <<-_EOF
+Usage:
+    $PROGRAM [-g|--get]
+    $PROGRAM [-a|--add] <alias>
+
+  If no options are given, the default option is '--get'. Both commands retrive
+  the Gandi API key using 'pass'm to add and get aliases.
+
+  This is a custom script, so it is tailored for my needings. Infact it uses
+  'pass' to retrivere API key and my email is hardcoded in the script.
+
+Available options:
+    -g, --get
+        Retrieve the email aliases for $EMAIL and print
+        them to stdout.
+
+    -a, --add=alias
+        Add new alias for $EMAIL. It fails if the given
+        alias is invalid or is a duplicate.
+
+    -h, --help
+        Show this message and exit.
+
+This script uses 'curl' and 'jq', they must be installed on the system.
+_EOF
+}
+
+
+cmd_get() {
+  get_sensible_data
+
+  local data
+  data="$(curl --silent --show-error -X GET "$ENDPOINT" \
+                     -H "authorization: apikey $API_KEY" 2>&1)"
+
+  [[ "$?" != "0" ]] && error "Failed to get GET reponse: $data"
+
+  aliases="$(echo "$data" | jq '.aliases')"
+
+  [[ "$aliases" == "null" ]] && error "Failed to get email aliases: $data"
+
+  echo "$aliases"
+}
+
+cmd_add() {
+  [[ "$1" ]] || error "Missing alias to add for $EMAIL"
+
+  local new_alias="$1"
+
+  get_sensible_data
+
+  # Get the alias list.
+  local data
+  data="$(cmd_get)"
+  [[ "$?" == "0" ]] || error "$data"
+
+  [[ "$(echo "$data" | grep "$new_alias")" ]] && error "Duplicate alias"
+
+  data="$(echo "$data" | jq ". += [\"$new_alias\"]" | jq '{ aliases: . }')"
+
+  # Add the alias.
+  local reponse
+  response="$(curl --silent --show-error -X PATCH "$ENDPOINT" \
+                   -H "authorization: apikey $API_KEY" \
+                   -H "content-type: application/json" \
+                   -d "$data" 2>&1)"
+
+  [[ "$?" != "0" ]] && error "Failed to send PATCH request: $response"
+
+  [[ "$(echo "$response" | grep "error")" ]] \
+    && error "Failed to add alias '$new_alias' to '$EMAIL': $response"
+
+  sleep 5 # Because the changes are not immediate.
+
+  # Check if the alias is correctly added.
+  data="$(cmd_get)"
+  [[ "$?" == "0" ]] || error "$data"
+
+  if [[ "$(echo "$data" | grep "$new_alias")" ]]; then
+    echo "Alias '$new_alias' successfully added to '$EMAIL'"
+  else
+    error "Failed to add alias '$new_alias' to '$EMAIL': $data"
+  fi
+}
+
+#
+# END subcommands functions
+#
+
+PROGRAM="${0##*/}"
+COMMAND="$1"
+
+case "$1" in
+  -h|--help) shift; cmd_help "$@" ;;
+  -g|--get) shift;  cmd_get "$@" ;;
+  -a|--add) shift;  cmd_add "$@" ;;
+  *) shift;         cmd_help "$@" ;;
+esac
+
+exit 0
