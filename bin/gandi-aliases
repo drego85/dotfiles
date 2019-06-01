@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# This script is useful to get and set aliases for my email address and domain,
+# This script is useful to manage aliases for my email address and domain,
 # "inbox@emanuelepetriglia.com".
 #
 # Use '-h' or '--help' option to get usage information. This script requires:
@@ -12,8 +12,14 @@
 # All right reserved. This file is licensed under the MIT license.
 
 readonly DOMAIN="emanuelepetriglia.com"
-readonly EMAIL="inbox@$DOMAIN"
+readonly EMAIL="inbox@$DOMAIN" # Used in output messages.
 readonly BASE_ENDPOINT="https://api.gandi.net/v5/email/mailboxes/$DOMAIN/"
+
+readonly CURL_OPTS="--silent --show-error"
+
+# Unit of time before checking if an alias is added or removed. it is necessary
+# because changes are not immediate.
+readonly WAITING="5s"
 
 #
 # BEGIN helper functions
@@ -25,18 +31,113 @@ error() {
   exit 1
 }
 
-# It set 'API_KEY' and '$ENDPOINT' readonly variables to send requests to Gandi.
+# It set '$API_KEY' and '$ENDPOINT' readonly variables to send requests to Gandi.
+# If they are already set, do nothing.
 get_sensible_data() {
-  # If the readonlt variables are already set, do nothing.
   [[ -z "$API_KEY" ]] && readonly API_KEY="$(pass shop/gandi.net | sed '5p;d')"
-
   [[ "$API_KEY" ]] || error "Failet to get api key."
 
-  local email_id="$(pass email/inbox@emanuelepetriglia.com | sed '4p;d')"
+  if [[ -z "$ENDPOINT" ]]; then
+    local email_id="$(pass email/inbox@emanuelepetriglia.com | sed '4p;d')"
+    [[ "$email_id" ]] || error "Failed to get email id."
 
-  [[ "$email_id" ]] || error "Failed to get email id."
+    readonly ENDPOINT="$BASE_ENDPOINT$email_id"
+  fi
+}
 
-  [[ -z "$ENDPOINT" ]] && readonly ENDPOINT="$BASE_ENDPOINT$email_id"
+# Print to the standard output aliases list for '$EMAIL' as JSON array. It uses
+# '$ENDPOINT' and '$API_KEY'. If it fails, it will exit with error code 1.
+get_aliases_list() {
+  get_sensible_data
+
+  local data
+  data="$(curl $CURL_OPTS -X GET "$ENDPOINT" \
+               --header "authorization: apikey $API_KEY" 2>&1)"
+
+  [[ "$?" != "0" ]] && error "Failed to get GET reponse: $data"
+
+  aliases="$(echo "$data" | jq '.aliases')"
+
+  [[ "$aliases" == "null" ]] && error "Failed to get email aliases: $data"
+
+  echo "$aliases"
+}
+
+# Update aliases list for email '$EMAIL', sending the updated JSON array using
+# '$ENDPOINT' and '$API_KEY'. If it fails it will exit with error code 1.
+#
+# Parameter:
+#   $1  - JSON aliases list.
+#
+send_aliases_list() {
+  [[ "$1" ]] || error "No aliases list given."
+  local alias_list="$(echo "$1" | jq '{ aliases: . }')"
+
+  get_sensible_data
+
+  local reponse
+  response="$(curl $CURL_OPTS -X PATCH "$ENDPOINT" \
+                   --header "authorization: apikey $API_KEY" \
+                   --header "content-type: application/json" \
+                   --data "$alias_list" 2>&1)"
+
+  [[ "$?" != "0" ]] && error "Failed to send aliases list: $response"
+
+  [[ "$(echo "$response" | grep "error")" ]] \
+    && error "Failed to update aliases list: $response"
+}
+
+# It locally update a given JSON aliases list, then it prints the list to the
+# standard output. It can remove an alias or add an alias. If it fails, it will
+# exit with error code 1.
+#
+# Parameters:
+#   $1  - JSON alias list;
+#   $2  - Alias to add or remove;
+#   $3  - Add ('add') or remove ('remove') the alias.
+#
+update_aliases_list() {
+  [[ "$1" ]] || error "No aliases list given."
+  [[ "$2" ]] || error "No alias given."
+  [[ "$3" && "$3" == "add" || "$3" == "remove" ]] \
+    || error "No command given ('add' or 'remove')."
+
+  local alias_list="$1"
+  local alias="$2"
+  local command="$3"
+  local operation
+
+  if [[ "$command" == "add" ]]; then
+    [[ "$(echo "$alias_list" | grep "\"$alias\"")" ]] \
+      && error "Alias '$alias' already exist."
+
+    operation="+="
+  else
+    [[ "$(echo "$alias_list" | grep "\"$alias\"")" ]] \
+      || error "Alias '$alias' doesn't exist."
+
+    operation="-="
+  fi
+
+  echo "$alias_list" | jq --monochrome-output ". $operation [\"$alias\"]"
+}
+
+manage_alias() {
+  [[ "$1" && "$1" == "add" || "$1" == "remove" ]] \
+    || error "No command given ('add' or 'remove')."
+  [[ "$2" ]] || error "No alias given."
+
+  local cmd="$1"
+  local alias="$2"
+
+  local list
+  list="$(get_aliases_list)"
+  [[ "$?" == "0" ]] || error "$list"
+
+  list="$(update_aliases_list "$list" "$alias" "$cmd")"
+  [[ "$?" == "0" ]] || error "$list"
+
+  send_aliases_list "$list"
 }
 
 #
@@ -70,7 +171,7 @@ Available options:
         Add new alias for '$EMAIL'. It fails if the given
         alias is invalid or is a duplicate.
 
-    -r, --remove
+    -r, --remove=alias
         Remove an alias from '$EMAIL'. It fails if the
         given alias doesn't exist.
 
@@ -82,101 +183,19 @@ _EOF
 }
 
 
+# Print to the standard output the JSON aliases list.
 cmd_get() {
-  get_sensible_data
-
-  local data
-  data="$(curl --silent --show-error -X GET "$ENDPOINT" \
-                     -H "authorization: apikey $API_KEY" 2>&1)"
-
-  [[ "$?" != "0" ]] && error "Failed to get GET reponse: $data"
-
-  aliases="$(echo "$data" | jq '.aliases')"
-
-  [[ "$aliases" == "null" ]] && error "Failed to get email aliases: $data"
-
-  echo "$aliases"
+  get_aliases_list
 }
 
+# Add one alias. If the alias is a duplicate or is invalid, it will fail.
 cmd_add() {
-  [[ "$1" ]] || error "Missing alias to add for $EMAIL"
-  local new_alias="$1"
-
-  get_sensible_data
-
-  # Get the alias list.
-  local data
-  data="$(cmd_get)"
-  [[ "$?" == "0" ]] || error "$data"
-
-  [[ "$(echo "$data" | grep "$new_alias")" ]] && error "Duplicate alias"
-
-  data="$(echo "$data" | jq ". += [\"$new_alias\"]" | jq '{ aliases: . }')"
-
-  # Add the alias.
-  local reponse
-  response="$(curl --silent --show-error -X PATCH "$ENDPOINT" \
-                   -H "authorization: apikey $API_KEY" \
-                   -H "content-type: application/json" \
-                   -d "$data" 2>&1)"
-
-  [[ "$?" != "0" ]] && error "Failed to send PATCH request: $response"
-
-  [[ "$(echo "$response" | grep "error")" ]] \
-    && error "Failed to add alias '$new_alias' to '$EMAIL': $response"
-
-  sleep 5 # Because the changes are not immediate.
-
-  # Check if the alias is correctly added.
-  data="$(cmd_get)"
-  [[ "$?" == "0" ]] || error "$data"
-
-  if [[ "$(echo "$data" | grep "$new_alias")" ]]; then
-    echo "Alias '$new_alias' successfully added to '$EMAIL'"
-  else
-    error "Failed to add alias '$new_alias' to '$EMAIL': $data"
-  fi
+  manage_alias "add" "$@"
 }
 
+# Remove one alias. If the alias doesn't exist, it will fail.
 cmd_remove() {
-  [[ "$1" ]] || error "Missing alias to remove for $EMAIL"
-  local rm_alias="$1"
-
-  get_sensible_data
-
-  # Get the alias list.
-  local data
-  data="$(cmd_get)"
-  [[ "$?" == "0" ]] || error "$data"
-
-  [[ "$(echo "$data" | grep "$rm_alias")" ]] \
-    || error "Alias '$rm_alias' doesn't exist."
-
-  data="$(echo "$data" | jq ". -= [\"$rm_alias\"]" | jq '{ aliases: . }')"
-
-  # Remove the alias.
-  local reponse
-  response="$(curl --silent --show-error -X PATCH "$ENDPOINT" \
-                   -H "authorization: apikey $API_KEY" \
-                   -H "content-type: application/json" \
-                   -d "$data" 2>&1)"
-
-  [[ "$?" != "0" ]] && error "Failed to send PATCH request: $response"
-
-  [[ "$(echo "$response" | grep "error")" ]] \
-    && error "Failed to remove alias '$rm_alias' from '$EMAIL': $response"
-
-  sleep 5 # Because the changes are not immediate.
-
-  # Check if the alias is correctly removed.
-  data="$(cmd_get)"
-  [[ "$?" == "0" ]] || error "$data"
-
-  if [[ "$(echo "$data" | grep "$new_alias")" ]]; then
-    echo "Alias '$rm_alias' successfully removed from '$EMAIL'"
-  else
-    error "Failed to remove alias '$rm_alias' from '$EMAIL': $data"
-  fi
+  manage_alias "remove" "$@"
 }
 
 #
