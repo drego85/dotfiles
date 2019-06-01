@@ -17,22 +17,18 @@ readonly BASE_ENDPOINT="https://api.gandi.net/v5/email/mailboxes/$DOMAIN/"
 
 readonly CURL_OPTS="--silent --show-error"
 
-# Unit of time before checking if an alias is added or removed. it is necessary
-# because changes are not immediate.
-readonly WAITING="5s"
-
 #
 # BEGIN helper functions
 #
 
-# It prints all arguments to the standard error and exits with error code 1.
+# Print all arguments to the standard error and exits with error code 1.
 error() {
   echo "$@" >&2
   exit 1
 }
 
-# It set '$API_KEY' and '$ENDPOINT' readonly variables to send requests to Gandi.
-# If they are already set, do nothing.
+# Set '$API_KEY' and '$ENDPOINT' readonly variables to send requests to Gandi.
+# If they are already set, the function does nothing.
 get_sensible_data() {
   [[ -z "$API_KEY" ]] && readonly API_KEY="$(pass shop/gandi.net | sed '5p;d')"
   [[ "$API_KEY" ]] || error "Failet to get api key."
@@ -75,7 +71,7 @@ send_aliases_list() {
 
   get_sensible_data
 
-  local reponse
+  local response
   response="$(curl $CURL_OPTS -X PATCH "$ENDPOINT" \
                    --header "authorization: apikey $API_KEY" \
                    --header "content-type: application/json" \
@@ -130,7 +126,7 @@ update_aliases_list() {
 # BEGIN subcommand functions
 #
 
-# It shows usage informations.
+# Show usage informations.
 cmd_help() {
   cat <<-_EOF
 Usage:
@@ -174,9 +170,7 @@ cmd_get() {
   get_aliases_list
 }
 
-# Add aliases to '$EMAIL', minimium one. If a given alias is invalid or
-# duplicate, all aliases before it are added, while aliases after it are not
-# added.
+# Add aliases to '$EMAIL', minimium one.
 cmd_add() {
   [[ "$1" ]] || error "No aliases given."
 
@@ -194,8 +188,7 @@ cmd_add() {
   send_aliases_list "$list"
 }
 
-# Add aliases to '$EMAIL', minimium one. If a given alias doesn't exist, all
-# aliases before it are removed, while aliases after it are not removed.
+# Remove aliases from '$EMAIL', minimium one.
 cmd_remove() {
   [[ "$1" ]] || error "No aliases given."
 
@@ -237,7 +230,9 @@ cmd_check() {
 #
 
 PROGRAM="${0##*/}"
-COMMAND="$1"
+
+[[ -z "$(command -v curl)" ]] && error "curl is needed to run this script."
+[[ -z "$(command -v jq)" ]] && error "jq is needed to run this script."
 
 case "$1" in
   -h|--help) shift;   cmd_help "$@" ;;
