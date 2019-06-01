@@ -122,24 +122,6 @@ update_aliases_list() {
   echo "$alias_list" | jq --monochrome-output ". $operation [\"$alias\"]"
 }
 
-manage_alias() {
-  [[ "$1" && "$1" == "add" || "$1" == "remove" ]] \
-    || error "No command given ('add' or 'remove')."
-  [[ "$2" ]] || error "No alias given."
-
-  local cmd="$1"
-  local alias="$2"
-
-  local list
-  list="$(get_aliases_list)"
-  [[ "$?" == "0" ]] || error "$list"
-
-  list="$(update_aliases_list "$list" "$alias" "$cmd")"
-  [[ "$?" == "0" ]] || error "$list"
-
-  send_aliases_list "$list"
-}
-
 #
 # END helper functions
 #
@@ -153,30 +135,31 @@ cmd_help() {
   cat <<-_EOF
 Usage:
     $PROGRAM [-g|--get]
-    $PROGRAM [-a|--add] <alias>
-    $PROGRAM [-r|--remove] <alias>
+    $PROGRAM [-a|--add] [alias ...]
+    $PROGRAM [-r|--remove] [alias ...]
+    $PROGRAM [-c|--check] [alias ...]
 
-  If no options are given, the default option is '--help'. Both commands retrive
-  the Gandi API key using 'pass'm to add and get aliases.
-
-  This is a custom script, so it is tailored for my needings. Infact it uses
-  'pass' to retrivere API key and my email is hardcoded in the script.
+  This script is useful to manage email aliases for '$EMAIL'.
+  It uses Gandi API, the script is tailored for my use cases, because is uses
+  'pass(1)' to retrieve API key and email ID.
 
 Available options:
     -g, --get
         Retrieve the email aliases for '$EMAIL' and print
         them to stdout.
 
-    -a, --add=alias
-        Add new alias for '$EMAIL'. It fails if the given
-        alias is invalid or is a duplicate.
+    -a, --add=alias ...
+        Add new aliases for '$EMAIL'. If a given alias
+        if invalid or a duplicate, it will fail and
+        don't update aliases list.
 
-    -r, --remove=alias
-        Remove an alias from '$EMAIL'. It fails if the
-        given alias doesn't exist.
+    -r, --remove=alias ...
+        Remove aliases from '$EMAIL'. If a given alias
+        doesn't exist, it will fail and don't update
+        aliases list.
 
     -c, --check=alias
-        Check if an alias exist for '$EMAIL'.
+        Check if the given aliases exists for '$EMAIL'.
 
     -h, --help
         Show this message and exit.
@@ -191,29 +174,62 @@ cmd_get() {
   get_aliases_list
 }
 
-# Add one alias. If the alias is a duplicate or is invalid, it will fail.
+# Add aliases to '$EMAIL', minimium one. If a given alias is invalid or
+# duplicate, all aliases before it are added, while aliases after it are not
+# added.
 cmd_add() {
-  manage_alias "add" "$@"
+  [[ "$1" ]] || error "No aliases given."
+
+  local list
+  list="$(get_aliases_list)"
+  [[ "$?" == "0" ]] || error "$list"
+
+  while [[ "$1" ]]; do
+    list="$(update_aliases_list "$list" "$1" "add")"
+    [[ "$?" == "0" ]] || error "$list"
+
+    shift
+  done
+
+  send_aliases_list "$list"
 }
 
-# Remove one alias. If the alias doesn't exist, it will fail.
+# Add aliases to '$EMAIL', minimium one. If a given alias doesn't exist, all
+# aliases before it are removed, while aliases after it are not removed.
 cmd_remove() {
-  manage_alias "remove" "$@"
+  [[ "$1" ]] || error "No aliases given."
+
+  local list
+  list="$(get_aliases_list)"
+  [[ "$?" == "0" ]] || error "$list"
+
+  while [[ "$1" ]]; do
+    list="$(update_aliases_list "$list" "$1" "remove")"
+    [[ "$?" == "0" ]] || error "$list"
+
+    shift
+  done
+
+  send_aliases_list "$list"
 }
 
+# Check the existend of various aliases, minumium one.
 cmd_check() {
-  [[ "$1" ]] || error "No alias given."
-  local alias="$1"
+  [[ "$1" ]] || error "No aliases given."
 
   local alias_list
   alias_list="$(get_aliases_list)"
   [[ "$?" == "0" ]] || error "$alias_list"
 
-  if [[ "$(echo "$alias_list" | grep "\"$alias\"")" ]]; then
-      echo "Alias '$alias' exist."
-  else
-      echo "Alias '$alias' doesn't exist."
-  fi
+  while [[ "$1" ]]; do
+    if [[ "$(echo "$alias_list" | grep "\"$1\"")" ]]; then
+      echo "Alias '$1' exist."
+    else
+      echo "Alias '$1' doesn't exist."
+    fi
+
+    shift
+  done
 }
 
 #
