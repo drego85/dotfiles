@@ -175,6 +175,9 @@ Available options:
         Remove an alias from '$EMAIL'. It fails if the
         given alias doesn't exist.
 
+    -c, --check=alias
+        Check if an alias exist for '$EMAIL'.
+
     -h, --help
         Show this message and exit.
 
@@ -198,6 +201,21 @@ cmd_remove() {
   manage_alias "remove" "$@"
 }
 
+cmd_check() {
+  [[ "$1" ]] || error "No alias given."
+  local alias="$1"
+
+  local alias_list
+  alias_list="$(get_aliases_list)"
+  [[ "$?" == "0" ]] || error "$alias_list"
+
+  if [[ "$(echo "$alias_list" | grep "\"$alias\"")" ]]; then
+      echo "Alias '$alias' exist."
+  else
+      echo "Alias '$alias' doesn't exist."
+  fi
+}
+
 #
 # END subcommands functions
 #
@@ -210,6 +228,7 @@ case "$1" in
   -g|--get) shift;    cmd_get "$@" ;;
   -a|--add) shift;    cmd_add "$@" ;;
   -r|--remove) shift; cmd_remove "$@" ;;
+  -c|--check) shift;  cmd_check "$@" ;;
   *) shift;           cmd_help "$@" ;;
 esac
 
