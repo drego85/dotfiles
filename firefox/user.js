@@ -155,8 +155,13 @@ user_pref("privacy.clearOnShutdown.sessions", false);
 user_pref("privacy.clearOnShutdown.offlineApps", false);
 user_pref("privacy.clearOnShutdown.sessions", false);
 
-//user_pref("privacy.firstparty.isolate", true);
-//user_pref("privacy.resistFingerprinting", true);
+
+/**
+ * 4500: RFP (RESIST FINGERPRINTING)
+ */
+
+/** 4504: disable letterboxing, so no space is wasted. **/
+user_pref("privacy.resistFingerprinting.letterboxing", false);
 
 
 /**
