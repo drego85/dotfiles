@@ -136,4 +136,6 @@ alias ..="cd .."
 
 alias clr="clear"
 
+alias tree="tree -C"
+
 # }}}
