@@ -10,17 +10,7 @@
 
 . ../.common/utils.sh
 
-# Check if it is installed Arc theme.
-output="$(dnf list --installed arc-theme)"
-installed=$?
-
-if [[ $installed == "0" ]]; then
-  ed_wlog "gtk: Arc themes are already installed!"
-else
-  ed_wlog "gtk: root requested to install Arc themes"
-
-  sudo dnf install arc-theme
-fi
+ed_install "arc-theme"
 
 # Activate the theme.
 current="$(xfconf-query --channel xsettings --property /Net/ThemeName)"

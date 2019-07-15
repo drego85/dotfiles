@@ -18,13 +18,7 @@ readonly src_file="$(readlink -f tlp)"
 
 # Install tlp via DNF.
 install_tlp() {
-  dnf list --installed tlp &>>/dev/null
-
-  if [[ "$?" != "0" ]]; then
-    ed_wlog "tlp: Root requested to install tlp"
-    sudo dnf install --assumeyes tlp &>>/dev/null ||
-      ed_elog "tlp: Failed to install tlp"
-  fi
+  ed_install "tlp"
 }
 
 # Create a backup file with old configuration.

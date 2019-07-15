@@ -10,24 +10,4 @@
 
 . ../.common/utils.sh
 
-# Check if Telegram Desktop is already installed.
-output="$(dnf list --installed vlc)"
-installed=$?
-
-if [[ $installed == "0" ]]; then
-  ed_wlog "vlc: VLC is already installed!"
-  exit 0
-fi
-
-# Install RPM Fusion (free) repository.
-if [[ "$(find /etc/yum.repos.d/ -name rpmfusion-free.repo)" ]]; then
-  ed_wlog "vlc: RPM Fusion free repository is already added!"
-else
-  ed_wlog "vlc: root requested to install RPM Fusion free repository"
-
-  sudo dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
-fi
-
-# Install Telegram Desktop.
-ed_wlog "vlc: root requested to install VLC"
-sudo dnf install vlc
+ed_install_fusion "vlc"

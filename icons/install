@@ -10,16 +10,7 @@
 
 . ../.common/utils.sh
 
-output="$(dnf list --installed papirus-icon-theme)"
-installed=$?
-
-if [[ $installed == "0" ]]; then
-  ed_wlog "icon: Papirus icon packs are already installed!"
-else
-  ed_wlog "icon: root requested to install Papirus icon packs"
-
-  sudo dnf install papirus-icon-theme
-fi
+ed_install "papirus-icon-theme"
 
 # Update cache.
 gtk-update-icon-cache "/usr/share/icons/Papirus-Dark"

@@ -10,14 +10,4 @@
 
 . ../.common/utils.sh
 
-# Check if it is installed Arc theme.
-output="$(dnf list --installed pass)"
-installed=$?
-
-if [[ $installed == "0" ]]; then
-  ed_wlog "pass: pass is already installed!"
-else
-  ed_wlog "pass: root requested to install pass"
-
-  sudo dnf install arc-theme
-fi
+ed_install "pass"

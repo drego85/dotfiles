@@ -151,4 +151,51 @@ ed_make_symlink() {
   fi
 }
 
+# It installs a package via DNF. Warning: if you want to install packages from
+# RPM Fusion repository, use 'ed_install_fusion'.
+#
+# Parameters:
+#     $1 -> package's name
+#
+# Example:
+#     ed_install "git"
+ed_install() {
+  local package="$1"
+
+  # Check if package is already installed.
+  output="$(dnf list --installed "$package")"
+  installed=$?
+
+  if [[ $installed == "0" ]]; then
+    ed_wlog "$package: $package is already installed!"
+  else
+    # Install the package.
+    ed_wlog "$package: root requested to install $package"
+    sudo dnf install "$package"
+  fi
+}
+
+# It installs a package via DNF from RPM Fusion repository. Use this function
+# because it installs RPM Fusion repository if necessary.
+#
+# Parameters:
+#     $1 -> package's name
+#
+# Example:
+#     ed_install_fusion "vlc"
+ed_install_fusion() {
+  local package="$1"
+  local repository="https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm"
+
+  # Install RPM Fusion (free) repository.
+  if [[ "$(find /etc/yum.repos.d/ -name rpmfusion-free.repo)" ]]; then
+    ed_wlog "$package: RPM Fusion free repository is already added!"
+  else
+    ed_wlog "$package: root requested to install RPM Fusion free repository"
+    sudo dnf install "$repository"
+  fi
+
+  ed_install "$package"
+}
+
 # vim:foldmethod=marker

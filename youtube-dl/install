@@ -10,13 +10,4 @@
 
 . ../.common/utils.sh
 
-output="$(dnf list --installed youtube-dl)"
-installed=$?
-
-if [[ $installed == "0" ]]; then
-  ed_wlog "youtube-dl: youtube-dl already installed!"
-else
-  ed_wlog "youtube-dl: root requested to install youtube-dl"
-
-  sudo dnf install youtube-dl
-fi
+ed_install "youtube-dl"

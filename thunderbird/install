@@ -10,14 +10,4 @@
 
 . ../.common/utils.sh
 
-# Check if it is installed Arc theme.
-output="$(dnf list --installed thunderbird)"
-installed=$?
-
-if [[ $installed == "0" ]]; then
-  ed_wlog "thunderbid: thunderbird is already installed!"
-else
-  ed_wlog "thunderbird: root requested to install thunderbird"
-
-  sudo dnf install thunderbird
-fi
+ed_install "thunderbird"
