@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+#
+# This script installs thunderbird.
+#
+# This script uses 'utils.sh', my custom library for manager dotfiles.
+#
+# Copyright (c) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.me>. All
+# right reserved. This file is license under the MIT license. See LICENSE for
+# more informations.
+
+. ../.common/utils.sh
+
+# Check if it is installed Arc theme.
+output="$(dnf list --installed thunderbird)"
+installed=$?
+
+if [[ $installed == "0" ]]; then
+  ed_wlog "thunderbid: thunderbird is already installed!"
+else
+  ed_wlog "thunderbird: root requested to install thunderbird"
+
+  sudo dnf install thunderbird
+fi
