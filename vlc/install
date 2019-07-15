@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 #
-# This script installs Telegram Desktop on Fedora 29. See README.md for more
-# informations.
+# This script installs VLC on Fedora. See README.md for more informations.
 #
 # It is required "util.sh", my custom library for manage dotfiles.
 #
