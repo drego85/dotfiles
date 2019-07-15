@@ -39,3 +39,5 @@ systemctl --user daemon-reload
 
 systemctl --user enable *.socket
 systemctl --user start *.socket
+
+ed_install "pinentry-gtk"
