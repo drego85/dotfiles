@@ -13,9 +13,9 @@ automatically, but some actions need to be performed manually.
 Unfortunately Firefox needs to be customized from GUI instead on CLI, so there
 is not a real installer script. The steps to do are:
 
-1. From an active Firefox session, create a new profile with name `emanuele` (it
-   is my name, it is hardcoded in the installer script). You can access to the
-   page via `about:profiles`.
+1. From an active Firefox session, create a new profile with name
+   `default-release` (default profile that comes with Fedora). You can access to
+   the page via `about:profiles`.
 2. Switch to the new profile and delete the old one (if you want).
 3. Login to Firefox Sync (or download all extentions you want).
 4. Customize Firefox GUI.

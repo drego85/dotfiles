@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # This script install custom 'user.js' file on my Firefox profile. The profile
-# is located by te folder that ends with "emanuele".
+# is located by te folder that ends with "default-release".
 #
 # This script uses 'util.sh', my custom library to manage dotfiles.
 #
@@ -14,13 +14,13 @@
 ed_exists "xdg-user-dir"
 ed_exists "wget"
 
-# Select only the profile with "emanuele" suffix.
+# Select only the profile with "default-release" suffix.
 readonly firefox_profiles="$(xdg-user-dir)/.mozilla/firefox"
 if [[ ! -d "$firefox_profiles" ]]; then
   ed_elog "No Firefox folder found. It is installed?"
 fi
 
-profile="$(ls $firefox_profiles -1 | grep emanuele)"
+profile="$(ls $firefox_profiles -1 | grep default-release)"
 if [[ ! "$profile" ]]; then
   ed_elog "No profile with suffix 'emanuele' found!"
 fi
