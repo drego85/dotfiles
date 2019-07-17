@@ -58,7 +58,8 @@ mv $mv_params "$hack_prefix_src/Hack-Regular.ttf"      "$hack_install_path/Hack-
 
 # Clear and regenerate font cache.
 ed_log "font: clearing and rigenerating font cache..."
-fc-cache -f
+ed_wlog "font: root requested to regenerate font cache"
+sudo fc-cache -f -v "$hack_install_path"
 ed_log "font: done!"
 
 rm --recursive --force "$tmpdir"
