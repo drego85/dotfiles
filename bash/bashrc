@@ -4,6 +4,9 @@
 #
 # Copyright (c) Emanuele Petriglia <inbox@emanuelepetriglia.me> 2018
 # This file is lincensed under the MIT license.
+#
+# This file is called every time a shell is started. It is also called by
+# '.bash_profile' only once.
 
 # Bash settings {{{
 
@@ -14,6 +17,7 @@ set -o vi
 set editing-mode vi
 set keymap vi
 
+# Enable auto-completion feature.
 if [[ -f "/etc/profile.d/bash_completion.sh" ]]; then
   . /etc/profile.d/bash_completion.sh
 fi
