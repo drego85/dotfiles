@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# vim:foldmethod=marker
 # My personal configuration of Bash. It contains my settings and some useful
 # scripts that I use ofter.
 #
@@ -35,19 +34,11 @@ export EDITOR=vim
 # }}}
 
 # Small scripts {{{
-# Here there are my custom script that I often use. They are small and simple to
-# understand. More complex scripts are located separately on dedicated files.
-
-# Cheat sheet for command line programs.
-# It uses cht.sh to query command via wget. Example: `cheat echo` or `chaeat`.
-cheat() {
-  wget --quiet --output-document - cht.sh/$1
-}
 
 # Colorized man pages.
 # Thanks to: https://news.ycombinator.com/item?id=12304730
 man() {
-  LESS_TERMCAP_mb=$(printf "\e[1;31m") \
+   LESS_TERMCAP_mb=$(printf "\e[1;31m") \
    LESS_TERMCAP_md=$(printf "\e[1;31m") \
    LESS_TERMCAP_me=$(printf "\e[0m") \
    LESS_TERMCAP_se=$(printf "\e[0m") \
@@ -121,3 +112,5 @@ alias clr="clear"
 alias tree="tree -C"
 
 # }}}
+
+# vim:foldmethod=marker
