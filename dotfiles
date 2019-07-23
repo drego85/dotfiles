@@ -32,6 +32,9 @@ readonly VERSION="Fedora 30"
 # Associative array of available modules (module name -> module function).
 declare -A MODULES
 
+# Associative array of modules description (module name -> module description).
+declare -A MODULES_DESCRIPTION
+
 # }}}
 
 # Common used functions {{{
@@ -251,6 +254,7 @@ ed_install_fusion() {
 # Modules {{{
 
 MODULES["pass"]="ed_module_pass"
+MODULES_DESCRIPTION["pass"]="install 'pass' package"
 ed_module_pass() {
   CURRENT_MODULE="pass"
   ed_log "Installing module $CURRENT_MODULE"
@@ -259,6 +263,7 @@ ed_module_pass() {
 }
 
 MODULES["telegram"]="ed_module_telegram"
+MODULES_DESCRIPTION["telegram"]="install 'telegram-desktop' package"
 ed_module_telegram() {
   CURRENT_MODULE="telegram"
   ed_log "Installing module $CURRENT_MODULE"
@@ -267,6 +272,7 @@ ed_module_telegram() {
 }
 
 MODULES["thunderbird"]="ed_module_telegram"
+MODULES_DESCRIPTION["thunderbird"]="install 'thunderbird' package"
 ed_module_thunderbird() {
   CURRENT_MODULE="thunderbird"
   ed_log "Installing module $CURRENT_MODULE"
@@ -275,6 +281,7 @@ ed_module_thunderbird() {
 }
 
 MODULES["vlc"]="ed_module_vlc"
+MODULES_DESCRIPTION["vlc"]="install 'vlc' package"
 ed_module_vlc() {
   CURRENT_MODULE="thunderbird"
   ed_log "Installing module $CURRENT_MODULE"
@@ -283,6 +290,7 @@ ed_module_vlc() {
 }
 
 MODULES["youtube-dl"]="ed_module_youtube-dl"
+MODULES_DESCRIPTION["youtube-dl"]="install 'youtube-dl' package"
 ed_module_youtube-dl() {
   CURRENT_MODULE="youtube-dl"
   ed_log "Installing module $CURRENT_MODULE"
@@ -291,6 +299,7 @@ ed_module_youtube-dl() {
 }
 
 MODULES["gtk"]="ed_module_gtk"
+MODULES_DESCRIPTION["gtk"]="install 'arc-them' package and enable Arc-Dark"
 ed_module_gtk() {
   CURRENT_MODULE="gtk"
   ed_log "Installing module $CURRENT_MODULE"
@@ -309,6 +318,7 @@ ed_module_gtk() {
 }
 
 MODULES["bin"]="ed_module_bin"
+MODULES_DESCRIPTION["bin"]="create symlinks for custom scripts on ~/.local/bin"
 ed_module_bin() {
   CURRENT_MODULE="bin"
   ed_log "Installing module $CURRENT_MODULE"
@@ -370,7 +380,7 @@ ed_cmd_list() {
   ed_log "${#MODULES[*]} available modules:"
 
   for module in ${!MODULES[*]} ; do
-    echo "$module"
+    printf "%-13s - %s\n" "$module" "${MODULES_DESCRIPTION["$module"]}"
   done
 }
 
