@@ -2,7 +2,7 @@
 # My personal configuration of Bash. It contains my settings and some useful
 # scripts that I use ofter.
 #
-# Copyright (c) Emanuele Petriglia <inbox@emanuelepetriglia.me> 2018
+# Copyright (c) Emanuele Petriglia <inbox@emanuelepetriglia.com> 2018
 # This file is lincensed under the MIT license.
 #
 # This file is called every time a shell is started. It is also called by

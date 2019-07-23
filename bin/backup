@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (C) 2018 Emanuele Petriglia <inbox@emanuelepetriglia.me>. All rigts
+# Copyright (C) 2018 Emanuele Petriglia <inbox@emanuelepetriglia.com>. All rigts
 # reserved. This file is licensed under the MIT license.
 
 # This script does a backup of some directories from my home folder.

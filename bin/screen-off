@@ -7,7 +7,7 @@
 #
 # How it works: it simply run "xset dpms force off".
 #
-# Copyright (C) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.me>. All right
+# Copyright (C) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.com>. All right
 # reserved. This file is licensed under the MIT license.
 
 readonly program="${0##*/}"
