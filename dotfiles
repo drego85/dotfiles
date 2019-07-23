@@ -1,0 +1,401 @@
+#!/usr/bin/env bash
+#
+# This script manages my dotfiles. Run `dotfiles help' to get more informations.
+#
+# Copyright (c) 2018-2019 Emanuele Petriglia <inbox@emanuelepetriglia.me>
+# All rights reserved. This file is licensed under the MIT license.
+
+# This file id divided into several sections:
+#   - List of global variables;
+#   - List of common used functions;
+#   - List of various modules (a script that does something);
+#   - List of commands;
+#   - Script's entry point.
+
+# Global variables {{{
+
+# Useful to display a prefix on logging messages.
+CURRENT_MODULE=""
+
+# Full path of this script.
+readonly SCRIPT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# Program's name.
+readonly PROGRAM="${0##*/}"
+
+# User given command.
+readonly COMMAND="$1"
+
+# Target distribution of this script.
+readonly VERSION="Fedora 30"
+
+# Associative array of available modules (module name -> module function).
+declare -A MODULES
+
+# }}}
+
+# Common used functions {{{
+
+# Logging {{{{
+
+# Prints a message to the standard output. If 'CURRENT_MODULE' is not empty, it
+# uses the value as prefix.
+#
+# Parameter:
+#     $1 -> the message to print to the standard output.
+#
+# Example:
+#     $ CURRENT_MODULE="test" ed_log "Some application downloaded!"
+#     test: Some application downloaded!
+#
+ed_log() {
+  if [[ "$CURRENT_MODULE" ]]; then
+    echo -n "$CURRENT_MODULE: "
+  fi
+
+  echo "$1"
+}
+
+# Prints a message to the standard error. If 'CURRENT_MODULE' is not empty, it
+# uses the value as prefix.
+#
+# Parameter:
+#     $1 -> the message to print to the standard error.
+#
+# Example:
+#     $ CURRENT_MODULE="test" ed_wlog "Skipping some tasks!"
+#     test: Skipping some tasks!
+#
+ed_wlog() {
+  ed_log "$1" >&2
+}
+
+# It prints a message to the standard error and exits with an error code. If
+# 'CURRENT_MODULE' is not empty, it uses the value as prefix.
+#
+# Parameters:
+#     $1 -> the message to print to the standard error;
+#     $2 -> the error code, default is 1.
+#
+# Example:
+#     $ CURRENT_MODULE="test" ed_elog "X not found!" 5
+#     test: X not found
+#     $ echo $?
+#     5
+#
+ed_elog() {
+  ed_wlog "$1"
+  exit "${2:-1}" # If $2 is unset or empty, set 'code' to 1.
+}
+
+# }}}}
+
+# Binary commonds {{{{
+
+# Check if a given program (the command) exists. If it doesn't
+# exist, it prints an error message and exits.
+#
+# Parameters:
+#     $1 -> the command to check.
+#
+# Example:
+#     ed_exists "curl"
+ed_exists() {
+  local command_to_check="$1"
+
+  if [[ -z "$command_to_check" ]]; then
+     ed_elog "ed_exists: no given command to check."
+  fi
+
+  if [[ -z "$(command -v "$command_to_check")" ]]; then
+    ed_elog "Error: $command_to_check is not installed on the system."
+  fi
+}
+
+# }}}}
+
+# Filesystem commons {{{{
+
+# Check if a given directory exists, if it doesn't exist it will create
+# the path with the directory.
+#
+# At the end of this function the path is certainly created.
+#
+# Parameters:
+#     $1 -> directory to check and create;
+#     $2 -> if "sudo" it creates the directory with root permissions.
+ed_make_dir() {
+  if [[ -z "$1" ]]; then
+    ed_elog "ed_make_dir: no given directory to create."
+  else
+    local directory="$1"
+  fi
+
+  if [[ "$2" == "sudo" ]]; then
+    local sudo="sudo"
+  fi
+
+  # $directory may exist but it is not necessary a directory.
+  if [[ -e "$directory" ]]; then
+    if [[ ! -d "$directory" ]]; then
+      ed_elog "Error: ed_make_dir: \"$directory\" already exists and it is not a directory"
+    fi
+  else
+    if [[ "$sudo" ]]; then
+      ed_wlog "root required to create directory \"$directory\""
+    fi
+
+    $sudo mkdir --parents --verbose "$directory"
+  fi
+}
+
+# It creates a simlink of a directory or file.
+#
+# Parameters:
+#     $1 -> source path (a file or a directory);
+#     $2 -> destination path;
+#     $3 -> if 'sudo' it creates a symlink using root permissions.
+#
+# Example:
+#     ed_make_symlink path/to/source path/to/dst
+ed_make_symlink() {
+  local src="$1"
+  local dst="$2"
+
+  if [[ "$3" == "sudo" ]]; then
+    local sudo="sudo"
+  fi
+
+  if [[ -z "$src" ]]; then
+    ed_elog "Error: source path is empty"
+  fi
+
+  if [[ -z "$dst" ]]; then
+    ed_elog "Error: destination path is empty"
+  fi
+
+  if [[ -L "$dst" ]]; then
+    local real_dst_path
+    real_dst_path="$(readlink -f "$dst")"
+
+    if [[ "$real_dst_path" != "$src" ]]; then
+      ed_elog "Error: $dst is a symlink to $real_dst_path, not to $src"
+    else
+      ed_log "$dst is already a symlink to $src"
+    fi
+  else
+    if [[ "$sudo" ]]; then
+      ed_wlog "root required to create symlink \"$src\" -> \"$dst\""
+    fi
+
+    $sudo ln --symbolic --force --verbose "$src" "$dst"
+  fi
+}
+
+# }}}}
+
+# DNF commons {{{{
+
+# It installs a package via DNF. Warning: if you want to install packages from
+# RPM Fusion repository, use 'ed_install_fusion'.
+#
+# Parameters:
+#     $1 -> package's name
+#
+# Example:
+#     ed_install "git"
+ed_install() {
+  local package="$1"
+
+  # Check if package is already installed.
+  output="$(dnf list --installed "$package")"
+  installed=$?
+
+  if [[ $installed == "0" ]]; then
+    ed_wlog "$package: $package is already installed!"
+  else
+    # Install the package.
+    ed_wlog "$package: root requested to install $package"
+    sudo dnf install "$package"
+  fi
+}
+
+# It installs a package via DNF from RPM Fusion repository. Use this function
+# because it installs RPM Fusion repository if necessary.
+#
+# Parameters:
+#     $1 -> package's name
+#
+# Example:
+#     ed_install_fusion "vlc"
+ed_install_fusion() {
+  local package="$1"
+  local repository
+  repository="https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm"
+
+  # Install RPM Fusion (free) repository.
+  if [[ "$(find /etc/yum.repos.d/ -name rpmfusion-free.repo)" ]]; then
+    ed_wlog "$package: RPM Fusion free repository is already added!"
+  else
+    ed_wlog "$package: root requested to install RPM Fusion free repository"
+    sudo dnf install "$repository"
+  fi
+
+  ed_install "$package"
+}
+
+# }}}}
+
+# }}}
+
+# Modules {{{
+
+MODULES["pass"]="ed_module_pass"
+ed_module_pass() {
+  CURRENT_MODULE="pass"
+  ed_log "Installing module $CURRENT_MODULE"
+
+  ed_install "pass"
+}
+
+MODULES["telegram"]="ed_module_telegram"
+ed_module_telegram() {
+  CURRENT_MODULE="telegram"
+  ed_log "Installing module $CURRENT_MODULE"
+
+  ed_install_fusion "telegram-desktop"
+}
+
+MODULES["thunderbird"]="ed_module_telegram"
+ed_module_thunderbird() {
+  CURRENT_MODULE="thunderbird"
+  ed_log "Installing module $CURRENT_MODULE"
+
+  ed_install "thunderbird"
+}
+
+MODULES["vlc"]="ed_module_vlc"
+ed_module_vlc() {
+  CURRENT_MODULE="thunderbird"
+  ed_log "Installing module $CURRENT_MODULE"
+
+  ed_install_fusion "vlc"
+}
+
+MODULES["youtube-dl"]="ed_module_youtube-dl"
+ed_module_youtube-dl() {
+  CURRENT_MODULE="youtube-dl"
+  ed_log "Installing module $CURRENT_MODULE"
+
+  ed_install "youtube-dl"
+}
+
+MODULES["gtk"]="ed_module_gtk"
+ed_module_gtk() {
+  CURRENT_MODULE="gtk"
+  ed_log "Installing module $CURRENT_MODULE"
+
+  # It is installed by default on Fedora.
+  # ed_install "arc-theme"
+
+  # Activate the theme.
+  local current
+  current="$(xfconf-query --channel xsettings --property /Net/ThemeName)"
+  if [[ "$current" == "Arc-Dark" ]]; then
+      ed_wlog "Arc-Dark theme is already activated!"
+    else
+        xfconf-query --channel xsettings --property /Net/ThemeName --set Arc-Dark
+  fi
+}
+
+MODULES["bin"]="ed_module_bin"
+ed_module_bin() {
+  CURRENT_MODULE="bin"
+  ed_log "Installing module $CURRENT_MODULE"
+
+  local bin_path
+  bin_path="$(xdg-user-dir)/.local/bin"
+
+  mkdir --parents --verbose "$bin_path" || ed_elog "Failed to create '$bin_path'"
+
+  for script in "$SCRIPT_PATH"/bin/* ; do
+    ed_make_symlink "$script" "$bin_path/$(basename "$script")"
+  done
+}
+
+# }}}
+
+# Command line interface {{{
+
+# It prints to the standard output an help message with usage instructions.
+ed_cmd_help() {
+  cat <<-_EOF
+Usage:
+    $PROGRAM [ COMMAND ] [ ARGS ] ...
+
+  This script manages my custom dotfiles. My dotfiles are organized as
+  "modules". A module is simply a Bash script, it can install packages (via DNF)
+  or create symlinks for the configuration.
+
+Commands:
+    list
+        List all available modules.
+    install <module>...
+        Install the given modules.
+    help
+        Show this text.
+    version
+        Show version information.
+
+Example:
+
+    The following command install the "telegram" module:
+    $ $PROGRAM install telegram
+
+_EOF
+}
+
+# It prints to the standard output the version of this script.
+ed_cmd_version() {
+  echo "$PROGRAM script for $VERSION"
+}
+
+# It prints to the standard output a list of available modules.
+ed_cmd_list() {
+  ed_log "${#MODULES[*]} available modules:"
+
+  for module in ${!MODULES[*]} ; do
+    echo "$module"
+  done
+}
+
+# It installs all modules given as input.
+ed_cmd_install() {
+  [[ "$1" ]] || ed_elog "No modules given."
+
+  ed_log "Installing modules..."
+
+  while [[ "$1" ]]; do
+    ${MODULES["$1"]}
+
+    shift
+  done
+}
+
+# }}}
+
+# Entry point {{{
+
+case "$COMMAND" in
+  list) shift;              ed_cmd_list "$@" ;;
+  install) shift;           ed_cmd_install "$@" ;;
+  help|-h|--help) shift;    ed_cmd_help "$@" ;;
+  version|--version) shift; ed_cmd_version "$@" ;;
+  *) shift;                 ed_cmd_help "$@" ;;
+esac
+
+exit 0
+
+# }}}
+
+# vim:foldmethod=marker
