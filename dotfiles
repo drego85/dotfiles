@@ -352,6 +352,11 @@ Example:
     The following command install the "telegram" module:
     $ $PROGRAM install telegram
 
+Files:
+
+    $SCRIPT_PATH
+        Dotfiles repository.
+
 _EOF
 }
 
