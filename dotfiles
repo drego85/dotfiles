@@ -372,6 +372,7 @@ ed_cmd_list() {
 
 # It installs all modules given as input.
 ed_cmd_install() {
+  local nr_modules counter
   [[ "$1" ]] || ed_elog "No modules given."
 
   # Check if exist given modules.
@@ -379,13 +380,15 @@ ed_cmd_install() {
     [[ "${MODULES["$module"]}" ]] || ed_elog "Module '$module' doesn't exist."
   done
 
-  local nr_modules="$#"
+  nr_modules="$#"
   ed_log "Installing $nr_modules modules..."
 
   while [[ "$1" ]]; do
+    # Note that '$#' change every iteration, because of 'shift'. It is a counter
+    # like this: (4/7) Installing module foo...
+    ed_log "($(($nr_modules - $# + 1))/$nr_modules) Installing module $1..."
+
     # The module name is also the suffix of the function.
-    # Note that '$#' change every iteration, because of 'shift'.
-    ed_log "($(($nr_modules - $# + 1))) Installing module $1"
     CURRENT_MODULE="$1" ed_module_$1
 
     shift
