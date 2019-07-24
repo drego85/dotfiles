@@ -299,7 +299,7 @@ ed_module_youtube-dl() {
 }
 
 MODULES["gtk"]="ed_module_gtk"
-MODULES_DESCRIPTION["gtk"]="install 'arc-them' package and enable Arc-Dark"
+MODULES_DESCRIPTION["gtk"]="enable Arc-Dark GTK+ theme"
 ed_module_gtk() {
   CURRENT_MODULE="gtk"
   ed_log "Installing module $CURRENT_MODULE"
@@ -313,7 +313,25 @@ ed_module_gtk() {
   if [[ "$current" == "Arc-Dark" ]]; then
       ed_wlog "Arc-Dark theme is already activated!"
     else
-        xfconf-query --channel xsettings --property /Net/ThemeName --set Arc-Dark
+      xfconf-query --channel xsettings --property /Net/ThemeName --set Arc-Dark
+  fi
+}
+
+MODULES["icon"]="ed_module_icon"
+MODULES_DESCRIPTION["icon"]="install 'papirus-icon-theme' package and enable it"
+ed_module_icon() {
+  CURRENT_MODULE="icon"
+  ed_log "Installing module $CURRENT_MODULE"
+
+   ed_install "papirus-icon-theme"
+
+  # Activate the icon theme.
+  local current
+  current="$(xfconf-query --channel xsettings --property /Net/IconThemeName)"
+  if [[ "$current" == "Papirus-Dark" ]]; then
+      ed_wlog "Papirus-Dark icon theme is already activated!"
+    else
+      xfconf-query --channel xsettings --property /Net/IconThemeName --set Papirus-Dark
   fi
 }
 
