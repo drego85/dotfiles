@@ -252,29 +252,21 @@ ed_install_fusion() {
 
 MODULES["pass"]="install 'pass' package"
 ed_module_pass() {
-  ed_log "Installing module $CURRENT_MODULE"
-
   ed_install "pass"
 }
 
 MODULES["telegram"]="install 'telegram-desktop' package"
 ed_module_telegram() {
-  ed_log "Installing module $CURRENT_MODULE"
-
   ed_install_fusion "telegram-desktop"
 }
 
 MODULES["thunderbird"]="install 'thunderbird' package"
 ed_module_thunderbird() {
-  ed_log "Installing module $CURRENT_MODULE"
-
   ed_install "thunderbird"
 }
 
 MODULES["vlc"]="install 'vlc' package"
 ed_module_vlc() {
-  ed_log "Installing module $CURRENT_MODULE"
-
   ed_install_fusion "vlc"
 }
 
@@ -287,8 +279,6 @@ ed_module_youtube-dl() {
 
 MODULES["gtk"]="enable Arc-Dark GTK+ theme"
 ed_module_gtk() {
-  ed_log "Installing module $CURRENT_MODULE"
-
   # It is installed by default on Fedora.
   # ed_install "arc-theme"
 
@@ -304,9 +294,7 @@ ed_module_gtk() {
 
 MODULES["icon"]="install 'papirus-icon-theme' package and enable it"
 ed_module_icon() {
-  ed_log "Installing module $CURRENT_MODULE"
-
-   ed_install "papirus-icon-theme"
+  ed_install "papirus-icon-theme"
 
   # Activate the icon theme.
   local current
@@ -320,8 +308,6 @@ ed_module_icon() {
 
 MODULES["bin"]="create symlinks for custom scripts on ~/.local/bin"
 ed_module_bin() {
-  ed_log "Installing module $CURRENT_MODULE"
-
   local bin_path
   bin_path="$(xdg-user-dir)/.local/bin"
 
@@ -393,6 +379,7 @@ ed_cmd_install() {
     [[ "${MODULES["$1"]}" ]] || ed_elog "Module '$1' doesn't exist."
 
     # The module name is also the suffix of the function.
+    ed_log "Installing module $1"
     CURRENT_MODULE="$1" ed_module_$1
 
     shift
