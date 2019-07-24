@@ -52,6 +52,39 @@ man() {
    command man "$@"
 }
 
+# This small script upload the current clipboard content to https://hastebin.com,
+# then shows the URL and copy it to the clipboard (erasing the previous
+# content).
+#
+# This script is useful with my xfce4-terminal configuration, that copy all text
+# selected to clipboard.
+#
+# This script requires the following extra commands: curl, xclip.
+haste() {
+  local endpoint url reponse
+
+  endpoint="https://hastebin.com/documents"
+
+  if [[ "$(command -v curl)" && "$(command -v xclip)" ]] ; then
+    response="$(curl --request POST --silent --data "$(xclip -o)" "$endpoint")"
+
+    if (( $? == 0 )) ; then
+      url="$(echo "$response" \
+        | awk --field-separator '"' '{ print "https://hastebin.com/"$4 }')"
+
+      echo "$url"
+
+      echo -n "$url" | xclip -selection clipboard \
+        || echo "Failed to copy URL to clipboard"
+    else
+      echo "Failed to upload the clipboard to https://hastebin.com" >&2
+    fi
+
+  else
+    echo "This script requires curl and xclip to run." >&2
+  fi
+}
+
 # Prints to the standard output a list of dreams in a fixed format. The list is
 # filename ordered. The format is: "FILENAME - FIRST LINE OF THE DREAM". Usually
 # the first line of the dream is the title.
