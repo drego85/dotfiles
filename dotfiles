@@ -29,11 +29,8 @@ readonly COMMAND="$1"
 # Target distribution of this script.
 readonly VERSION="Fedora 30"
 
-# Associative array of available modules (module name -> module function).
+# Associative array of available modules (module name -> module description).
 declare -A MODULES
-
-# Associative array of modules description (module name -> module description).
-declare -A MODULES_DESCRIPTION
 
 # }}}
 
@@ -253,8 +250,7 @@ ed_install_fusion() {
 
 # Modules {{{
 
-MODULES["pass"]="ed_module_pass"
-MODULES_DESCRIPTION["pass"]="install 'pass' package"
+MODULES["pass"]="install 'pass' package"
 ed_module_pass() {
   CURRENT_MODULE="pass"
   ed_log "Installing module $CURRENT_MODULE"
@@ -262,8 +258,7 @@ ed_module_pass() {
   ed_install "pass"
 }
 
-MODULES["telegram"]="ed_module_telegram"
-MODULES_DESCRIPTION["telegram"]="install 'telegram-desktop' package"
+MODULES["telegram"]="install 'telegram-desktop' package"
 ed_module_telegram() {
   CURRENT_MODULE="telegram"
   ed_log "Installing module $CURRENT_MODULE"
@@ -271,8 +266,7 @@ ed_module_telegram() {
   ed_install_fusion "telegram-desktop"
 }
 
-MODULES["thunderbird"]="ed_module_telegram"
-MODULES_DESCRIPTION["thunderbird"]="install 'thunderbird' package"
+MODULES["thunderbird"]="install 'thunderbird' package"
 ed_module_thunderbird() {
   CURRENT_MODULE="thunderbird"
   ed_log "Installing module $CURRENT_MODULE"
@@ -280,8 +274,7 @@ ed_module_thunderbird() {
   ed_install "thunderbird"
 }
 
-MODULES["vlc"]="ed_module_vlc"
-MODULES_DESCRIPTION["vlc"]="install 'vlc' package"
+MODULES["vlc"]="install 'vlc' package"
 ed_module_vlc() {
   CURRENT_MODULE="thunderbird"
   ed_log "Installing module $CURRENT_MODULE"
@@ -289,8 +282,7 @@ ed_module_vlc() {
   ed_install_fusion "vlc"
 }
 
-MODULES["youtube-dl"]="ed_module_youtube-dl"
-MODULES_DESCRIPTION["youtube-dl"]="install 'youtube-dl' package"
+MODULES["youtube-dl"]="install 'youtube-dl' package"
 ed_module_youtube-dl() {
   CURRENT_MODULE="youtube-dl"
   ed_log "Installing module $CURRENT_MODULE"
@@ -298,8 +290,7 @@ ed_module_youtube-dl() {
   ed_install "youtube-dl"
 }
 
-MODULES["gtk"]="ed_module_gtk"
-MODULES_DESCRIPTION["gtk"]="enable Arc-Dark GTK+ theme"
+MODULES["gtk"]="enable Arc-Dark GTK+ theme"
 ed_module_gtk() {
   CURRENT_MODULE="gtk"
   ed_log "Installing module $CURRENT_MODULE"
@@ -317,8 +308,7 @@ ed_module_gtk() {
   fi
 }
 
-MODULES["icon"]="ed_module_icon"
-MODULES_DESCRIPTION["icon"]="install 'papirus-icon-theme' package and enable it"
+MODULES["icon"]="install 'papirus-icon-theme' package and enable it"
 ed_module_icon() {
   CURRENT_MODULE="icon"
   ed_log "Installing module $CURRENT_MODULE"
@@ -335,8 +325,7 @@ ed_module_icon() {
   fi
 }
 
-MODULES["bin"]="ed_module_bin"
-MODULES_DESCRIPTION["bin"]="create symlinks for custom scripts on ~/.local/bin"
+MODULES["bin"]="create symlinks for custom scripts on ~/.local/bin"
 ed_module_bin() {
   CURRENT_MODULE="bin"
   ed_log "Installing module $CURRENT_MODULE"
@@ -398,7 +387,7 @@ ed_cmd_list() {
   ed_log "${#MODULES[*]} available modules:"
 
   for module in ${!MODULES[*]} ; do
-    printf "%-13s - %s\n" "$module" "${MODULES_DESCRIPTION["$module"]}"
+    printf "%-13s - %s\n" "$module" "${MODULES["$module"]}"
   done
 }
 
@@ -409,7 +398,10 @@ ed_cmd_install() {
   ed_log "Installing modules..."
 
   while [[ "$1" ]]; do
-    ${MODULES["$1"]}
+    [[ "${MODULES["$1"]}" ]] || ed_elog "Module '$1' doesn't exist."
+
+    # The module name is also the suffix of the function.
+    ed_module_$1
 
     shift
   done
