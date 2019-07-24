@@ -374,12 +374,15 @@ ed_cmd_list() {
 ed_cmd_install() {
   [[ "$1" ]] || ed_elog "No modules given."
 
+  # Check if exist given modules.
+  for module in $@ ; do
+    [[ "${MODULES["$module"]}" ]] || ed_elog "Module '$module' doesn't exist."
+  done
+
   local nr_modules="$#"
   ed_log "Installing $nr_modules modules..."
 
   while [[ "$1" ]]; do
-    [[ "${MODULES["$1"]}" ]] || ed_elog "Module '$1' doesn't exist."
-
     # The module name is also the suffix of the function.
     # Note that '$#' change every iteration, because of 'shift'.
     ed_log "($(($nr_modules - $# + 1))) Installing module $1"
