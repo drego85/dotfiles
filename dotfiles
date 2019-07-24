@@ -252,7 +252,6 @@ ed_install_fusion() {
 
 MODULES["pass"]="install 'pass' package"
 ed_module_pass() {
-  CURRENT_MODULE="pass"
   ed_log "Installing module $CURRENT_MODULE"
 
   ed_install "pass"
@@ -260,7 +259,6 @@ ed_module_pass() {
 
 MODULES["telegram"]="install 'telegram-desktop' package"
 ed_module_telegram() {
-  CURRENT_MODULE="telegram"
   ed_log "Installing module $CURRENT_MODULE"
 
   ed_install_fusion "telegram-desktop"
@@ -268,7 +266,6 @@ ed_module_telegram() {
 
 MODULES["thunderbird"]="install 'thunderbird' package"
 ed_module_thunderbird() {
-  CURRENT_MODULE="thunderbird"
   ed_log "Installing module $CURRENT_MODULE"
 
   ed_install "thunderbird"
@@ -276,7 +273,6 @@ ed_module_thunderbird() {
 
 MODULES["vlc"]="install 'vlc' package"
 ed_module_vlc() {
-  CURRENT_MODULE="thunderbird"
   ed_log "Installing module $CURRENT_MODULE"
 
   ed_install_fusion "vlc"
@@ -284,7 +280,6 @@ ed_module_vlc() {
 
 MODULES["youtube-dl"]="install 'youtube-dl' package"
 ed_module_youtube-dl() {
-  CURRENT_MODULE="youtube-dl"
   ed_log "Installing module $CURRENT_MODULE"
 
   ed_install "youtube-dl"
@@ -292,7 +287,6 @@ ed_module_youtube-dl() {
 
 MODULES["gtk"]="enable Arc-Dark GTK+ theme"
 ed_module_gtk() {
-  CURRENT_MODULE="gtk"
   ed_log "Installing module $CURRENT_MODULE"
 
   # It is installed by default on Fedora.
@@ -310,7 +304,6 @@ ed_module_gtk() {
 
 MODULES["icon"]="install 'papirus-icon-theme' package and enable it"
 ed_module_icon() {
-  CURRENT_MODULE="icon"
   ed_log "Installing module $CURRENT_MODULE"
 
    ed_install "papirus-icon-theme"
@@ -327,7 +320,6 @@ ed_module_icon() {
 
 MODULES["bin"]="create symlinks for custom scripts on ~/.local/bin"
 ed_module_bin() {
-  CURRENT_MODULE="bin"
   ed_log "Installing module $CURRENT_MODULE"
 
   local bin_path
@@ -401,7 +393,7 @@ ed_cmd_install() {
     [[ "${MODULES["$1"]}" ]] || ed_elog "Module '$1' doesn't exist."
 
     # The module name is also the suffix of the function.
-    ed_module_$1
+    CURRENT_MODULE="$1" ed_module_$1
 
     shift
   done
