@@ -16,11 +16,14 @@ usually Fedora, so they will work on my distro, but on others might not.
 Install
 -------
 
-Every folder is a category. In each folder there is an installer script written
-in Bash, that uses my custom library contained in `.commons`. You can run these
-installer script to install the configuration and script of the category.
+Every folder is a module, which contains the configuration for that module.
+There are some module only written in `dotfiles` script, because they have no
+configuration (for example `gtk` only enable GTK+ theme).
 
-For more information you can read specific READMEs for every category.
+Modules
+-------
+
+WIP
 
 License
 -------
