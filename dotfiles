@@ -318,6 +318,21 @@ ed_module_bin() {
   done
 }
 
+MODULES["git"]="install 'git' and link the configuration"
+ed_module_git() {
+  local dest_path
+  dest_path="$(xdg-user-dir)"
+
+  ed_install "git"
+
+  mkdir --parents --verbose "$dest_path" || ed_elog "Failed to create '$dest_path'"
+
+  for config in "$SCRIPT_PATH"/git/* ; do
+    # Because git config are dotfiles, they starts with '.'.
+    ed_make_symlink "$config" "$dest_path/.$(basename "$config")"
+  done
+}
+
 # }}}
 
 # Command line interface {{{
