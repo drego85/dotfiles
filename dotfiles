@@ -479,6 +479,23 @@ ed_module_lightdm() {
                   sudo
 }
 
+MODULES["vim"]="prepare vim folder and link it to $HOME_PATH/.vim"
+ed_module_vim() {
+  local plugins_path
+
+  # TODO: fix
+  ln -Tfs /home/emanuele/.dotfiles/vim /home/emanuele/.vim
+
+  plugins_path="$REPO_PATH/vim/pack/start"
+
+  # Update and download all plugins.
+  git -C "$REPO_PATH" submodule update --init "$plugins_path/papercolor-theme"
+  git -C "$REPO_PATH" submodule update --init "$plugins_path/vim-syntax-extra"
+  git -C "$REPO_PATH" submodule update --init "$plugins_path/python-syntax"
+  git -C "$REPO_PATH" submodule update --init "$plugins_path/goyo.vim"
+  git -C "$REPO_PATH" submodule update --init "$plugins_path/vim-pencil"
+}
+
 # }}}
 
 # Command line interface {{{
