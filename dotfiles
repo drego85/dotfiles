@@ -444,6 +444,34 @@ ed_module_clean() {
   ed_remove "firewall-config"
 }
 
+MODULES["gpg"]="install GnuPG configuration and enable it via systemd --user"
+ed_module_gpg() {
+  local file dest_unit src_unit
+
+  # 1. Install my favourite pinentry.
+  ed_install "pinetry-gtk"
+
+  # 2. Create symlinks for configuration.
+  for file in "gpg.conf" "gpg-agent.conf" "sshcontrol" ; do
+    ed_make_symlink "$REPO_PATH/gnupg/$file" "$HOME_PATH/.gnupg/$file"
+  done
+
+  dest_unit="$HOME_PATH/.config/systemd/user"
+  src_unit="/usr/share/doc/gnupg2/examples/systemd-user"
+
+  # 3. Create symlinks for systemd unit files.
+  ed_make_dir "$dest_unit"
+  for unit in "$src_unit"/*.{service,socket} ; do
+    ed_make_symlink "$unit" "$dest_unit/${unit##*/}"
+  done
+
+  # 4. Enable systemd unit files.
+  systemctl --user daemon-reload
+
+  systemctl --user enable $(basename --multiple "$src_unit"/*.socket)
+  systemctl --user start $(basename --multiple "$src_unit"/*.socket)
+}
+
 # }}}
 
 # Command line interface {{{
