@@ -17,8 +17,11 @@
 # Useful to display a prefix on logging messages.
 CURRENT_MODULE=""
 
-# Full path of this script.
-readonly SCRIPT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# Full path of dotfiles repository.
+readonly REPO_PATH="$(dirname "$(readlink -f "$0")")"
+
+# Full path of user's home dir.
+readonly HOME_PATH="$(xdg-user-dir)"
 
 # Program's name.
 readonly PROGRAM="${0##*/}"
@@ -342,11 +345,11 @@ ed_module_icon() {
 MODULES["bin"]="create symlinks for custom scripts on ~/.local/bin"
 ed_module_bin() {
   local bin_path
-  bin_path="$(xdg-user-dir)/.local/bin"
+  bin_path="$HOME_PATH/.local/bin"
 
   mkdir --parents --verbose "$bin_path" || ed_elog "Failed to create '$bin_path'"
 
-  for script in "$SCRIPT_PATH"/bin/* ; do
+  for script in "$REPO_PATH"/bin/* ; do
     ed_make_symlink "$script" "$bin_path/$(basename "$script")"
   done
 }
@@ -354,26 +357,26 @@ ed_module_bin() {
 MODULES["git"]="install 'git' and link the configuration"
 ed_module_git() {
   local dest_path
-  dest_path="$(xdg-user-dir)"
+  dest_path="$HOME_PATH"
 
   ed_install "git"
 
   mkdir --parents --verbose "$dest_path" || ed_elog "Failed to create '$dest_path'"
 
-  for config in "$SCRIPT_PATH"/git/* ; do
+  for config in "$REPO_PATH"/git/* ; do
     # Because git config are dotfiles, they starts with '.'.
     ed_make_symlink "$config" "$dest_path/.$(basename "$config")"
   done
 }
 
-MODULES["tlp"]="install 'tlp', link the configuration (with backup) and enable"
+MODULES["tlp"]="install 'tlp', link the configuration and enable it"
 ed_module_tlp() {
   local src dst check_path
 
   ed_install "tlp"
 
   # Create symlink (with backup).
-  src="$SCRIPT_PATH/tlp/tlp"
+  src="$REPO_PATH/tlp/tlp"
   dst="/etc/default/tlp"
 
   if [[ "$(readlink -f "$dst")" != "$src" ]] ; then
@@ -387,6 +390,11 @@ ed_module_tlp() {
   ed_wlog "root requested to start tlp!"
   sudo tlp start &>>/dev/null || ed_elog "tlp: Failed to start tlp!"
   ed_log "tlp started successfuly!"
+}
+
+MODULES["dotfiles"]="install itself to '~/.local/bin'"
+ed_module_dotfiles() {
+  ed_make_symlink "$REPO_PATH/$PROGRAM" "$HOME_PATH/.local/bin/$PROGRAM"
 }
 
 # }}}
@@ -420,7 +428,7 @@ Example:
 
 Files:
 
-    $SCRIPT_PATH
+    $REPO_PATH
         Dotfiles repository.
 
 _EOF
