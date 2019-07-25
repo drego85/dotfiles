@@ -192,6 +192,39 @@ ed_make_symlink() {
   fi
 }
 
+# It creates a backup of a given file, appeding '.bak' suffix.
+#
+# Parameters:
+#     $1 -> file path to copy;
+#     $2 -> if 'sudo' it creates the backup using root permissions.
+#
+# Example:
+#     $ ed_make_symlink file/path
+#     Backup created: file/path.bak
+ed_make_backup() {
+  local src dst sudo
+
+  [[ "$1" ]] || ed_elog "error: file path is empty"
+
+  src="$1"
+  dst="$1.bak"
+
+  sudo=""
+  [[ "$2" == "sudo" ]] && sudo="$2"
+
+  [[ -e "$dst" ]] && ed_wlog "$dst backup file already exist, overwriting it..."
+
+  [[ "$sudo" ]] && ed_wlog "root required to create symlink backup file '$dst'."
+
+  $sudo cp --force "$src" "$dst" 2>/dev/null
+
+  if [[ "$?" == "0" ]] ; then
+    ed_log "created backup file '$dst' from '$src'."
+  else
+    ed_elog "failed to create backup file '$dst' from '$src'."
+  fi
+}
+
 # }}}}
 
 # DNF commons {{{{
@@ -331,6 +364,29 @@ ed_module_git() {
     # Because git config are dotfiles, they starts with '.'.
     ed_make_symlink "$config" "$dest_path/.$(basename "$config")"
   done
+}
+
+MODULES["tlp"]="install 'tlp', link the configuration (with backup) and enable"
+ed_module_tlp() {
+  local src dst check_path
+
+  ed_install "tlp"
+
+  # Create symlink (with backup).
+  src="$SCRIPT_PATH/tlp/tlp"
+  dst="/etc/default/tlp"
+
+  if [[ "$(readlink -f "$dst")" != "$src" ]] ; then
+    ed_make_backup "$dst" "sudo"
+    ed_make_symlink "$src" "$dst" "sudo"
+  else
+    ed_wlog "'$dst' is already a symlink to '$src'."
+  fi
+
+  # Enable tlp
+  ed_wlog "root requested to start tlp!"
+  sudo tlp start &>>/dev/null || ed_elog "tlp: Failed to start tlp!"
+  ed_log "tlp started successfuly!"
 }
 
 # }}}
