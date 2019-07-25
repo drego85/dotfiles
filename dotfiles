@@ -256,6 +256,29 @@ ed_install() {
   fi
 }
 
+# It removes a package via DNF.
+#
+# Parameters:
+#     $1 -> package's name
+#
+# Example:
+#     ed_remove "git"
+ed_remove() {
+  local package="$1"
+
+  # Check if package is already removed.
+  output="$(dnf list --installed "$package")"
+  installed=$?
+
+  if [[ $installed == "0" ]]; then
+    # Remove the package.
+    ed_wlog "root requested to remove $package"
+    sudo dnf remove "$package"
+  else
+    ed_wlog "$package is already removed!"
+  fi
+}
+
 # It installs a package via DNF from RPM Fusion repository. Use this function
 # because it installs RPM Fusion repository if necessary.
 #
@@ -397,6 +420,28 @@ ed_module_tlp() {
 MODULES["dotfiles"]="install itself to '~/.local/bin'"
 ed_module_dotfiles() {
   ed_make_symlink "$REPO_PATH/$PROGRAM" "$HOME_PATH/.local/bin/$PROGRAM"
+}
+
+MODULES["clean"]="remove various packages that I don't use"
+ed_module_clean() {
+  ed_remove "gnome-keyring"
+  ed_remove "seahorse"
+  ed_remove "xfdashboard"
+  ed_remove "claws-mail"
+  ed_remove "xscreensaver-base"
+  ed_remove "xfburn"
+  ed_remove "geany"
+  ed_remove "pidgin"
+  ed_remove "asunder"
+  ed_remove "pragha"
+  ed_remove "parole"
+  ed_remove "dnfdragora"
+  ed_remove "abiword"
+  ed_remove "gnumeric"
+  ed_remove "xfce4-dict"
+  ed_remove "orage"
+  ed_remove "xfce4-clipman-plugin"
+  ed_remove "firewall-config"
 }
 
 # }}}
