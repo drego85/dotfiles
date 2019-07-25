@@ -108,18 +108,12 @@ PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 # }}}
 
 # Aliases {{{
-#
-# Here there are my custom aliases. Some aliases can call functions in this
-# file.
 
 # It stops Bash to record commands in the current session.
 alias forget="unset HISTFILE"
 
 # It downloads videos and then extracts the audio.
 alias music-dl='youtube-dl -x --audio-format vorbis'
-
-# It download videos form YouTube at HD format (because my bandwith is limited).
-alias yt-dl='youtube-dl -f "best[height=720]"'
 
 # It replace spaces to underscore and convert the text in lowercase.
 alias renamefull="rename 's/ /_/g' * && rename 'y/A-Z/a-z/' *"
@@ -133,6 +127,7 @@ alias snips="snippets"
 # Enable colors for varous commands.
 alias ls="ls --color=auto"
 alias grep="grep --color=auto"
+alias tree="tree -C"
 
 # Enable ls aliases.
 alias ll="ls -l"
@@ -144,9 +139,8 @@ alias writing="vim -c Writing"
 
 alias ..="cd .."
 
-alias clr="clear"
-
-alias tree="tree -C"
+# Alias for my dotfiles script manager.
+alias dot="dotfiles"
 
 # }}}
 
