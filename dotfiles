@@ -350,7 +350,9 @@ ed_module_bin() {
   mkdir --parents --verbose "$bin_path" || ed_elog "Failed to create '$bin_path'"
 
   for script in "$REPO_PATH"/bin/* ; do
-    ed_make_symlink "$script" "$bin_path/$(basename "$script")"
+    if [[ -x "$script" ]] ; then # Avoid symlink the README.md file.
+      ed_make_symlink "$script" "$bin_path/$(basename "$script")"
+    fi
   done
 }
 
