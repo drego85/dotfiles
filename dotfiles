@@ -472,6 +472,13 @@ ed_module_gpg() {
   systemctl --user start $(basename --multiple "$src_unit"/*.socket)
 }
 
+MODULES["lightdm"]="link LightDM configuration"
+ed_module_lightdm() {
+  ed_make_symlink "$REPO_PATH/lightdm/lightdm.conf" \
+                  "/usr/share/lightdm/lightdm.conf.d/70_start_xfce_session.conf"\
+                  sudo
+}
+
 # }}}
 
 # Command line interface {{{
