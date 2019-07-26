@@ -496,6 +496,16 @@ ed_module_vim() {
   git -C "$REPO_PATH" submodule update --init "$plugins_path/vim-pencil"
 }
 
+MODULES["xfce4-terminal"]="link configuration"
+ed_module_xfce4-terminal() {
+  local dest_path
+
+  dest_path="$HOME_PATH/.config/xfce4"
+
+  # TODO: fix, same as vim module
+  ln -Tfs "$REPO_PATH/xfce4-terminal" "$dest_path/terminal"
+}
+
 # }}}
 
 # Command line interface {{{
