@@ -496,14 +496,15 @@ ed_module_vim() {
   git -C "$REPO_PATH" submodule update --init "$plugins_path/vim-pencil"
 }
 
-MODULES["xfce4-terminal"]="link configuration"
-ed_module_xfce4-terminal() {
+MODULES["xfce4"]="link configuration of various Xfce apps"
+ed_module_xfce4() {
   local dest_path
 
   dest_path="$HOME_PATH/.config/xfce4"
 
+  # xfce4-terminal configuration.
   # TODO: fix, same as vim module
-  ln -Tfs "$REPO_PATH/xfce4-terminal" "$dest_path/terminal"
+  ln -Tfs "$REPO_PATH/xfce4/xfce4-terminal" "$dest_path/terminal"
 }
 
 MODULES["xfwm4"]="install xfwm4 theme"
