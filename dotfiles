@@ -29,8 +29,9 @@ readonly PROGRAM="${0##*/}"
 # User given command.
 readonly COMMAND="$1"
 
-# Target distribution of this script.
-readonly VERSION="Fedora 30"
+# Target of this script.
+readonly TARGET_DISTRIBUTION="Fedora"
+readonly TARGET_VERSION=30
 
 # Associative array of available modules (module name -> module description).
 declare -A MODULES
@@ -93,7 +94,7 @@ ed_elog() {
 
 # }}}}
 
-# Binary commonds {{{{
+# Binary commons {{{{
 
 # Check if a given program (the command) exists. If it doesn't
 # exist, it prints an error message and exits.
@@ -608,6 +609,20 @@ ed_cmd_install() {
 # }}}
 
 # Entry point {{{
+
+# Check operating system name and version {{{{
+if [[ -e "/etc/os-release" ]]; then
+  source "/etc/os-release"
+elif [[ -e "/etc/usr/lib/os-release" ]]; then
+  source "/etc/usr/lib/os-release"
+else
+  ed_elog "Failed to establish the current operating system name and version"
+fi
+
+if [[ "$NAME" != "$TARGET_DISTRIBUTION" || "$VERSION_ID" != "$TARGET_VERSION" ]]; then
+  ed_wlog "Host OS is $NAME $VERSION_ID but this script is written for $TARGET_DISTRIBUTION $TARGET_VERSION. It might not work!"
+fi
+# }}}}
 
 case "$COMMAND" in
   list) shift;              ed_cmd_list "$@" ;;
