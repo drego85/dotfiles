@@ -25,6 +25,12 @@ reserved folder, which contains some configuration files.
 
 ## Modules
 
+### bash
+
+This modules simply link my bash configuration, that consists of a `bashrc` and
+`bash_profile` file. It contains essential environment variables, aliases and
+small scripts.
+
 ### tlp
 
 TLP is an useful package to manage power and extends battery life. It works well

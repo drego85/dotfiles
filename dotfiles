@@ -519,6 +519,12 @@ ed_module_xfwm4() {
   ed_make_symlink "$REPO_PATH/xfwm4/thinble" "$dest_path/thinble"
 }
 
+MODULES["bash"]="link Bash configuration"
+ed_module_bash() {
+  ed_make_symlink "$REPO_PATH/bash/bashrc" "$HOME_PATH/.bashrc"
+  ed_make_symlink "$REPO_PATH/bash/bash_profile" "$HOME_PATH/.bash_profile"
+}
+
 # }}}
 
 # Command line interface {{{
