@@ -1,8 +1,8 @@
 image: fedora:30
 
 before_script:
-  # Install 'find' and 'shellcheck' command.
-  - dnf --quiet --assumeyes install ShellCheck findutils
+  # Install various commands used during the build.
+  - dnf --quiet --assumeyes install ShellCheck findutils make
 
 lint:
   stage: test
