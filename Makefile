@@ -6,4 +6,4 @@ all : lint
 # script of a git submodule.
 # Disable also SC1091, it is a warning for files not checked in Bash 'source'.
 lint :
-	find . -not -name "test.sh" -and -name "*.sh" -or -name "install" -exec shellcheck --color=always --exclude=SC1091 {} \;
+	find . -not -name "test.sh" -and -name "*.sh" -or -name "install" -or -name "dotfiles" -exec shellcheck --color=always --exclude=SC1091 {} \;
