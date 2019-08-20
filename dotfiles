@@ -396,7 +396,7 @@ ed_module_git() {
 
 MODULES["tlp"]="install 'tlp', link the configuration and enable it"
 ed_module_tlp() {
-  local src dst check_path
+  local src dst
 
   ed_install "tlp"
 
@@ -498,7 +498,7 @@ ed_module_vim() {
 
 MODULES["xfce4"]="link configuration of various Xfce apps"
 ed_module_xfce4() {
-  local dest_path config_file
+  local dest_path
 
   dest_path="$HOME_PATH/.config/xfce4"
 
@@ -582,11 +582,11 @@ ed_cmd_list() {
 
 # It installs all modules given as input.
 ed_cmd_install() {
-  local nr_modules counter
+  local nr_modules
   [[ "$1" ]] || ed_elog "No modules given."
 
   # Check if exist given modules.
-  for module in $@ ; do
+  for module in "$@" ; do
     [[ "${MODULES["$module"]}" ]] || ed_elog "Module '$module' doesn't exist."
   done
 
@@ -596,10 +596,10 @@ ed_cmd_install() {
   while [[ "$1" ]]; do
     # Note that '$#' change every iteration, because of 'shift'. It is a counter
     # like this: (4/7) Installing module foo...
-    ed_log "($(($nr_modules - $# + 1))/$nr_modules) Installing module $1..."
+    ed_log "($((nr_modules - $# + 1))/$nr_modules) Installing module $1..."
 
     # The module name is also the suffix of the function.
-    CURRENT_MODULE="$1" ed_module_$1
+    CURRENT_MODULE="$1" ed_module_"$1"
 
     shift
   done
