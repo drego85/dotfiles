@@ -101,6 +101,12 @@ it crashes. I don't know why.
 More informations can be found on [LightDM's home page][1] and on the [Arch
 Linux's wiki][2].
 
+### xfwm4
+
+This module installs my custom theme for Xfwm4. The theme has small borders and
+it is really minimal. I've also set up a Gitlab repository for my theme, see
+[here][4].
+
 ## License
 
 Every script is licensed under the [MIT License][0].
@@ -110,3 +116,4 @@ Every script is licensed under the [MIT License][0].
 [1]: www.freedesktop.org/wiki/Software/LightDM
 [2]: https://wiki.archlinux.org/index.php/LightDM
 [3]: https://github.com/spanezz/lightdm-autologin-greeter
+[4]: https://gitlab.com/ema-pe/backup-thinble-xfwm4-theme

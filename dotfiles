@@ -506,6 +506,18 @@ ed_module_xfce4-terminal() {
   ln -Tfs "$REPO_PATH/xfce4-terminal" "$dest_path/terminal"
 }
 
+MODULES["xfwm4"]="install xfwm4 theme"
+ed_module_xfwm4() {
+  local dest_path
+
+  git -C "$REPO_PATH" submodule update --init "xfwm4/thinble"
+
+  dest_path="$HOME_PATH/.local/share/themes"
+  ed_make_dir "$dest_path"
+
+  ed_make_symlink "$REPO_PATH/xfwm4/thinble" "$dest_path/thinble"
+}
+
 # }}}
 
 # Command line interface {{{
