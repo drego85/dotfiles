@@ -113,6 +113,56 @@ This module installs my custom theme for Xfwm4. The theme has small borders and
 it is really minimal. I've also set up a Gitlab repository for my theme, see
 [here][4].
 
+### firefox
+
+I use Mozilla Firefox as my main browser. I like it because is privacy focused,
+fast and work really well in Linux. It is a big and complex software, it is not
+easy to customize it.
+
+#### Manual installation process
+
+Unfortunately Firefox needs to be customized from GUI instead on CLI, so there
+is not a real installer script. The steps to do are:
+
+1. From an active Firefox session, create a new profile with name
+   `default-release` (default profile that comes with Fedora). You can access to
+   the page via `about:profiles`.
+2. Switch to the new profile and delete the old one (if you want).
+3. Login to Firefox Sync (or download all extentions you want).
+4. Customize Firefox GUI.
+5. To set custom `user.js`, run my installer script.
+
+#### Extentions
+
+Extentions can't be installed from command line, so you need to install them
+manually (or use [Firefox Sync][5]). I use these extentions:
+
+* **CanvasBlocker**: prevent Canvas fingerprinting; [[FA]][6] [[Sources]][7]
+* **CSS Exfil Protection**: prevent CSS Exfil attacks; [[FA]][8] [[Sources]][9]
+* **Decentraleyes**: local emulation of CDN; [[FA]][10] [[Sources]][11]
+* **HTTPS Everywhere**: force HTTPS on sites; [[FA]][12] [[Sources]][13]
+* **Tridactyl**: VIM keybindings on Firefox; [[FA]][14] [[Sources]][15]
+* **uBlock Origin**: general blocker; [[FA]][16] [[Sources]][17]
+* **Neat URL**: remove garbage from URLs; [[FA]][20] [[Sources]][21]
+* **Containerise**: automatically open websites in a container; [[FA]][22] [[Sources]][23]
+* **Add custom search engine**: add cutom search engine. [[FA]][24] [[Sources]][24]
+
+All these extentions are automatically updated via Firefox, so you only need to
+download them the first time.
+
+#### Custom user.js
+
+The `user.js` file is a file with all options to customize Firefox behaviour.
+Many options can be selected from the graphical interface, but lots are hidden.
+
+I use [ghacks' `user.js`][18], an `user.js` enhanced for privacy. I don't like
+some options, so I have also a custom [`user.js`][19] that overrides some
+options.
+
+This module will download the latest version of ghacks' `user.js` and move that
+file to the Firefox profile with suffix `default-release`. At the end it append
+my custom options to `user.js` file on the profile.
+
 ## License
 
 Every script is licensed under the [MIT License][0].
@@ -123,3 +173,24 @@ Every script is licensed under the [MIT License][0].
 [2]: https://wiki.archlinux.org/index.php/LightDM
 [3]: https://github.com/spanezz/lightdm-autologin-greeter
 [4]: https://gitlab.com/ema-pe/backup-thinble-xfwm4-theme
+[5]: https://www.mozilla.org/en-US/firefox/features/sync/
+[6]: https://addons.mozilla.org/en-US/firefox/addon/canvasblocker/
+[7]: https://github.com/kkapsner/CanvasBlocker
+[8]: https://addons.mozilla.org/en-US/firefox/addon/css-exfil-protection/
+[9]: https://github.com/mlgualtieri/CSS-Exfil-Protection
+[10]: https://addons.mozilla.org/en-US/firefox/addon/decentraleyes/
+[11]: https://git.synz.io/Synzvato/decentraleyes
+[12]: https://addons.mozilla.org/en-US/firefox/addon/https-everywhere/
+[13]: https://github.com/EFForg/https-everywhere
+[14]: https://addons.mozilla.org/en-US/firefox/addon/https-everywhere/
+[15]: https://github.com/cmcaine/tridactyl
+[16]: https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/
+[17]: https://github.com/gorhill/uBlock
+[18]: https://github.com/ghacksuserjs/ghacks-user.js
+[19]: firefox/user.js
+[20]: https://addons.mozilla.org/en-US/firefox/addon/neat-url/
+[21]: https://github.com/Smile4ever/Neat-URL
+[22]: https://addons.mozilla.org/en-US/firefox/addon/containerise/
+[23]: https://github.com/kintesh/containerise
+[24]: https://addons.mozilla.org/en-US/firefox/addon/add-custom-search-engine/
+[25]: https://github.com/evilpie/add-custom-search-engine
