@@ -592,6 +592,33 @@ ed_module_font() {
   fc-cache --verbose --force "$dest_path"
 }
 
+MODULES["firefox"]="install firefox and custom user.js to 'emanuele' profile"
+ed_module_firefox() {
+  ed_install "firefox"
+
+  local firefox_path="$HOME_PATH/.mozilla/firefox"
+
+  # Find profile path.
+  [[ -d "$firefox_path" ]] ||
+    ed_elog "No '$firefox_path' folder found. Is Firefox installed?"
+
+  local profile_path
+  profile_path="$(find "$firefox_path" -maxdepth 1 -regex '.*\.default-release$')"
+
+  [[ "$profile_path" ]] ||
+    ed_elog "No profile with suffix 'default-release' found!"
+
+  # Download and install custom user.js.
+  local ghacks_js_url="https://raw.githubusercontent.com/ghacksuserjs/ghacks-user.js/master/user.js"
+  local dest_user_js="$profile_path/user.js"
+  local custom_user_js="$REPO_PATH/firefox/user.js"
+
+  ed_download "$ghacks_js_url" "$dest_user_js" ||
+    ed_elog "Failed to download '$ghacks_js_url'"
+
+  cat "$custom_user_js" >> "$dest_user_js" # Note: append, don't overwrite!
+}
+
 # }}}
 
 # Command line interface {{{
