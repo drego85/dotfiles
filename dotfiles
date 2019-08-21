@@ -36,6 +36,10 @@ readonly TARGET_VERSION=30
 # Associative array of available modules (module name -> module description).
 declare -A MODULES
 
+# Default exit codes.
+readonly EXIT_SUCCESS=0
+readonly EXIT_FAILURE=1
+
 # }}}
 
 # Common used functions {{{
@@ -79,17 +83,24 @@ ed_wlog() {
 #
 # Parameters:
 #     $1 -> the message to print to the standard error;
-#     $2 -> the error code, default is 1.
+#     $2 -> the error code, default is $EXIT_FAILURE (optional);
+#     $3 -> an optional function or command to run before exit (optional).
 #
 # Example:
 #     $ CURRENT_MODULE="test" ed_elog "X not found!" 5
 #     test: X not found
 #     $ echo $?
 #     5
+#     $ ed_elog "failed to do..." 1 "echo ciao"
+#     failed to do...
+#     ciao
 #
 ed_elog() {
   ed_wlog "$1"
-  exit "${2:-1}" # If $2 is unset or empty, set 'code' to 1.
+
+  [[ "$3" ]] && "$3" # Run a command before exiting, if exists.
+
+  exit "${2:-$EXIT_FAILURE}" # If $2 is unset or empty, set to default.
 }
 
 # }}}}
@@ -321,7 +332,8 @@ ed_download() {
   local src="$1"
   local dst="$2"
 
-  curl --silent --show-error "$src" --output "$dst" || return 1
+  # '--location' is needed to follow redirects.
+  curl --location --silent --show-error "$src" --output "$dst" || return 1
 
   return 0
 }
@@ -546,6 +558,38 @@ MODULES["bash"]="link Bash configuration"
 ed_module_bash() {
   ed_make_symlink "$REPO_PATH/bash/bashrc" "$HOME_PATH/.bashrc"
   ed_make_symlink "$REPO_PATH/bash/bash_profile" "$HOME_PATH/.bash_profile"
+}
+
+MODULES["font"]="download and install Hack font (but don't activate it)"
+ed_module_font() {
+  local xz_file
+  local tar_file
+  local dest_path="$HOME_PATH/.local/share/fonts"
+  local hack_version="v3.003"
+
+  xz_file="$(mktemp --suffix=.tar.xz)"
+  tar_file="${xz_file%%.xz}"
+
+  local hack_dl_file="Hack-$hack_version-ttf.tar.xz"
+  local hack_dl_url="https://github.com/source-foundry/Hack/releases/download/$hack_version/$hack_dl_file"
+
+  # Download the font files.
+  ed_download "$hack_dl_url" "$xz_file" ||
+    ed_elog "Failed to download '$hack_dl_url'" "$EXIT_FAILURE" "rf --force $xz_file"
+
+  # Extract the pack and install the fonts.
+  xz --decompress "$xz_file" ||
+    ed_elog "Failed to decompress '$xz_file'" "$EXIT_FAILURE" "rf --force $xz_file"
+
+  ed_make_dir "$dest_path"
+
+  tar --extract --file "$tar_file" --directory "$dest_path" ||
+    ed_elog "Failed to extract '$tar_file'" "$EXIT_FAILURE" "rf --force $tar_file"
+
+  rm --force "$tar_file" # Remove downloaded file.
+
+  ed_log "clearing and rigenerating font cache, it may taking a while..."
+  fc-cache --verbose --force "$dest_path"
 }
 
 # }}}
