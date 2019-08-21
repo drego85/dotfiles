@@ -260,10 +260,10 @@ ed_install() {
   installed=$?
 
   if [[ $installed == "0" ]]; then
-    ed_wlog "$package: $package is already installed!"
+    ed_wlog "$package is already installed!"
   else
     # Install the package.
-    ed_wlog "$package: root requested to install $package"
+    ed_wlog "root requested to install $package"
     sudo dnf install "$package"
   fi
 }
@@ -306,9 +306,9 @@ ed_install_fusion() {
 
   # Install RPM Fusion (free) repository.
   if [[ "$(find /etc/yum.repos.d/ -name rpmfusion-free.repo)" ]]; then
-    ed_wlog "$package: RPM Fusion free repository is already added!"
+    ed_wlog "RPM Fusion free repository is already added!"
   else
-    ed_wlog "$package: root requested to install RPM Fusion free repository"
+    ed_wlog "root requested to install RPM Fusion free repository"
     sudo dnf install "$repository"
   fi
 
