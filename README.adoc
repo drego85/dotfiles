@@ -33,6 +33,8 @@ This modules simply link my bash configuration, that consists of a `bashrc` and
 `bash_profile` file. It contains essential environment variables, aliases and
 small scripts.
 
+'''
+
 === bin
 
 This module links all custom scripts to `~/.local/bin`. These scripts are:
@@ -41,23 +43,25 @@ This module links all custom scripts to `~/.local/bin`. These scripts are:
   external HDD.
 * link:bin/firefox-tmp[*firefox-tmp*]: this script launchs a temporary Mozilla
   Firefox instance (useful for testing or debugging).
-* link:bin/gandi-aliases[gandi-aliases]: this script manages aliases for my
+* link:bin/gandi-aliases[*gandi-aliases*]: this script manages aliases for my
   email hosted on https://www.gandi.net/en[Gandi.net].
-* link:bin/goodmorningitalia[goodmorningitalia]: this script automatically
+* link:bin/goodmorningitalia[*goodmorningitalia*]: this script automatically
   subscribe a 30-days free trial on
-  https://app.goodmorningitalia.it/[goodmorningitalia.it], an italian
+  https://app.goodmorningitalia.it/[*goodmorningitalia.it*], an italian
   newsletter.
-* link:bin/keyboard-shortcuts-help[keyboard-shortcuts-help]: this script shows a
-  window with all my keyboard shortcuts.
-* link:bin/sapienza-wifi[sapienza-wifi]: this script automatically logins to the
+* link:bin/keyboard-shortcuts-help[*keyboard-shortcuts-help*]: this script shows
+  a window with all my keyboard shortcuts.
+* link:bin/sapienza-wifi[*sapienza-wifi*]: this script automatically logins to the
   Sapienza's WiFi network, without open a broswer.
-* link:bin/screen-off[screen-off]: this simple script turns off the screen.
+* link:bin/screen-off[*screen-off*]: this simple script turns off the screen.
 
 These script can be installed manually, each requires some software specificated
-on the first lines (for example `jq` for link:bin/gandi-aliases[gandi-aliases].
+on the first lines (for example `jq` for link:bin/gandi-aliases[gandi-aliases]).
 
 WARNING: Make sure that `~/.local/bin` has ben added to `PATH` if you run this
 module!
+
+'''
 
 === tlp
 
@@ -78,16 +82,22 @@ The basic commands available are:
 This module will install tlp, copy my configuration, start tlp and enable the
 unit file (for systemd).
 
+'''
+
 === dotfiles
 
 This module installs the `dotfiles` script to `~/.local/bin` folder. It is
 supposed that this path is added previously to `PATH` environment variable.
+
+'''
 
 === clean
 
 This module simply removes via `dnf` all preinstalled Fedora packaged that I
 don't use. For a list of these packages, open the script and go to the `clean`
 module.
+
+'''
 
 === gpg
 
@@ -118,6 +128,8 @@ line is already added in my custom `.bash_profile` file:
 This module also installs `pinentry-gtk`, because I don't like the default
 installed that uses ncurses.
 
+'''
+
 === lightdm
 
 https://github.com/canonical/lightdm[LightDM] is a desktop manager easy to use,
@@ -133,11 +145,15 @@ have only one user, but I keep it to have a "modern" desktop.
 IMPORTANT: **DO NOT LOCK THE SCREEN**. If you lock the screen and go back to the
 greeter, it crashes. I don't know why.
 
+'''
+
 === xfwm4
 
 This module installs my custom theme for Xfwm4. The theme has small borders and
 it is really minimal. You can found more information on its
 https://gitlab.com/ema-pe/backup-thinble-xfwm4-theme[repository].
+
+'''
 
 === firefox
 
@@ -198,6 +214,8 @@ custom link:firefox/user.js[`user.js`] that overrides some options.
 This module will download the latest version of ghacks' `user.js` and move that
 file to the Firefox profile with suffix `default-release`. At the end it append
 my custom options to `user.js` file on the profile.
+
+'''
 
 == License
 
