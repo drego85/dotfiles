@@ -34,7 +34,8 @@ get_sensible_data() {
   [[ "$API_KEY" ]] || error "Failet to get api key."
 
   if [[ -z "$ENDPOINT" ]]; then
-    local email_id="$(pass email/inbox@emanuelepetriglia.com | sed '4p;d')"
+    local email_id
+    email_id="$(pass email/inbox@emanuelepetriglia.com | sed '4p;d')"
     [[ "$email_id" ]] || error "Failed to get email id."
 
     readonly ENDPOINT="$BASE_ENDPOINT$email_id"
@@ -67,7 +68,8 @@ get_aliases_list() {
 #
 send_aliases_list() {
   [[ "$1" ]] || error "No aliases list given."
-  local alias_list="$(echo "$1" | jq '{ aliases: . }')"
+  local alias_list
+  alias_list="$(echo "$1" | jq '{ aliases: . }')"
 
   get_sensible_data
 

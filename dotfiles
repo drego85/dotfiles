@@ -231,9 +231,7 @@ ed_make_backup() {
 
   [[ "$sudo" ]] && ed_wlog "root required to create symlink backup file '$dst'."
 
-  $sudo cp --force "$src" "$dst" 2>/dev/null
-
-  if [[ "$?" == "0" ]] ; then
+  if $sudo cp --force "$src" "$dst" 2>/dev/null ; then
     ed_log "created backup file '$dst' from '$src'."
   else
     ed_elog "failed to create backup file '$dst' from '$src'."
@@ -256,10 +254,7 @@ ed_install() {
   local package="$1"
 
   # Check if package is already installed.
-  output="$(dnf list --installed "$package")"
-  installed=$?
-
-  if [[ $installed == "0" ]]; then
+  if dnf list --installed "$package" &>/dev/null ; then
     ed_wlog "$package is already installed!"
   else
     # Install the package.
@@ -279,10 +274,7 @@ ed_remove() {
   local package="$1"
 
   # Check if package is already removed.
-  output="$(dnf list --installed "$package")"
-  installed=$?
-
-  if [[ $installed == "0" ]]; then
+  if dnf list --installed "$package" &>/dev/null ; then
     # Remove the package.
     ed_wlog "root requested to remove $package"
     sudo dnf remove "$package"
@@ -552,8 +544,9 @@ ed_module_xfwm4() {
 
 MODULES["bash"]="link Bash configuration"
 ed_module_bash() {
-  ed_make_symlink "$REPO_PATH/bash/bashrc" "$HOME_PATH/.bashrc"
-  ed_make_symlink "$REPO_PATH/bash/bash_profile" "$HOME_PATH/.bash_profile"
+  for file in "$REPO_PATH"/bash/* ; do
+    ed_make_symlink "$file" "$HOME_PATH/.${file##*/}"
+  done
 }
 
 MODULES["font"]="download and install Hack font (but don't activate it)"

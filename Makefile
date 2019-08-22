@@ -1,6 +1,6 @@
 # Disable also SC1091, it is a warning for files not checked in Bash 'source'.
 # Shellcheck reads this environment variable automatically.
-SHELLCHECK_OPTS = --color=never --exclude=SC1091
+shellcheck_opts = --color=always --exclude=SC1091
 
 .PHONY: all lint lint-bash lint-bash-module lint-bash-dotfiles lint-bash-bin
 
@@ -11,12 +11,12 @@ lint-bash: lint-bash-module lint-bash-dotfiles lint-bash-bin
 
 # Lint Bash module.
 lint-bash-module:
-	shellcheck bash/*
+	shellcheck $(shellcheck_opts) bash/bash*
 
 # Lint Bash main installer script.
 lint-bash-dotfiles:
-	shellcheck dotfiles
+	shellcheck $(shellcheck_opts) dotfiles
 
 # Lint all custom Bash scripts.
 lint-bash-bin:
-	shellcheck  bin/*
+	shellcheck $(shellcheck_opts) bin/*

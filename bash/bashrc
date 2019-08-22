@@ -10,15 +10,9 @@
 
 # Bash settings {{{
 
-# Set VIM keybindings on Bash
-set -o vi
-
-# Set VIM keybindings for all programs.
-set editing-mode vi
-set keymap vi
-
 # Enable auto-completion feature.
 if [[ -f "/etc/profile.d/bash_completion.sh" ]]; then
+  # shellcheck disable=SC1091
   . /etc/profile.d/bash_completion.sh
 fi
 
@@ -30,7 +24,7 @@ fi
 export PS1="[\u@\h \[\e[36m\]\W\[\e[m\]]\\$ "
 
 # Enable SSH support for gpg-agent.
-export SSH_AUTH_SOCK="/run/user/$(id -u)/gnupg/S.gpg-agent.ssh"
+export SSH_AUTH_SOCK="/run/user/$EUID/gnupg/S.gpg-agent.ssh"
 
 # Default editor.
 export EDITOR=vim
@@ -61,13 +55,14 @@ man() {
 #
 # This script requires the following extra commands: curl, xclip.
 haste() {
-  local endpoint url reponse
+  local endpoint url response
 
   endpoint="https://hastebin.com/documents"
 
   if [[ "$(command -v curl)" && "$(command -v xclip)" ]] ; then
     response="$(curl --request POST --silent --data "$(xclip -o)" "$endpoint")"
 
+    # shellcheck disable=SC2181
     if (( $? == 0 )) ; then
       url="$(echo "$response" \
         | awk --field-separator '"' '{ print "https://hastebin.com/"$4 }')"
@@ -121,7 +116,7 @@ alias renamefull="rename 's/ /_/g' * && rename 'y/A-Z/a-z/' *"
 alias py="python3"
 
 # Show all available snippets for VIM.
-alias snippets="ls $HOME/.vim/snippets"
+alias snippets="ls \$HOME/.vim/snippets"
 alias snips="snippets"
 
 # Enable colors for varous commands.

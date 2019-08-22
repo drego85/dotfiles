@@ -6,3 +6,6 @@
 
 # Ignore auto-generated dumps of GTK+ keyboard accelerator.
 *.scm
+
+# Ignore VIM netwhist config file.
+vim/.netrwhist

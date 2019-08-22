@@ -18,9 +18,6 @@
 # Copyright (c) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.com>
 # All right reserved. This file is licensed under the MIT license.
 
-# Login URL.
-URL="https://wifi-cont1.uniroma1.it:8003/index.php?zone=wifi_sapienza"
-
 # Location of the password in the password store database.
 PASSWORD_LOCATION="university/uniroma1.it"
 
@@ -98,7 +95,8 @@ cmd_login() {
 
   # POST parameters.
   local auth_user="auth_user=$USERNAME"
-  local auth_pass="auth_pass=$(pass $PASSWORD_LOCATION | head -n 1)"
+  local auth_pass
+  auth_pass="auth_pass=$(pass $PASSWORD_LOCATION | head -n 1)"
   local zone="zone=wifi_sapienza"
   local redirurl="redirurl=wifi_sapienza"
   local accept="accept=Accetto+-+Accept"
@@ -106,7 +104,8 @@ cmd_login() {
   local data="$auth_user&$auth_pass&$zone&$redirurl&$accept"
 
   # Temporary file to store HTML result of the request.
-  local html_result="$(mktemp)"
+  local html_result
+  html_result="$(mktemp)"
 
   wget --output-document="$html_result" --quiet --post-data "$data" "$login_url"
 
@@ -132,7 +131,8 @@ cmd_logout() {
   local logout_url="https://wifi-cont1.uniroma1.it:8003/"
 
   # POST parameters.
-  local logout_id="logout_id=$(cat $LOGOUT_ID_FILE)"
+  local logout_id
+  logout_id="logout_id=$(cat $LOGOUT_ID_FILE)"
   local zone="zone=wifi_sapienza"
   local logout_command="logout=Logout"
 
@@ -154,14 +154,13 @@ cmd_logout() {
 #
 
 PROGRAM="${0##*/}"
-COMMAND="$1"
 
 case "$1" in
   login)                cmd_login ;;
   logout)               cmd_logout ;;
   check)                cmd_check_network ;;
   help)                 cmd_help ;;
-  *) COMMAND="login";   cmd_login ;;
+  *)                    cmd_login ;;
 esac
 
 exit 0
