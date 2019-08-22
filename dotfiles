@@ -480,11 +480,11 @@ ed_module_gpg() {
   local file dest_unit src_unit
 
   # 1. Install my favourite pinentry.
-  ed_install "pinetry-gtk"
+  ed_install "pinentry-gtk"
 
   # 2. Create symlinks for configuration.
-  for file in "gpg.conf" "gpg-agent.conf" "sshcontrol" ; do
-    ed_make_symlink "$REPO_PATH/gnupg/$file" "$HOME_PATH/.gnupg/$file"
+  for file in "$REPO_PATH"/gnupg/* ; do
+    ed_make_symlink "$file" "$HOME_PATH/.gnupg/${file##*/}"
   done
 
   dest_unit="$HOME_PATH/.config/systemd/user"
