@@ -63,6 +63,29 @@ module!
 
 '''
 
+=== vim
+
+I use VIM as my text editor for programming and writing. I found it very
+productive and efficent.
+
+My link:vim/vimrc[vimrc] file is well documented, i also use some plugins:
+
+* https://github.com/junegunn/goyo.vim[*goyo.vim*]: for writing without
+  distractions.
+* https://github.com/NLKNguyen/papercolor-theme[*papercolor-theme*]: a VIM color
+  scheme inspired by Google's Material Design.
+* https://github.com/hdima/python-syntax[*python-syntax*]: better Python syntax
+  highlighting.
+* https://github.com/reedes/vim-pencil[*vim-pencil*]: better movements for
+  writing prose.
+* https://github.com/justinmk/vim-syntax-extra[*vim-syntax-extra*]: better C
+  syntax highlighting.
+
+Both *goyo.vim* and *vim-pencil* are not automatically started with VIM, instead
+you need to run `vim -c Writing`.
+
+'''
+
 === tlp
 
 TLP is an useful package to manage power and extends battery life. It works well
@@ -214,8 +237,6 @@ custom link:firefox/user.js[`user.js`] that overrides some options.
 This module will download the latest version of ghacks' `user.js` and move that
 file to the Firefox profile with suffix `default-release`. At the end it append
 my custom options to `user.js` file on the profile.
-
-'''
 
 == License
 
