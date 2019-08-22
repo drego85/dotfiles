@@ -1,7 +1,7 @@
 image: fedora:30
 
 before_script:
-  - cat /os/release
+  - cat /etc/os-release
   - dnf --version
   - dnf --assumeyes install ShellCheck findutils make
 
