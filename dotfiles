@@ -402,30 +402,26 @@ ed_module_icon() {
 
 MODULES["bin"]="create symlinks for custom scripts on ~/.local/bin"
 ed_module_bin() {
-  local bin_path
-  bin_path="$HOME_PATH/.local/bin"
+  local bin_path="$HOME_PATH/.local/bin"
 
-  mkdir --parents --verbose "$bin_path" || ed_elog "Failed to create '$bin_path'"
+  ed_make_dir "$bin_path"
 
   for script in "$REPO_PATH"/bin/* ; do
-    if [[ -x "$script" ]] ; then # Avoid symlink the README.md file.
-      ed_make_symlink "$script" "$bin_path/$(basename "$script")"
-    fi
+    ed_make_symlink "$script" "$bin_path/${script##*/}"
   done
 }
 
 MODULES["git"]="install 'git' and link the configuration"
 ed_module_git() {
-  local dest_path
-  dest_path="$HOME_PATH"
+  local dest_path="$HOME_PATH"
 
   ed_install "git"
 
-  mkdir --parents --verbose "$dest_path" || ed_elog "Failed to create '$dest_path'"
+  ed_make_dir "$dest_path"
 
   for config in "$REPO_PATH"/git/* ; do
     # Because git config are dotfiles, they starts with '.'.
-    ed_make_symlink "$config" "$dest_path/.$(basename "$config")"
+    ed_make_symlink "$config" "$dest_path/.${config##*/}"
   done
 }
 
