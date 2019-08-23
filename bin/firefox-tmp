@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+#
 # This script launchs a temporary Firefox instance.
 #
 # How it works: it uses `mktemp` to create a temporary directory and give it to
@@ -10,19 +10,8 @@
 
 readonly program="${0##*/}"
 
-# This small function checks if a given command exists; if it doesn't exists, it
-# stops the script with error code 1.
-check_command() {
-  local command_to_check="$1"
-
-  if [[ -z "$(command -v $command_to_check)" ]]; then
-    echo "$command_to_check not found." >&2
-    exit 1
-  fi
-}
-
-case "$1" in
-  --help|-h)
+# Prints an help message to the standard output.
+help_message() {
     cat <<-_EOF
 Usage:
     $program [--help]
@@ -34,14 +23,25 @@ Options:
 
 'mktemp' and 'firefox' must be installed on the system.
 _EOF
-  ;;
-  *)
+}
+
+# Spawn a temporary Firefox instance.
+spawn_firefox_instance() {
   readonly temp_dir="$(mktemp --directory)"
 
-  firefox --new-instance --profile $temp_dir
+  trap clean_temp_dir EXIT
 
-  rm --force --recursive $temp_dir
-  ;;
+  firefox --new-instance --profile "$temp_dir"
+}
+
+# Delete the temporary Firefox instance.
+clean_temp_dir() {
+  rm --force --recursive "$temp_dir"
+}
+
+case "$1" in
+  --help|-h) shift; help_message ;;
+  *) shift;         spawn_firefox_instance ;;
 esac
 
 exit 0
