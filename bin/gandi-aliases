@@ -15,8 +15,6 @@ readonly DOMAIN="emanuelepetriglia.com"
 readonly EMAIL="inbox@$DOMAIN" # Used in output messages.
 readonly BASE_ENDPOINT="https://api.gandi.net/v5/email/mailboxes/$DOMAIN/"
 
-readonly CURL_OPTS="--silent --show-error"
-
 #
 # BEGIN helper functions
 #
@@ -48,9 +46,10 @@ get_aliases_list() {
   get_sensible_data
 
   local data
-  data="$(curl $CURL_OPTS -X GET "$ENDPOINT" \
+  data="$(curl --silent --show-error -X GET "$ENDPOINT" \
                --header "authorization: apikey $API_KEY" 2>&1)"
 
+  # shellcheck disable=SC2181
   [[ "$?" != "0" ]] && error "Failed to get GET reponse: $data"
 
   aliases="$(echo "$data" | jq '.aliases')"
@@ -74,15 +73,17 @@ send_aliases_list() {
   get_sensible_data
 
   local response
-  response="$(curl $CURL_OPTS -X PATCH "$ENDPOINT" \
+  response="$(curl --silent --show-error -X PATCH "$ENDPOINT" \
                    --header "authorization: apikey $API_KEY" \
                    --header "content-type: application/json" \
                    --data "$alias_list" 2>&1)"
 
+  # shellcheck disable=SC2181
   [[ "$?" != "0" ]] && error "Failed to send aliases list: $response"
 
-  [[ "$(echo "$response" | grep "error")" ]] \
-    && error "Failed to update aliases list: $response"
+  if echo "$response" | grep --quiet "error" ; then
+    error "Failed to update aliases list: $response"
+  fi
 }
 
 # It locally update a given JSON aliases list, then it prints the list to the
@@ -106,13 +107,15 @@ update_aliases_list() {
   local operation
 
   if [[ "$command" == "add" ]]; then
-    [[ "$(echo "$alias_list" | grep "\"$alias\"")" ]] \
-      && error "Alias '$alias' already exist."
+    if echo "$alias_list" | grep --quiet "\"$alias\"" ; then
+      error "Alias '$alias' already exist."
+    fi
 
     operation="+="
   else
-    [[ "$(echo "$alias_list" | grep "\"$alias\"")" ]] \
-      || error "Alias '$alias' doesn't exist."
+    if ! echo "$alias_list" | grep --quiet "\"$alias\"" ; then
+      error "Alias '$alias' doesn't exist."
+    fi
 
     operation="-="
   fi
@@ -178,10 +181,12 @@ cmd_add() {
 
   local list
   list="$(get_aliases_list)"
+  # shellcheck disable=SC2181
   [[ "$?" == "0" ]] || error "$list"
 
   while [[ "$1" ]]; do
     list="$(update_aliases_list "$list" "$1" "add")"
+    # shellcheck disable=SC2181
     [[ "$?" == "0" ]] || error "$list"
 
     shift
@@ -196,10 +201,12 @@ cmd_remove() {
 
   local list
   list="$(get_aliases_list)"
+  # shellcheck disable=SC2181
   [[ "$?" == "0" ]] || error "$list"
 
   while [[ "$1" ]]; do
     list="$(update_aliases_list "$list" "$1" "remove")"
+    # shellcheck disable=SC2181
     [[ "$?" == "0" ]] || error "$list"
 
     shift
@@ -214,10 +221,11 @@ cmd_check() {
 
   local alias_list
   alias_list="$(get_aliases_list)"
+  # shellcheck disable=SC2181
   [[ "$?" == "0" ]] || error "$alias_list"
 
   while [[ "$1" ]]; do
-    if [[ "$(echo "$alias_list" | grep "\"$1\"")" ]]; then
+    if echo "$alias_list" | grep --quiet "\"$1\"" ; then
       echo "Alias '$1' exist."
     else
       echo "Alias '$1' doesn't exist."
