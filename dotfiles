@@ -469,8 +469,6 @@ ed_module_clean() {
 
 MODULES["gpg"]="install GnuPG configuration and enable it via systemd --user"
 ed_module_gpg() {
-  local file dest_unit src_unit
-
   # 1. Install my favourite pinentry.
   ed_install "pinentry-gtk"
 
@@ -479,8 +477,8 @@ ed_module_gpg() {
     ed_make_symlink "$file" "$HOME_PATH/.gnupg/${file##*/}"
   done
 
-  dest_unit="$HOME_PATH/.config/systemd/user"
-  src_unit="/usr/share/doc/gnupg2/examples/systemd-user"
+  local dest_unit="$HOME_PATH/.config/systemd/user"
+  local src_unit="/usr/share/doc/gnupg2/examples/systemd-user"
 
   # 3. Create symlinks for systemd unit files.
   ed_make_dir "$dest_unit"
@@ -491,8 +489,13 @@ ed_module_gpg() {
   # 4. Enable systemd unit files.
   systemctl --user daemon-reload
 
-  systemctl --user enable $(basename --multiple "$src_unit"/*.socket)
-  systemctl --user start $(basename --multiple "$src_unit"/*.socket)
+  local socket
+  for full_socket in "$src_unit"/*.socket ; do
+    socket="${full_socket##*/}"
+
+    systemctl --user enable "$socket"
+    systemctl --user start "$socket"
+  done
 }
 
 MODULES["lightdm"]="link LightDM configuration"
