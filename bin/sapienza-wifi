@@ -112,7 +112,7 @@ cmd_login() {
   # Extract the logout ID from the HTML response.
   # It filters the 17th line (the one with login ID), then extracts all words
   # and the last is the ID.
-  cat "$html_result" | sed -n 17p | grep -oE '[[:alnum:]]+' | \
+  cat < "$html_result" | sed -n 17p | grep -oE '[[:alnum:]]+' | \
                                                      tail -n 1 > $LOGOUT_ID_FILE
 
   rm "$html_result"
