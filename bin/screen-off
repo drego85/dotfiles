@@ -28,11 +28,7 @@ Options:
 _EOF
   ;;
   *)
-    delay="1s"
-
-    if [[ ! -z "$1" ]] ; then
-      delay="$1"
-    fi
+    delay="${1:-"1s"}"
 
     sleep "$delay" && xset dpms force off
   ;;
