@@ -434,6 +434,17 @@ ed_module_tlp() {
     ed_wlog "'$dst' is already a symlink to '$src'."
   fi
 
+  # Before enabling tlp, you need to fix a SELinux policy.
+  local policy="$REPO_PATH/tlp/fix-tlp"
+  checkmodule --mls -m -o "$policy.mod" "$policy.te"
+  semodule_package -o "$policy.pp" -m "$policy.mod"
+
+  ed_wlog "root requested to install '$policy.te' policy!"
+  sudo semodule --install "$policy.pp"
+  ed_log "policy installed successfuly!"
+
+  rm --force "$policy.pp" "$policy.mod"
+
   # Enable tlp
   ed_wlog "root requested to start tlp!"
   sudo tlp start &>>/dev/null || ed_elog "tlp: Failed to start tlp!"
