@@ -13,7 +13,6 @@ lint-bash-dotfiles:
   stage: test
   script: make lint-bash-dotfiles
 
-# WIP: ignore errore until all problems are fixed.
 lint-bash-bin:
   stage: test
-  script: make --ignore-errors lint-bash-bin
+  script: make lint-bash-bin
