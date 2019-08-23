@@ -1,41 +1,56 @@
 #!/usr/bin/env bash
+#
+# This script does a backup of some directories from my home folder to my backup
+# external HDD.
+#
+# Copyright (C) 2018-2019 Emanuele Petriglia <inbox@emanuelepetriglia.com>. All
+# rights reserved. This file is licensed under the MIT license.
 
-# Copyright (C) 2018 Emanuele Petriglia <inbox@emanuelepetriglia.com>. All rigts
-# reserved. This file is licensed under the MIT license.
+readonly hdd_id="6bada27e-026d-424c-b3f7-ad323ace4574"
+readonly hdd="/run/media/$USER/$hdd_id"
 
-# This script does a backup of some directories from my home folder.
+# Prints a message to the standard error and exits with error code 1.
+#
+# Parameters:
+#   $1 -> message to print to the standard error
+#
+# Example:
+#   error "Missing parameter!"
+error() {
+  echo "$1" >&2
 
-readonly HDD_ID="6bada27e-026d-424c-b3f7-ad323ace4574"
-readonly HDD="/run/media/$USER/$HDD_ID"
-
-readonly HOME="/home/$USER"
-
-# Program used to do the backup. Archive mode enabled with verbosity. It does an
-# exact mirror (it deletes file from destination folder that aren't in the
-# source folder).
-RSYNC="rsync --archive --delete --verbose"
-
-# Runs rsync with the first arguments as source folder and second as destination
-# folder.
-backup_folder() {
-  SRC="$1"
-  DST="$2"
-
-  $RSYNC $SRC $DST
+  exit 1
 }
 
-ls $HDD &> /dev/null
-if [[ "$?" != 0 ]]; then
-  echo "No destination device found (it is plugged?)" >&2
-  exit 1
-fi
+# Make a backup of a source directory to a destination directory. The backup is
+# made as a mirror, so any files on the destination directory not present on the
+# first are deleted.
+#
+# Parameters:
+#   $1 -> source directory;
+#   $2 -> destination directory;
+#
+# Example:
+#   backup_folder "$HOME/Music/" "$HDD/music"
+backup_folder() {
+  local src="$1"
+  local dst="$2"
+
+  [[ "$src" ]] || error "Missing source directory!"
+  [[ "$dst" ]] || error "Missing destination directory!"
+
+
+  rsync --archive --delete --verbose "$src" "$dst"
+}
+
+[[ "$(command -v rsync)" ]] || error "Missing rsync command! Is it installed?"
+
+[[ -d "$hdd" ]] || error "No destination device found! Is it plugged?"
 
 #
 # Backup objectives
 #
 
-backup_folder $HOME/Music/                $HDD/music/
-#backup_folder $HOME/Pictures/backgrounds/ $HDD/immagini/backgrounds/
-backup_folder $HOME/Documents/gps_tracks/ $HDD/file/gps_tracks/
-backup_folder $HOME/Documents/writing/    $HDD/file/writing/
-#backup_folder $HOME/Pictures/gif/         $HDD/immagini/gif/
+backup_folder "$HOME/Music/"                "$HDD/music/"
+backup_folder "$HOME/Documents/gps_tracks/" "$HDD/file/gps_tracks/"
+backup_folder "$HOME/Documents/writing/"    "$HDD/file/writing/"
