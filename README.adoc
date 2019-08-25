@@ -196,6 +196,13 @@ https://gitlab.com/ema-pe/backup-thinble-xfwm4-theme[repository].
 
 '''
 
+=== ruby
+
+I don't know Ruby, but I use https://jekyllrb.com/[Jekyll] to build my
+https://www.emanuelepetriglia.com/[personal website], and it is written in Ruby.
+So my dotfiles constists a configuration for my development environment, it is
+not trivial with Fedora.
+
 === firefox
 
 I use Mozilla Firefox as my main browser. I like it because is privacy focused,
