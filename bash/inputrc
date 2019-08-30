@@ -1,2 +1,17 @@
+# ema-pe's GNU Readline configuration.
+
+# Use vim-like keybindings.
 set editing-mode vi
 set keymap vi
+
+# Enable different mode feedback for vim keymap.
+set show-mode-in-prompt on
+
+# Blinking block cursor on inserting.
+set vi-ins-mode-string \1\e[1 q\2
+
+# Blinking underline on command.
+set vi-cmd-mode-string \1\e[3 q\2
+
+# Display possible completions using  colors to indicate their file types.
+set colored-stats on
