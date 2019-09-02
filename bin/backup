@@ -51,6 +51,6 @@ backup_folder() {
 # Backup objectives
 #
 
-backup_folder "$HOME/Music/"                "$HDD/music/"
-backup_folder "$HOME/Documents/gps_tracks/" "$HDD/file/gps_tracks/"
-backup_folder "$HOME/Documents/writing/"    "$HDD/file/writing/"
+backup_folder "$HOME/Music/"                "$hdd/music/"
+backup_folder "$HOME/Documents/gps_tracks/" "$hdd/file/gps_tracks/"
+backup_folder "$HOME/Documents/writing/"    "$hdd/file/writing/"
