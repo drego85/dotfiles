@@ -1,87 +1,64 @@
 #!/usr/bin/env python3
+#
+# This Python scripts is useful to manage Gandi mailbox aliases. It is tailored
+# with my needs, because I use 'pass' (from 'passwordstore') to store API key
+# and email ID.
+#
+# Some tips:
+#   - Get number of aliases: 'gandi-aliases list | wc --lines'
+#   - Check if an alias exists: 'gandi-aliases list | grep foo'
+#
+# Copyright (c) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.com>
+# All rights reserved. This file is licensed under the MIT license.
 
-from subprocess import run, CalledProcessError
-from sys import exit, argv
-from requests import get, patch, ConnectionError, HTTPError
-from json import dumps
-
-
-def get_secret_data(key, line):
-    '''
-    Retrive a secret data file using 'pass' and return the selected line as
-    a string.
-
-    Arguments:
-        key: the secret data file (example 'shopping/amazon.com').
-        line: the line you want to get, it must be non negative.
-
-    Returns:
-        It returns the selected line from the file specified by 'key'.
-
-    Raises:
-        ValueError: is 'line' is a negative number.
-        IndexError: if you select a line that doesn't exists.
-        SystemExit: if the is any error during the execution of 'pass'.
-
-    Notes:
-        If there is any error during the execution of 'pass', an error message
-        is printed to the standard error.
-    '''
-
-    if line < 0:
-        raise ValueError("line must be a positive number")
-
-    try:
-        result = run(['pass', key], capture_output=True, check=True)
-
-        # The 'stdout' attribute is a byte string, also passwordstore files are
-        # simply text files, so returns the wanted line.
-        return result.stdout.decode().split('\n')[line]
-    except FileNotFoundError:
-        exit('ERROR: Failed to run pass, it is installed?')
-    except CalledProcessError:
-        exit('ERROR: Failed to get secret data.')
+import subprocess
+import sys
+import requests
+import json
 
 
-def get_aliases_list(api_key, url_endpoint):
-    auth = {'authorization': f'Apikey {api_key}'}
+class App():
 
-    try:
-        result = get(url_endpoint, headers=auth)
+    def __init__(self, argv):
+        self.__command_to_run = self.__command_help
 
-        result.raise_for_status()
+        if len(argv) >= 2:
+            command = argv[1]
 
-        return result.json()['aliases']
-    except ConnectionError:
-        exit('ERROR: Failed to connect to \'https://api.ganti.net\'')
-    except HTTPError as error:
-        exit(f'ERROR: Failed to get mailbox info: {error}')
+            if command == 'help':
+                self.__command_to_run = self.__command_help
+            elif command == 'list':
+                self.__command_to_run = self.__command_list
+            elif command == 'add':
+                self.__command_to_run = self.__command_add
+                self.__aliases_list = argv[2:]
+            elif command == 'remove':
+                self.__command_to_run = self.__command_remove
+                self.__aliases_list = argv[2:]
+            else:
+                sys.exit(f'ERROR: \'{command}\' is not a command!')
 
+            try:
+                if len(self.__aliases_list) == 0:
+                    sys.exit("ERROR: You must give at leat one alias!")
+            except AttributeError:  # The command wasn't 'add' or 'remove'!
+                pass
 
-def send_aliases_list(api_key, url_endpoint, aliases_list):
-    auth = {'authorization': f'Apikey {api_key}',
-            'Content-Type': 'application/json'}
+    def run(self):
+        # Prepare URL and API key to contact Gandi.net API.
+        if self.__command_to_run != self.__command_help:
+            api_key = self.__get_secret_data('shop/gandi.net')[4]
+            email_id = \
+                self.__get_secret_data('email/inbox@emanuelepetriglia.com')[3]
+            base_url = 'https://api.gandi.net/v5/email/mailboxes'
 
-    payload = dumps({'aliases': aliases_list})
+            self.__headers = {'Authorization': f'Apikey {api_key}'}
+            self.__url = f'{base_url}/emanuelepetriglia.com/{email_id}'
 
-    try:
-        patch(url_endpoint, headers=auth, data=payload)
-    except ConnectionError:
-        exit('ERROR: Failed to connect to \'https://api.ganti.net\'')
-    except HTTPError as error:
-        exit(f'ERROR: Failed to send mailbox info: {error}')
+        self.__command_to_run()
 
-
-if __name__ == '__main__':
-    if len(argv) > 0:
-        if len(argv) == 1:
-            print("Help")
-            exit()
-
-        arg = argv[1]
-
-        if arg == '-h' or arg == '--help':
-            print('''Usage: gandi-aliases [-h] {list | add | remove } ...
+    def __command_help(self):
+        help_message = '''Usage: gandi-aliases {help | list | add | remove} ...
 
 This script is useful to manage email aliases for 'inbox@emanuelepetriglia.com'.
 It uses Gandi API, the script is tailored for my use cases, because it uses
@@ -100,58 +77,97 @@ Commands:
         Remove aliases from 'inbox@emanuelepetriglia.com'. If a given alias
         doesn't exist, it will fail and don't update aliases list.
 
-Options:
-    -h, --help
+    help
         Show this message and exit.
 
-This scripts needs Python 3.6 to run, it also requires 'pass' (to retrive secret
-data', and 'requests' module, but is preinstalled on Fedora.
-''')
-        elif arg == 'list':
-            api_key = get_secret_data('shop/gandi.net', line=4)
+This scripts needs Python 3.6 to run, it also requires 'pass' (to retrieve
+secret data), and 'requests' module, but is preinstalled on Fedora.
+'''
 
-            domain = 'emanuelepetriglia.com'
-            email_id = get_secret_data(f'email/inbox@emanuelepetriglia.com', 3)
-            url = 'https://api.gandi.net/v5/email/mailboxes'
-            url_endpoint = f'{url}/{domain}/{email_id}'
+        print(help_message, end='')
 
-            for alias in get_aliases_list(api_key, url_endpoint):
-                print(alias)
+    def __command_list(self):
+        for alias in self.__get_aliases_list():
+            print(alias)
 
-        elif arg == 'add':
-            api_key = get_secret_data('shop/gandi.net', line=4)
+    def __command_add(self):
+        current_aliases = self.__get_aliases_list()
 
-            domain = 'emanuelepetriglia.com'
-            email_id = get_secret_data(f'email/inbox@emanuelepetriglia.com', 3)
-            url = 'https://api.gandi.net/v5/email/mailboxes'
-            url_endpoint = f'{url}/{domain}/{email_id}'
+        for alias in self.__aliases_list:
+            if alias in current_aliases:
+                sys.exit(f'Alias \'{alias}\' is already added!')
 
-            aliases_to_add = argv[2:]
-            aliases = get_aliases_list(api_key, url_endpoint)
+            current_aliases.append(alias)
 
-            for alias_to_add in aliases_to_add:
-                if alias_to_add in aliases:
-                    exit(f'Alias \'{alias_to_add}\' is already added!')
+        self.__send_aliases_list(current_aliases)
 
-                aliases.append(alias_to_add)
+    def __command_remove(self):
+        current_aliases = self.__get_aliases_list()
 
-            send_aliases_list(api_key, url_endpoint, aliases)
+        for alias in self.__aliases_list:
+            if alias not in current_aliases:
+                sys.exit(f'Alias \'{alias}\' doesn\'t exist!')
 
-        elif arg == 'remove':
-            api_key = get_secret_data('shop/gandi.net', line=4)
+            current_aliases.remove(alias)
 
-            domain = 'emanuelepetriglia.com'
-            email_id = get_secret_data(f'email/inbox@emanuelepetriglia.com', 3)
-            url = 'https://api.gandi.net/v5/email/mailboxes'
-            url_endpoint = f'{url}/{domain}/{email_id}'
+        self.__send_aliases_list(current_aliases)
 
-            aliases_to_remove = argv[2:]
-            aliases = get_aliases_list(api_key, url_endpoint)
+    def __get_aliases_list(self):
+        try:
+            result = requests.get(self.__url, headers=self.__headers)
 
-            for alias_to_remove in aliases_to_remove:
-                if alias_to_remove not in aliases:
-                    exit(f'Alias \'{alias_to_remove}\' doesn\'t exist!')
+            result.raise_for_status()
 
-                aliases.remove(alias_to_remove)
+            return result.json()['aliases']
+        except requests.ConnectionError:
+            sys.exit('ERROR: Failed to connect to \'https://api.ganti.net\'')
+        except requests.HTTPError as error:
+            sys.exit(f'ERROR: Failed to get mailbox info: {error}')
 
-            send_aliases_list(api_key, url_endpoint, aliases)
+    def __send_aliases_list(self, aliases_list):
+        self.__headers['Content-Type'] = 'application/json'
+
+        payload = json.dumps({'aliases': aliases_list})
+
+        try:
+            requests.patch(self.__url, headers=self.__headers, data=payload)
+        except requests.ConnectionError:
+            sys.exit('ERROR: Failed to connect to \'https://api.ganti.net\'')
+        except requests.HTTPError as error:
+            sys.exit(f'ERROR: Failed to send mailbox info: {error}')
+
+    def __get_secret_data(self, key):
+        '''
+        Retrieve a secret data file using 'pass'.
+
+        Arguments:
+            key: the secret data file (example 'shopping/amazon.com').
+
+        Returns:
+            It returns the selected line from the file specified by 'key'.
+
+        Raises:
+            IndexError: if you select a line that doesn't exists.
+            SystemExit: if the is any error during the execution of 'pass'.
+
+        Notes:
+            If there is any error during the execution of 'pass', an error
+            message is printed to the standard error.
+        '''
+        try:
+            result = subprocess.run(['pass', key],
+                                    capture_output=True,
+                                    check=True)
+
+            # It's a text file with '\n' line endings.
+            return result.stdout.decode().split('\n')
+        except FileNotFoundError:
+            sys.exit('ERROR: Failed to run \'pass\', it is installed?')
+        except subprocess.CalledProcessError:
+            sys.exit(f'ERROR: Failed to get secret data: pass: {result.stderr}')
+
+
+if __name__ == '__main__':
+    app = App(sys.argv)
+
+    app.run()
