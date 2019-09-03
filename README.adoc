@@ -272,8 +272,8 @@ I also provide a custom link:Makefile[Makefile] file to lint all scripts in my
 repository. You need some special software, such as `shellcheck` to lint Bash
 script or `flake8` to lint Python scripts.
 
-This Makefile is executed on Gitlab CI, anyway you can run it locally with `make
-lint`.
+This Makefile is executed on Gitlab CI, to run locally type `make all`. You can
+also specify with file to lint, with `make` + kbd:[Tab].
 
 == License
 
