@@ -661,10 +661,13 @@ Usage:
 Commands:
     list
         List all available modules.
+
     install <module>...
         Install the given modules.
+
     help
         Show this text.
+
     version
         Show version information.
 
