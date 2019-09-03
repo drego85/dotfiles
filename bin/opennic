@@ -3,7 +3,7 @@
 # This script prints to the standard output the four closest DNS server from
 # OpenNIC DNS resolvers network.
 #
-# Copyright (c) 2018-2019 Emanuele Petriglia <inbox@emanuelepetriglia.com>
+# Copyright (c) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.com>
 # All rights reserved. This file is licensed under the MIT license.
 
 # Program's name.
