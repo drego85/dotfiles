@@ -1,256 +1,152 @@
-#!/usr/bin/env bash
-#
-# This script is useful to manage aliases for my email address and domain,
-# "inbox@emanuelepetriglia.com".
-#
-# Use '-h' or '--help' option to get usage information. This script requires:
-#   - pass: to get private api key;
-#   - curl: to send and get api requests;
-#   - jq: to manage JSON data.
-#
-# Copyright (c) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.com>
-# All right reserved. This file is licensed under the MIT license.
+#!/usr/bin/env python3
 
-readonly DOMAIN="emanuelepetriglia.com"
-readonly EMAIL="inbox@$DOMAIN" # Used in output messages.
-readonly BASE_ENDPOINT="https://api.gandi.net/v5/email/mailboxes/$DOMAIN/"
+from subprocess import run, CalledProcessError
+from sys import exit, argv
+from requests import get, patch, ConnectionError, HTTPError
+from json import dumps
 
-#
-# BEGIN helper functions
-#
+def get_secret_data(key, line):
+    '''
+    Retrive a secret data file using 'pass' and return the selected line as
+    a string.
 
-# Print all arguments to the standard error and exits with error code 1.
-error() {
-  echo "$@" >&2
-  exit 1
-}
+    Arguments:
+        key: the secret data file (example 'shopping/amazon.com').
+        line: the line you want to get, it must be non negative.
 
-# Set '$API_KEY' and '$ENDPOINT' readonly variables to send requests to Gandi.
-# If they are already set, the function does nothing.
-get_sensible_data() {
-  [[ -z "$API_KEY" ]] && readonly API_KEY="$(pass shop/gandi.net | sed '5p;d')"
-  [[ "$API_KEY" ]] || error "Failet to get api key."
+    Returns:
+        It returns the selected line from the file specified by 'key'.
 
-  if [[ -z "$ENDPOINT" ]]; then
-    local email_id
-    email_id="$(pass email/inbox@emanuelepetriglia.com | sed '4p;d')"
-    [[ "$email_id" ]] || error "Failed to get email id."
+    Raises:
+        ValueError: is 'line' is a negative number.
+        IndexError: if you select a line that doesn't exists.
+        SystemExit: if the is any error during the execution of 'pass'.
 
-    readonly ENDPOINT="$BASE_ENDPOINT$email_id"
-  fi
-}
+    Notes:
+        If there is any error during the execution of 'pass', an error message
+        is printed to the standard error.
+    '''
 
-# Print to the standard output aliases list for '$EMAIL' as JSON array. It uses
-# '$ENDPOINT' and '$API_KEY'. If it fails, it will exit with error code 1.
-get_aliases_list() {
-  get_sensible_data
+    if line < 0:
+        raise ValueError("line must be a positive number")
 
-  local data
-  data="$(curl --silent --show-error -X GET "$ENDPOINT" \
-               --header "authorization: apikey $API_KEY" 2>&1)"
+    try:
+        result = run(['pass', key], capture_output=True, check=True)
 
-  # shellcheck disable=SC2181
-  [[ "$?" != "0" ]] && error "Failed to get GET reponse: $data"
+        # The 'stdout' attribute is a byte string, also passwordstore files are
+        # simply text files, so returns the wanted line.
+        return result.stdout.decode().split('\n')[line]
+    except FileNotFoundError:
+        exit('ERROR: Failed to run pass, it is installed?')
+    except CalledProcessError:
+        exit('ERROR: Failed to get secret data.')
 
-  aliases="$(echo "$data" | jq '.aliases')"
+def get_aliases_list(api_key, url_endpoint):
+    auth = {'authorization': f'Apikey {api_key}'}
 
-  [[ "$aliases" == "null" ]] && error "Failed to get email aliases: $data"
+    try:
+        result = get(url_endpoint, headers=auth)
 
-  echo "$aliases"
-}
+        result.raise_for_status()
 
-# Update aliases list for email '$EMAIL', sending the updated JSON array using
-# '$ENDPOINT' and '$API_KEY'. If it fails it will exit with error code 1.
-#
-# Parameter:
-#   $1  - JSON aliases list.
-#
-send_aliases_list() {
-  [[ "$1" ]] || error "No aliases list given."
-  local alias_list
-  alias_list="$(echo "$1" | jq '{ aliases: . }')"
+        return result.json()['aliases']
 
-  get_sensible_data
+    except ConnectionError:
+        exit('ERROR: Failed to connect to \'https://api.ganti.net\'')
+    except HTTPError as error:
+        exit(f'ERROR: Failed to get mailbox info: {error}')
 
-  local response
-  response="$(curl --silent --show-error -X PATCH "$ENDPOINT" \
-                   --header "authorization: apikey $API_KEY" \
-                   --header "content-type: application/json" \
-                   --data "$alias_list" 2>&1)"
+def send_aliases_list(api_key, url_endpoint, aliases_list):
+    auth = {'authorization': f'Apikey {api_key}', 'Content-Type': 'application/json'}
 
-  # shellcheck disable=SC2181
-  [[ "$?" != "0" ]] && error "Failed to send aliases list: $response"
+    payload = dumps({'aliases': aliases_list})
 
-  if echo "$response" | grep --quiet "error" ; then
-    error "Failed to update aliases list: $response"
-  fi
-}
+    try:
+        result = patch(url_endpoint, headers=auth, data=payload)
+        #print(payload)
+    except ConnectionError:
+        exit('ERROR: Failed to connect to \'https://api.ganti.net\'')
+    except HTTPError as error:
+        exit(f'ERROR: Failed to send mailbox info: {error}')
 
-# It locally update a given JSON aliases list, then it prints the list to the
-# standard output. It can remove an alias or add an alias. If it fails, it will
-# exit with error code 1.
-#
-# Parameters:
-#   $1  - JSON alias list;
-#   $2  - Alias to add or remove;
-#   $3  - Add ('add') or remove ('remove') the alias.
-#
-update_aliases_list() {
-  [[ "$1" ]] || error "No aliases list given."
-  [[ "$2" ]] || error "No alias given."
-  [[ "$3" && "$3" == "add" || "$3" == "remove" ]] \
-    || error "No command given ('add' or 'remove')."
+if __name__ == '__main__':
+    if len(argv) > 0:
+        if len(argv) == 1:
+            print("Help")
+            exit()
 
-  local alias_list="$1"
-  local alias="$2"
-  local command="$3"
-  local operation
+        arg = argv[1]
 
-  if [[ "$command" == "add" ]]; then
-    if echo "$alias_list" | grep --quiet "\"$alias\"" ; then
-      error "Alias '$alias' already exist."
-    fi
 
-    operation="+="
-  else
-    if ! echo "$alias_list" | grep --quiet "\"$alias\"" ; then
-      error "Alias '$alias' doesn't exist."
-    fi
+        if arg == '-h' or arg == '--help':
+            print('''Usage: gandi-aliases [-h] {list | add | remove } ...
 
-    operation="-="
-  fi
+This script is useful to manage email aliases for 'inbox@emanuelepetriglia.com'.
+It uses Gandi API, the script is tailored for my use cases, because it uses
+'pass(1)' to retrieve API key and email ID.
 
-  echo "$alias_list" | jq --monochrome-output ". $operation [\"$alias\"]"
-}
+Commands:
+    list
+        Retrieve the email aliases for 'inbox@emanuelepetriglia.com' and
+        print them to stdout.
 
-#
-# END helper functions
-#
+    add <ALIAS> ...
+        Add new aliases for 'inbox@emanuelepetriglia.com'. If a given alias
+        if invalid or a duplicate, it will fail and don't update aliases list.
 
-#
-# BEGIN subcommand functions
-#
+    remove <ALIAS> ...
+        Remove aliases from 'inbox@emanuelepetriglia.com'. If a given alias
+        doesn't exist, it will fail and don't update aliases list.
 
-# Show usage informations.
-cmd_help() {
-  cat <<-_EOF
-Usage:
-    $PROGRAM [-g|--get]
-    $PROGRAM [-a|--add] [alias ...]
-    $PROGRAM [-r|--remove] [alias ...]
-    $PROGRAM [-c|--check] [alias ...]
-
-  This script is useful to manage email aliases for '$EMAIL'.
-  It uses Gandi API, the script is tailored for my use cases, because is uses
-  'pass(1)' to retrieve API key and email ID.
-
-Available options:
-    -g, --get
-        Retrieve the email aliases for '$EMAIL' and print
-        them to stdout.
-
-    -a, --add=alias ...
-        Add new aliases for '$EMAIL'. If a given alias
-        if invalid or a duplicate, it will fail and
-        don't update aliases list.
-
-    -r, --remove=alias ...
-        Remove aliases from '$EMAIL'. If a given alias
-        doesn't exist, it will fail and don't update
-        aliases list.
-
-    -c, --check=alias
-        Check if the given aliases exists for '$EMAIL'.
-
+Options:
     -h, --help
         Show this message and exit.
 
-This script uses 'curl' and 'jq', they must be installed on the system.
-_EOF
-}
+This scripts needs Python 3.6 to run, it also requires 'pass' (to retrive secret
+data', and 'requests' module, but is preinstalled on Fedora.
+''')
+        elif arg == 'list':
+            api_key = get_secret_data('shop/gandi.net', line=4)
 
+            domain = 'emanuelepetriglia.com'
+            email_id = get_secret_data(f'email/inbox@emanuelepetriglia.com', line=3)
+            url_endpoint = f'https://api.gandi.net/v5/email/mailboxes/{domain}/{email_id}'
 
-# Print to the standard output the JSON aliases list.
-cmd_get() {
-  get_aliases_list
-}
+            for alias in get_aliases_list(api_key, url_endpoint):
+                 print(alias)
 
-# Add aliases to '$EMAIL', minimium one.
-cmd_add() {
-  [[ "$1" ]] || error "No aliases given."
+        elif arg == 'add':
+            api_key = get_secret_data('shop/gandi.net', line=4)
 
-  local list
-  list="$(get_aliases_list)"
-  # shellcheck disable=SC2181
-  [[ "$?" == "0" ]] || error "$list"
+            domain = 'emanuelepetriglia.com'
+            email_id = get_secret_data(f'email/inbox@emanuelepetriglia.com', line=3)
+            url_endpoint = f'https://api.gandi.net/v5/email/mailboxes/{domain}/{email_id}'
 
-  while [[ "$1" ]]; do
-    list="$(update_aliases_list "$list" "$1" "add")"
-    # shellcheck disable=SC2181
-    [[ "$?" == "0" ]] || error "$list"
+            aliases_to_add = argv[2:]
+            aliases = get_aliases_list(api_key, url_endpoint)
 
-    shift
-  done
+            for alias_to_add in aliases_to_add:
+                if alias_to_add in aliases:
+                    exit(f'Alias \'{alias_to_add}\' is already added!')
 
-  send_aliases_list "$list"
-}
+                aliases.append(alias_to_add)
 
-# Remove aliases from '$EMAIL', minimium one.
-cmd_remove() {
-  [[ "$1" ]] || error "No aliases given."
+            send_aliases_list(api_key, url_endpoint, aliases)
 
-  local list
-  list="$(get_aliases_list)"
-  # shellcheck disable=SC2181
-  [[ "$?" == "0" ]] || error "$list"
+        elif arg == 'remove':
+            api_key = get_secret_data('shop/gandi.net', line=4)
 
-  while [[ "$1" ]]; do
-    list="$(update_aliases_list "$list" "$1" "remove")"
-    # shellcheck disable=SC2181
-    [[ "$?" == "0" ]] || error "$list"
+            domain = 'emanuelepetriglia.com'
+            email_id = get_secret_data(f'email/inbox@emanuelepetriglia.com', line=3)
+            url_endpoint = f'https://api.gandi.net/v5/email/mailboxes/{domain}/{email_id}'
 
-    shift
-  done
+            aliases_to_remove = argv[2:]
+            aliases = get_aliases_list(api_key, url_endpoint)
 
-  send_aliases_list "$list"
-}
+            for alias_to_remove in aliases_to_remove:
+                if alias_to_remove not in aliases:
+                    exit(f'Alias \'{alias_to_remove}\' doesn\'t exist!')
 
-# Check the existend of various aliases, minumium one.
-cmd_check() {
-  [[ "$1" ]] || error "No aliases given."
+                aliases.remove(alias_to_remove)
 
-  local alias_list
-  alias_list="$(get_aliases_list)"
-  # shellcheck disable=SC2181
-  [[ "$?" == "0" ]] || error "$alias_list"
-
-  while [[ "$1" ]]; do
-    if echo "$alias_list" | grep --quiet "\"$1\"" ; then
-      echo "Alias '$1' exist."
-    else
-      echo "Alias '$1' doesn't exist."
-    fi
-
-    shift
-  done
-}
-
-#
-# END subcommands functions
-#
-
-PROGRAM="${0##*/}"
-
-[[ -z "$(command -v curl)" ]] && error "curl is needed to run this script."
-[[ -z "$(command -v jq)" ]] && error "jq is needed to run this script."
-
-case "$1" in
-  -h|--help) shift;   cmd_help "$@" ;;
-  -g|--get) shift;    cmd_get "$@" ;;
-  -a|--add) shift;    cmd_add "$@" ;;
-  -r|--remove) shift; cmd_remove "$@" ;;
-  -c|--check) shift;  cmd_check "$@" ;;
-  *) shift;           cmd_help "$@" ;;
-esac
-
-exit 0
+            send_aliases_list(api_key, url_endpoint, aliases)
