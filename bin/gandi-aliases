@@ -22,6 +22,7 @@ class App():
     def __init__(self, argv):
         self.__command_to_run = self.__command_help
 
+        # Parse arguments.
         if len(argv) >= 2:
             command = argv[1]
 
@@ -38,6 +39,7 @@ class App():
             else:
                 sys.exit(f'ERROR: \'{command}\' is not a command!')
 
+            # Check only for 'add' and 'remove' command.
             try:
                 if len(self.__aliases_list) == 0:
                     sys.exit("ERROR: You must give at leat one alias!")
@@ -52,6 +54,7 @@ class App():
                 self.__get_secret_data('email/inbox@emanuelepetriglia.com')[3]
             base_url = 'https://api.gandi.net/v5/email/mailboxes'
 
+            # Default URL and headers.
             self.__headers = {'Authorization': f'Apikey {api_key}'}
             self.__url = f'{base_url}/emanuelepetriglia.com/{email_id}'
 

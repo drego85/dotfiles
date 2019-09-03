@@ -72,9 +72,13 @@ This module links all custom scripts to `~/.local/bin`. These scripts are:
 * link:bin/sapienza-wifi[*sapienza-wifi*]: this script automatically logins to the
   Sapienza's WiFi network, without open a broswer.
 * link:bin/screen-off[*screen-off*]: this simple script turns off the screen.
+* link:bin/opennic[*opennic*]: this script shows the closest DNS servers
+collaborating in the link:https://www.opennic.org/[OpenNIC project].
 
 These script can be installed manually, each requires some software specificated
-on the first lines (for example `jq` for link:bin/gandi-aliases[gandi-aliases]).
+on the first lines.
+
+NOTE: scripts are written in varios languages (e.g. Python), not only in Bash!
 
 WARNING: Make sure that `~/.local/bin` has ben added to `PATH` if you run this
 module!
@@ -262,6 +266,15 @@ custom link:firefox/user.js[`user.js`] that overrides some options.
 This module will download the latest version of ghacks' `user.js` and move that
 file to the Firefox profile with suffix `default-release`. At the end it append
 my custom options to `user.js` file on the profile.
+
+== Makefile
+
+I also provide a custom link:Makefile[Makefile] file to lint all scripts in my
+repository. You need some special software, such as `shellcheck` to lint Bash
+script or `flake8` to lint Python scripts.
+
+This Makefile is runned by Gitlab CI, anyway you can run it locally with `make
+lint`.
 
 == License
 
