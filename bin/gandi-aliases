@@ -5,6 +5,7 @@ from sys import exit, argv
 from requests import get, patch, ConnectionError, HTTPError
 from json import dumps
 
+
 def get_secret_data(key, line):
     '''
     Retrive a secret data file using 'pass' and return the selected line as
@@ -41,6 +42,7 @@ def get_secret_data(key, line):
     except CalledProcessError:
         exit('ERROR: Failed to get secret data.')
 
+
 def get_aliases_list(api_key, url_endpoint):
     auth = {'authorization': f'Apikey {api_key}'}
 
@@ -50,24 +52,25 @@ def get_aliases_list(api_key, url_endpoint):
         result.raise_for_status()
 
         return result.json()['aliases']
-
     except ConnectionError:
         exit('ERROR: Failed to connect to \'https://api.ganti.net\'')
     except HTTPError as error:
         exit(f'ERROR: Failed to get mailbox info: {error}')
 
+
 def send_aliases_list(api_key, url_endpoint, aliases_list):
-    auth = {'authorization': f'Apikey {api_key}', 'Content-Type': 'application/json'}
+    auth = {'authorization': f'Apikey {api_key}',
+            'Content-Type': 'application/json'}
 
     payload = dumps({'aliases': aliases_list})
 
     try:
-        result = patch(url_endpoint, headers=auth, data=payload)
-        #print(payload)
+        patch(url_endpoint, headers=auth, data=payload)
     except ConnectionError:
         exit('ERROR: Failed to connect to \'https://api.ganti.net\'')
     except HTTPError as error:
         exit(f'ERROR: Failed to send mailbox info: {error}')
+
 
 if __name__ == '__main__':
     if len(argv) > 0:
@@ -76,7 +79,6 @@ if __name__ == '__main__':
             exit()
 
         arg = argv[1]
-
 
         if arg == '-h' or arg == '--help':
             print('''Usage: gandi-aliases [-h] {list | add | remove } ...
@@ -109,18 +111,20 @@ data', and 'requests' module, but is preinstalled on Fedora.
             api_key = get_secret_data('shop/gandi.net', line=4)
 
             domain = 'emanuelepetriglia.com'
-            email_id = get_secret_data(f'email/inbox@emanuelepetriglia.com', line=3)
-            url_endpoint = f'https://api.gandi.net/v5/email/mailboxes/{domain}/{email_id}'
+            email_id = get_secret_data(f'email/inbox@emanuelepetriglia.com', 3)
+            url = 'https://api.gandi.net/v5/email/mailboxes'
+            url_endpoint = f'{url}/{domain}/{email_id}'
 
             for alias in get_aliases_list(api_key, url_endpoint):
-                 print(alias)
+                print(alias)
 
         elif arg == 'add':
             api_key = get_secret_data('shop/gandi.net', line=4)
 
             domain = 'emanuelepetriglia.com'
-            email_id = get_secret_data(f'email/inbox@emanuelepetriglia.com', line=3)
-            url_endpoint = f'https://api.gandi.net/v5/email/mailboxes/{domain}/{email_id}'
+            email_id = get_secret_data(f'email/inbox@emanuelepetriglia.com', 3)
+            url = 'https://api.gandi.net/v5/email/mailboxes'
+            url_endpoint = f'{url}/{domain}/{email_id}'
 
             aliases_to_add = argv[2:]
             aliases = get_aliases_list(api_key, url_endpoint)
@@ -137,8 +141,9 @@ data', and 'requests' module, but is preinstalled on Fedora.
             api_key = get_secret_data('shop/gandi.net', line=4)
 
             domain = 'emanuelepetriglia.com'
-            email_id = get_secret_data(f'email/inbox@emanuelepetriglia.com', line=3)
-            url_endpoint = f'https://api.gandi.net/v5/email/mailboxes/{domain}/{email_id}'
+            email_id = get_secret_data(f'email/inbox@emanuelepetriglia.com', 3)
+            url = 'https://api.gandi.net/v5/email/mailboxes'
+            url_endpoint = f'{url}/{domain}/{email_id}'
 
             aliases_to_remove = argv[2:]
             aliases = get_aliases_list(api_key, url_endpoint)

@@ -5,14 +5,6 @@ before_script:
   - dnf --version
   - dnf --assumeyes install ShellCheck findutils make
 
-lint-bash-module:
+lint:
   stage: test
-  script: make lint-bash-module
-
-lint-bash-dotfiles:
-  stage: test
-  script: make lint-bash-dotfiles
-
-lint-bash-bin:
-  stage: test
-  script: make lint-bash-bin
+  script: make --jobs $(nproc) lint
