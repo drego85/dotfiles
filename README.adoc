@@ -1,6 +1,5 @@
 = ema-pe dotfiles
 Emanuele Petriglia
-:experimental
 :toc:
 
 == What they are
@@ -274,7 +273,7 @@ repository. You need some special software, such as `shellcheck` to lint Bash
 script or `flake8` to lint Python scripts.
 
 This Makefile is executed on Gitlab CI, to run locally type `make all`. You can
-also specify with file to lint, with `make` + kbd:[TAB].
+also specify with file to lint, with `make` + `TAB`.
 
 == License
 
