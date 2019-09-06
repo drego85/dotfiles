@@ -105,30 +105,6 @@ ed_elog() {
 
 # }}}}
 
-# Binary commons {{{{
-
-# Check if a given program (the command) exists. If it doesn't
-# exist, it prints an error message and exits.
-#
-# Parameters:
-#     $1 -> the command to check.
-#
-# Example:
-#     ed_exists "curl"
-ed_exists() {
-  local command_to_check="$1"
-
-  if [[ -z "$command_to_check" ]]; then
-     ed_elog "ed_exists: no given command to check."
-  fi
-
-  if [[ -z "$(command -v "$command_to_check")" ]]; then
-    ed_elog "Error: $command_to_check is not installed on the system."
-  fi
-}
-
-# }}}}
-
 # Filesystem commons {{{{
 
 # Check if a given directory exists, if it doesn't exist it will create
@@ -288,9 +264,6 @@ ed_module_packages() {
 
 MODULES["gtk"]="enable Arc-Dark GTK+ theme"
 ed_module_gtk() {
-  # It is installed by default on Fedora.
-  # ed_install "arc-theme"
-
   # Activate the theme.
   local current
   current="$(xfconf-query --channel xsettings --property /Net/ThemeName)"
@@ -593,11 +566,6 @@ Files:
 _EOF
 }
 
-# It prints to the standard output the version of this script.
-ed_cmd_version() {
-  echo "$PROGRAM script for $VERSION"
-}
-
 # It prints to the standard output a list of available modules.
 ed_cmd_list() {
   local sorted_modules
@@ -640,7 +608,7 @@ ed_cmd_install() {
 
 # Entry point {{{
 
-# Check operating system name and version {{{{
+# Check operating system name and version.
 if [[ -e "/etc/os-release" ]]; then
   source "/etc/os-release"
 elif [[ -e "/etc/usr/lib/os-release" ]]; then
@@ -652,13 +620,12 @@ fi
 if [[ "$NAME" != "$TARGET_DISTRIBUTION" || "$VERSION_ID" != "$TARGET_VERSION" ]]; then
   ed_wlog "Host OS is $NAME $VERSION_ID but this script is written for $TARGET_DISTRIBUTION $TARGET_VERSION. It might not work!"
 fi
-# }}}}
 
 case "$COMMAND" in
   list) shift;              ed_cmd_list "$@" ;;
   install) shift;           ed_cmd_install "$@" ;;
   help|-h|--help) shift;    ed_cmd_help "$@" ;;
-  version|--version) shift; ed_cmd_version "$@" ;;
+  version|--version) shift; echo "$PROGRAM script for $VERSION" ;;
   *) shift;                 ed_cmd_help "$@" ;;
 esac
 
