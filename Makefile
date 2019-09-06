@@ -11,11 +11,11 @@
 # Copyright (c) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.com>
 # All rights reserved. This file is licensed under the MIT license.
 
-# Disable also SC1091, it is a warning for files not checked in Bash 'source'.
-# Shellcheck reads this environment variable automatically.
+# Disable SC1091: doesn't follow other Bash sources.
 shellcheck_opts = --color=always --exclude=SC1091
 
-flake8_opts = --max-line-length=80
+# Disable E261: "at least two spaces before inline comment".
+flake8_opts = --max-line-length=80 --extend-ignore=E261
 
 # Get only the files that are written in Bash.
 bash_scripts = $(shell grep -rl -e "^\#!/usr/bin/env bash")

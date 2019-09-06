@@ -1,12 +1,18 @@
 #!/usr/bin/env python3
 #
-# This Python scripts is useful to manage Gandi mailbox aliases. It is tailored
-# with my needs, because I use 'pass' (from 'passwordstore') to store API key
-# and email ID.
+# This Python script is useful to manage my email aliases. My email is hosted on
+# Gandi.net, so I use their API to add, list and remove email aliases.
+#
+# This script is tailored to my needs, for example I use 'pass' to manage secret
+# data (such as API key and email ID), but it shouldn't be too difficult to edit
+# with your needs.
+#
+# You only need 'request' module to run my script, it is installed by default on
+# Fedora!
 #
 # Some tips:
-#   - Get number of aliases: 'gandi-aliases list | wc --lines'
-#   - Check if an alias exists: 'gandi-aliases list | grep foo'
+#     - Get number of aliases: 'gandi-aliases list | wc --lines'
+#     - Check if an alias exists: 'gandi-aliases list | grep foo'
 #
 # Copyright (c) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.com>
 # All rights reserved. This file is licensed under the MIT license.
@@ -17,9 +23,15 @@ import requests
 import json
 
 
-class App():
+class GandiAliases():
+    '''This class wraps the entire script.'''
 
     def __init__(self, argv):
+        '''Create a new GandiAliases object.
+
+        Arguments:
+            argv: a list of system command line arguments.
+        '''
         self.__command_to_run = self.__command_help
 
         # Parse arguments.
@@ -39,14 +51,15 @@ class App():
             else:
                 sys.exit(f'ERROR: \'{command}\' is not a command!')
 
-            # Check only for 'add' and 'remove' command.
+            # 'add' or 'remove' commands require a list of aliases!
             try:
                 if len(self.__aliases_list) == 0:
                     sys.exit("ERROR: You must give at leat one alias!")
-            except AttributeError:  # The command wasn't 'add' or 'remove'!
+            except AttributeError: # The command wasn't 'add' or 'remove'!
                 pass
 
     def run(self):
+        '''Run the script.'''
         # Prepare URL and API key to contact Gandi.net API.
         if self.__command_to_run != self.__command_help:
             api_key = self.__get_secret_data('shop/gandi.net')[4]
@@ -61,6 +74,7 @@ class App():
         self.__command_to_run()
 
     def __command_help(self):
+        '''Prints the help message on the standard output.'''
         help_message = '''Usage: gandi-aliases {help | list | add | remove} ...
 
 This script is useful to manage email aliases for 'inbox@emanuelepetriglia.com'.
@@ -90,10 +104,12 @@ secret data), and 'requests' module, but is preinstalled on Fedora.
         print(help_message, end='')
 
     def __command_list(self):
+        '''Prints an aliases list on the standard output.'''
         for alias in self.__get_aliases_list():
             print(alias)
 
     def __command_add(self):
+        '''Add the new aliases.'''
         current_aliases = self.__get_aliases_list()
 
         for alias in self.__aliases_list:
@@ -105,6 +121,7 @@ secret data), and 'requests' module, but is preinstalled on Fedora.
         self.__send_aliases_list(current_aliases)
 
     def __command_remove(self):
+        '''Remove some aliases.'''
         current_aliases = self.__get_aliases_list()
 
         for alias in self.__aliases_list:
@@ -116,6 +133,7 @@ secret data), and 'requests' module, but is preinstalled on Fedora.
         self.__send_aliases_list(current_aliases)
 
     def __get_aliases_list(self):
+        '''Returns the aliases list.'''
         try:
             result = requests.get(self.__url, headers=self.__headers)
 
@@ -128,6 +146,7 @@ secret data), and 'requests' module, but is preinstalled on Fedora.
             sys.exit(f'ERROR: Failed to get mailbox info: {error}')
 
     def __send_aliases_list(self, aliases_list):
+        '''Send the aliases list 'aliases_list'.'''
         self.__headers['Content-Type'] = 'application/json'
 
         payload = json.dumps({'aliases': aliases_list})
@@ -140,23 +159,7 @@ secret data), and 'requests' module, but is preinstalled on Fedora.
             sys.exit(f'ERROR: Failed to send mailbox info: {error}')
 
     def __get_secret_data(self, key):
-        '''
-        Retrieve a secret data file using 'pass'.
-
-        Arguments:
-            key: the secret data file (example 'shopping/amazon.com').
-
-        Returns:
-            It returns the selected line from the file specified by 'key'.
-
-        Raises:
-            IndexError: if you select a line that doesn't exists.
-            SystemExit: if the is any error during the execution of 'pass'.
-
-        Notes:
-            If there is any error during the execution of 'pass', an error
-            message is printed to the standard error.
-        '''
+        ''' Retrieve a secret data file using 'pass'.'''
         try:
             result = subprocess.run(['pass', key],
                                     capture_output=True,
@@ -171,6 +174,6 @@ secret data), and 'requests' module, but is preinstalled on Fedora.
 
 
 if __name__ == '__main__':
-    app = App(sys.argv)
+    app = GandiAliases(sys.argv)
 
     app.run()
