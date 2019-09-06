@@ -8,13 +8,13 @@
 # Copyright (C) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.com>. All right
 # reserved. This file is licensed under the MIT license.
 
-readonly program="${0##*/}"
+readonly PROGRAM="${0##*/}"
 
 # Prints an help message to the standard output.
 help_message() {
     cat <<-_EOF
 Usage:
-    $program [--help]
+    $PROGRAM [--help]
 
 It launchs a temporary Firefox instance.
 
