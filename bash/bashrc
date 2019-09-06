@@ -33,6 +33,16 @@ export EDITOR=vim
 
 # Small scripts {{{
 
+# Prints the closest IPv4 and IPv6 DNS resolvers in the OpenNIC network.
+opennic() {
+  echo "Closest IPv4 (IP, name and reliability):"
+  curl "https://api.opennic.org/geoip/?list&res=4&ipv=4"
+  echo
+  echo "Closest IPv6 (IP, name and reliability):"
+  curl "https://api.opennic.org/geoip/?list&res=4&ipv=6"
+  echo
+}
+
 # Colorized man pages.
 # Thanks to: https://news.ycombinator.com/item?id=12304730
 man() {
