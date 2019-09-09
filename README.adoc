@@ -72,8 +72,10 @@ a window with all my keyboard shortcuts.
 * link:bin/sapienza-wifi[*sapienza-wifi*]: this script automatically logins to
 the Sapienza's Wi-Fi network, without open a browser.
 * link:bin/screen-off[*screen-off*]: this simple script turns off the screen.
-* link:bin/opennic[*opennic*]: this script shows the closest DNS servers
-collaborating in the link:https://www.opennic.org/[OpenNIC project].
+* link:bin/musicconvert[*musicconvert*]: this script syncs my music library to a
+destinarion directory, copying all files except for FLAC files, that are
+converted to OGG using `ffmpeg`. The reason of this script is that my mobile
+phone has a limited space.
 
 These script can be installed manually, each requires some software specified
 on the first lines.
