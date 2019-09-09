@@ -18,6 +18,10 @@
 #
 # This script requires Python 3.6+ and 'ffmpeg'.
 #
+# TODO:
+#   - Add counters? (converted files, copied files, ignored...)
+#   - Improve design?
+#
 # Copyright (c) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.com>
 # All right reserved. This file is licensed under the MIT license.
 
