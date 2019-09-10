@@ -1,0 +1,248 @@
+#!/usr/bin/env python3
+#
+#
+# This script is useful to do a batch upload of GPX tracks to OpenStreetMap,
+# filtering each file by removing GPX points closer to a given coordinate point
+# (for privacy reasons).
+#
+# This script is tailored with my needs, so do not use it without have read
+# every line of code!
+
+#
+# I use cURL instead of requests, because I failed to use requests to send a
+# valid request to OpenStreetMap.
+#
+#
+# Only one warning: give your user name instead of you email, otherwise the
+# printed URL, of your uploaded file, will not work!
+#
+# Example usage:
+#   $ cd gpx_tracks
+#   gpx_tracks $ osmgpx -u 'username' -p 'pwd' --latitude '66.6666' \
+#                       --longitude '66.6666' --radius 400 \
+#                       --description 'My description' --tag 'love tag' \
+#                       --visibility public \
+#                       *.gpx
+#
+# Copyright (c) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.com>
+# All right reserved. This file is licensed under the MIT license.
+
+from sys import argv
+from argparse import ArgumentParser, FileType
+import xml.etree.ElementTree as xml
+from getpass import getpass, GetPassWarning
+from tempfile import NamedTemporaryFile
+from subprocess import run, CalledProcessError
+import math
+
+
+class GeoPoint():
+    '''A geographical point.
+
+    This class represents a geographical point, with a latitude and a longitude.
+    It can also calculate the distance to another point.
+    '''
+
+    earthRadius = 6371e3
+    '''Radius of earth (in metres).'''
+
+    latitude = None
+    '''Latitude (in degrees).'''
+
+    longitude = None
+    '''Longitude (in degrees).'''
+
+    def __init__(self, latitude: float, longitude: float):
+        '''Constructs a GeoPoint, using 'latitude' and 'longitude'. The only
+        acceptable format is a numeric pair (as for example 52.205, 0.119).
+
+        Raises ValueError if 'latitude' or 'longitude' are invalid geographical
+        points in degrees.
+        '''
+        if not -180 < latitude < 180:
+            raise ValueError(f'invalid latitude: {latitude}')
+
+        if not -90 < longitude < 90:
+            raise ValueError(f'invalid longitude: {longitude}')
+
+        self.latitude = latitude
+        self.longitude = longitude
+
+    def distance(self, point=None) -> float:
+        '''Returns the distance along the surface of the earth from 'this' point
+        to destination point in metres. Uses Harvesine formula.
+
+        'point' must be a GeoPoint instance or a tuple (latitude, longitude),
+        otherwise ValueError is raised.
+
+        Haversine formula is good if the two points are closer. Because this
+        project is used to filter GPX files, the points are never too distant.
+        '''
+        if not isinstance(point, GeoPoint):
+            if not isinstance(point, tuple) or len(point) != 2:
+                raise ValueError('GeoPoint or latitude/longitude must be given')
+
+            point = GeoPoint(point[0], point[1])
+
+        # Thanks to http://www.movable-type.co.uk/scripts/latlong.html for a
+        # good explaination.
+        p1la, p1lo = math.radians(self.latitude), math.radians(self.longitude)
+        p2la, p2lo = math.radians(point.latitude), math.radians(point.longitude)
+
+        dla = p2la - p1la
+        dlo = p2lo - p1lo
+
+        a = math.sin(dla / 2) ** 2 + \
+            math.cos(p1la) * math.cos(p2la) * math.sin(dlo / 2) ** 2
+
+        c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+
+        return GeoPoint.earthRadius * c
+
+    def __repr__(self):
+        return f'<GeoPoint latitude={self.latitude} longitude={self.longitude}>'
+
+
+def filterGpxFile(gpx, point, radius):
+    '''Filters *gpx* file, removing all close points to *point* for *radius*
+    metres. At the end the resulting file is written to a temporary file and it
+    is returned.
+
+    *gpx* is a filename or file object (opened for binary read) containing GPX
+    data.
+
+    *point* is a GeoPoint.
+
+    *radius* is the radius in metres from *point* in which points are removed.
+
+    xml.etree.ElementTree.ParseError is raised if *file* is a invalid XML file.
+
+    ValueError is raise if *file* is a invalid GPX file.
+    '''
+    gpx_schema = 'http://www.topografix.com/GPX/1/1'
+
+    xml.register_namespace('', gpx_schema)
+    xml.register_namespace('xsi', 'http://www.w3.org/2001/XMLSchema-instance')
+
+    namespace = {'gpx': gpx_schema}
+
+    tree = xml.parse(gpx)
+
+    # GPX points are under: trk -> trkseg.
+    for track in tree.getroot().findall('gpx:trk', namespace):
+        for trackSegment in track.findall('gpx:trkseg', namespace):
+            for gpxPoint in trackSegment.findall('gpx:trkpt', namespace):
+                lat = float(gpxPoint.get('lat'))
+                lon = float(gpxPoint.get('lon'))
+
+                if not lat or not lon: # Maybe it is a malformed GPX file.
+                    raise ValueError('Missing \'lat\' or \'lon\' attribute')
+
+                if point.distance(GeoPoint(lat, lon)) <= radius:
+                    trackSegment.remove(gpxPoint)
+
+    out = NamedTemporaryFile(prefix=gpx if isinstance(gpx, str) else gpx.name,
+                             suffix='.gpx')
+
+    tree.write(out, encoding='UTF-8', xml_declaration=True)
+
+    return out
+
+
+if __name__ == '__main__':
+    def _checkUserPwd(args, parser):
+        '''Checks if it is given the user name and password, otherwise it will
+        ask interactively.
+        '''
+        if not args.user:
+            try:
+                args.user = input('User name: ')
+            except EOFError:
+                parser.error('failed to get user name')
+
+        if not args.password:
+            try:
+                args.password = getpass()
+            except EOFError:
+                parser.error('failed to get password')
+            except GetPassWarning:
+                pass
+
+    def _processGpxFiles(args, parser):
+        '''Processes and uploads every GPX file.'''
+        baseUrl = 'https://api.openstreetmap.org'
+        gpxUrl = f'{baseUrl}/api/0.6/gpx/create'
+        linkUrl = f'{baseUrl}/user/{args.user}/traces'
+
+        for gpx in args.file:
+            try:
+                print(f'Processing {gpx.name}...', end='')
+                out = filterGpxFile(gpx,
+                                    GeoPoint(args.latitude, args.longitude),
+                                    args.radius)
+                print(' OK', end='')
+                gpx.close()
+
+                # Because 'out' will be passed to 'curl'.
+                out.flush()
+
+                print(' Uploading GPX...', end='')
+                # I use cURL because I failed to use requests to send a valid
+                # request to OpenStreetMap.
+                tags = ' '.join(args.tag) if args.tag else ""
+                result = run(['curl', gpxUrl,
+                              '--user', f'{args.user}:{args.password}',
+                              '-F', f'file=@{out.name}',
+                              '-F', f'description={args.description}',
+                              '-F', f'tags={tags}',
+                              '-F', f'visibility={args.visibility}'],
+                             check=True,
+                             capture_output=True)
+
+                # Direct link to the uploaded GPX file.
+                print(f' OK: {linkUrl}/{result.stdout.decode()}')
+            except xml.ParseError as error:
+                parser.error(f'in file {gpx.name}: {error}')
+            except FileNotFoundError as error:
+                parser.error(error)
+            except CalledProcessError as error:
+                parser.error(f'failed to upload {gpx.name}: ' +
+                             error.stderr.decode())
+
+    description = '''This script is useful to do a batch upload of GPX tracks to
+    OpenStreetMap, filtering each file by removing GPX points closer to a given
+    coordinate point (for privacy reasons).'''
+
+    epilog = 'This script requires \'curl\' binary to run.'
+
+    parser = ArgumentParser(description=description, epilog=epilog)
+
+    parser.add_argument('-u', '--user',
+                        help='your OpenSteetMap username, NOT EMAIL! '
+                             '(if not provided will be asked)')
+    parser.add_argument('-p', '--password',
+                        help='your OpenStreetMap password (if not provided will'
+                             ' be asked)')
+    parser.add_argument('-r', '--radius', default=300, type=int,
+                        help='radius in meters in which remove GPX points '
+                             '(default 300)')
+    parser.add_argument('--latitude', required=True, type=float,
+                        help='latitude of source point')
+    parser.add_argument('--longitude', required=True, type=float,
+                        help='longitude of source point')
+    parser.add_argument('-d', '--description',
+                        help='description for uploaded GPX file (optional)')
+    parser.add_argument('-t', '--tag', nargs='+',
+                        help='tags for uploaded GPX file (optional)')
+    parser.add_argument('-v', '--visibility', choices=['private', 'public',
+                        'trackable', 'identifiable'], default='private',
+                        help='visibility of uploaded GPX file (default '
+                             'private)')
+    parser.add_argument('file', nargs='+', type=FileType('rb'),
+                        help='GPX file to process and upload to OpenStreetMap')
+
+    args = parser.parse_args(argv[1:]) # argv[0] is the program name.
+
+    _checkUserPwd(args, parser)
+
+    _processGpxFiles(args, parser)
