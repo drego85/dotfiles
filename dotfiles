@@ -276,7 +276,7 @@ ed_module_gtk() {
 
 MODULES["icon"]="install 'papirus-icon-theme' package and enable it"
 ed_module_icon() {
-  ed_install "papirus-icon-theme"
+  sudo dnf install "papirus-icon-theme"
 
   # Activate the icon theme.
   local current
@@ -303,7 +303,7 @@ MODULES["git"]="install 'git' and link the configuration"
 ed_module_git() {
   local dest_path="$HOME_PATH"
 
-  ed_install "git"
+  sudo dnf install "git"
 
   ed_make_dir "$dest_path"
 
@@ -317,7 +317,7 @@ MODULES["tlp"]="install 'tlp', link the configuration and enable it"
 ed_module_tlp() {
   local src dst
 
-  ed_install "tlp"
+  sudo dnf install "tlp"
 
   # Create symlink (with backup).
   src="$REPO_PATH/tlp/tlp"
@@ -363,7 +363,7 @@ ed_module_clean() {
 MODULES["gpg"]="install GnuPG configuration and enable it via systemd --user"
 ed_module_gpg() {
   # 1. Install my favourite pinentry.
-  ed_install "pinentry-gtk"
+  sudo dnf install "pinentry-gtk"
 
   # 2. Create symlinks for configuration.
   for file in "$REPO_PATH"/gnupg/* ; do
@@ -483,11 +483,11 @@ ed_module_ruby() {
   ed_log "Installing C development tools and libraries (for native rubygems)"
   sudo dnf group install "C Development Tools and Libraries"
 
-  ed_install "ruby"
-  ed_install "ruby-devel"
+  sudo dnf install "ruby"
+  sudo dnf install "ruby-devel"
 
   # Necessary to build native gems.
-  ed_install "redhat-rpm-config"
+  sudo dnf install "redhat-rpm-config"
 
   # Install bundler
   ed_log "Install bundler via rubygem"
@@ -501,7 +501,7 @@ ed_module_ruby() {
 
 MODULES["firefox"]="install firefox and custom user.js to 'emanuele' profile"
 ed_module_firefox() {
-  ed_install "firefox"
+  sudo dnf install "firefox"
 
   local firefox_path="$HOME_PATH/.mozilla/firefox"
 
