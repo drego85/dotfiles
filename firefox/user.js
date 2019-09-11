@@ -53,6 +53,14 @@ user_pref("extensions.update.autoUpdateDefault", true);
 
 
 /**
+ * 0700: HTTP* / TCP/IP / DNS / PROXY / SOCKS etc
+ */
+
+/** 0707: disable DoH. **/
+user_pref("network.trr.mode", 5);
+
+
+/**
  * 0800: LOCATION BAR / SEARCH BAR / SUGGESTIONS / HISTORY / FORMS [SETUP]
  */
 
