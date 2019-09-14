@@ -8,3 +8,12 @@ before_script:
 lint:
   stage: test
   script: make --jobs $(nproc) lint
+
+# Run this job only if variable 'GOODMORNINGITALIA' is given. This job
+# subscribes to goodmorningitalia.it for a one month free trial.
+goodmorningitalia:
+  only:
+    variables:
+      - $GOODMORNINGITALIA
+  stage: build
+  script: echo 'ciao'
