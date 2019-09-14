@@ -20,3 +20,6 @@
 [submodule "vim/plugins/start/pythob-syntax"]
 	path = vim/pack/plugins/start/python-syntax
 	url = https://github.com/vim-python/python-syntax.git
+[submodule "vim/pack/plugins/start/simplylfold"]
+	path = vim/pack/plugins/start/simplylfold
+	url = https://github.com/tmhedberg/SimpylFold.git
