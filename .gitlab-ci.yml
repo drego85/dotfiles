@@ -16,4 +16,4 @@ goodmorningitalia:
     variables:
       - $GOODMORNINGITALIA
   stage: build
-  script: echo 'ciao'
+  script: bash -c 'bin/goodmorningitalia'
