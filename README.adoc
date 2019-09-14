@@ -109,6 +109,8 @@ highlighting.
 writing prose.
 * https://github.com/justinmk/vim-syntax-extra[*vim-syntax-extra*]: better C
 syntax highlighting.
+* https://github.com/tmhedberg/SimpylFold[SimplylFold][*SimplylFold*]: better
+Python folding (truly!).
 
 Both *goyo.vim* and *vim-pencil* are not automatically started with VIM, instead
 you need to run `vim -c Writing`.
