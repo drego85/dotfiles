@@ -16,4 +16,6 @@ goodmorningitalia:
     variables:
       - $GOODMORNINGITALIA
   stage: build
-  script: bin/goodmorningitalia
+  script:
+    - dnf --assumeyes install curl bash
+    - bin/goodmorningitalia
