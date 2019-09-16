@@ -7,11 +7,10 @@
 #
 # This script is tailored with my needs, so do not use it without have read
 # every line of code!
-
+#
 #
 # I use cURL instead of requests, because I failed to use requests to send a
 # valid request to OpenStreetMap.
-#
 #
 # Only one warning: give your user name instead of you email, otherwise the
 # printed URL, of your uploaded file, will not work!
