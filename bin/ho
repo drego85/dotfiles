@@ -96,7 +96,7 @@ class SingleCounter:
         if self.threshold == 1000000:
             self.threshold = 'UNLIMITED'
 
-    def format(self, prefix: str='') -> str:
+    def format(self, prefix: str = '') -> str:
         '''Returns a formatted string of this counter. If 'prefix' is given,
         it is added before each field.'''
         result = f'{prefix}{self.name}: {self.used} {self.used_unit} / '
