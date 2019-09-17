@@ -86,30 +86,29 @@ class SingleCounter:
     '''This class represents a single counter. 'threshold' is optional, if it is
     'None' it means 'UNLIMITED'.'''
     name: str
-    unit: str
-    used: float = 0
-    threshold: float = None
+    used: float
+    used_unit: str
+    threshold: float
+    threshold_unit: str
 
-    def format(self, prefix=None) -> str:
-        '''Returns a formatted string of this counter. If 'prefix' is given,
-        it is added before each field.'''
-        if not prefix:
-            prefix = ''
-
-        if self.name == 'SMS':
-            self.used = int(self.used)
-            self.threshold = int(self.threshold)
-
+    def __post_init__(self):
         # Unlimited threshold is actually a limit of 1000000.
         if self.threshold == 1000000:
             self.threshold = 'UNLIMITED'
 
-        result = f'{prefix}{self.name}: {self.used} / {self.threshold} ' + \
-                 f'{self.unit}'
+    def format(self, prefix: str='') -> str:
+        '''Returns a formatted string of this counter. If 'prefix' is given,
+        it is added before each field.'''
+        result = f'{prefix}{self.name}: {self.used} {self.used_unit} / '
 
-        # Used percentage.
-        if self.threshold != 'UNLIMITED':
-            result += (f' ({self.used * 100 / self.threshold} %)')
+        if self.threshold == 'UNLIMITED':
+            result += self.threshold
+        else:
+            result += f'{self.threshold} {self.threshold_unit}'
+
+            # Unit can be different and with no usage it is useless.
+            if self.threshold_unit == self.used_unit and self.used != 0:
+                result += f' ({self.used * 100 / self.threshold} %)'
 
         return result
 
@@ -117,9 +116,9 @@ class SingleCounter:
 @dataclass
 class Counters:
     '''This class represents several counters of an Ho Mobile account.'''
-    voice: SingleCounter = SingleCounter('Voice', 'min')
-    sms: SingleCounter = SingleCounter('SMS', 'sms')
-    internet: SingleCounter = SingleCounter('Internet', 'GB')
+    voice: SingleCounter = None
+    sms: SingleCounter = None
+    internet: SingleCounter = None
 
 
 @dataclass
@@ -273,14 +272,23 @@ class HoMobileSession():
         result = result['countersList'][0]['countersDetailsList']
         data = Counters()
 
-        data.voice.used = float(result[0]['value'])
-        data.voice.threshold = float(result[0]['threshold'])
+        data.voice = SingleCounter('Voice',
+                                   float(result[0]['value']),
+                                   result[0]['valueUnit'],
+                                   float(result[0]['threshold']),
+                                   result[0]['thresholdUnit'])
 
-        data.sms.used = float(result[1]['value'])
-        data.sms.threshold = float(result[1]['threshold'])
+        data.sms = SingleCounter('SMS',
+                                 int(result[1]['value']),
+                                 'sms',
+                                 int(result[1]['threshold']),
+                                 'sms')
 
-        data.internet.used = float(result[2]['value'])
-        data.internet.threshold = float(result[2]['threshold'])
+        data.internet = SingleCounter('Internet',
+                                      float(result[2]['value']),
+                                      result[2]['valueUnit'],
+                                      float(result[2]['threshold']),
+                                      result[2]['thresholdUnit'])
 
         return data
 
