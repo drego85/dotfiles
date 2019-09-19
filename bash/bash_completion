@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+for bc_file in ~/.bash_completion.d/* ; do
+  [[ -f "$bc_file" ]] && . "$bc_file"
+done

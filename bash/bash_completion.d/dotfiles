@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+#
+# Bash completion for 'dotfiles' script.
+#
+# Copyright (c) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.com>
+# All rights reserved. This file is licensed under the MIT license.
+
+_dotfiles() {
+  local current previous commands words
+  COMPREPLY=()
+  current="${COMP_WORDS[$COMP_CWORD]}"
+  previous="${COMP_WORDS[$COMP_CWORD - 1]}"
+  commands="list install help version"
+
+  # It is a command.
+  if [[ "$COMP_CWORD" == "1" ]]; then
+    words="$commands"
+  else # It is a module.
+    if [[ "${COMP_WORDS[1]}" == "install" ]]; then # 'install' command.
+      words="$(dotfiles list | tail --lines +2 | cut --delimiter '-' --field 1)"
+      words="all $words" # 'all' is a special module.
+    fi
+  fi
+
+  COMPREPLY=( $(compgen -W "$words" -- "$current") )
+  return 0
+}
+
+complete -F _dotfiles dotfiles

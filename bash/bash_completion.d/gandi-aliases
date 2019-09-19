@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+#
+# Bash completion for 'gandi-aliases' script.
+#
+# Copyright (c) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.com>
+# All rights reserved. This file is licensed under the MIT license.
+
+_gandi_aliases() {
+  local current previous commands words
+  COMPREPLY=()
+  current="${COMP_WORDS[$COMP_CWORD]}"
+  previous="${COMP_WORDS[$COMP_CWORD - 1]}"
+  commands="list add remove help"
+
+  # It is a command.
+  if [[ "$COMP_CWORD" == "1" ]]; then
+    words="$commands"
+  fi
+
+  COMPREPLY=( $(compgen -W "$words" -- "$current") )
+  return 0
+}
+
+complete -F _gandi_aliases gandi-aliases

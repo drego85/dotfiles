@@ -51,6 +51,9 @@ These modules simply link my bash configuration, that consists of a `bashrc` and
 `bash_profile` file. It contains essential environment variables, aliases and
 small scripts.
 
+It also provides some autocompletion scripts for `dotfiles` script and other
+cusotm scripts.
+
 '''
 
 === bin

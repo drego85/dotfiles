@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+#
+# Bash completion for 'osmgpx' script.
+#
+# Copyright (c) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.com>
+# All rights reserved. This file is licensed under the MIT license.
+
+_osmgpx() {
+  local current previous options words
+  COMPREPLY=()
+  current="${COMP_WORDS[$COMP_CWORD]}"
+  previous="${COMP_WORDS[$COMP_CWORD - 1]}"
+  options="-h --help -u --user -p --password -r --radius --latitude"
+  options="$options --longitude -d --description -t --tag -v --visibility"
+
+  if [[ "$current" == -* ]]; then
+    words="$options"
+  elif [[ "$previous" == -* ]]; then
+      # Visibility option can have a fixed number of values.
+      if [[ "$previous" == "-v" || "$previous" == "--visibility" ]]; then
+        words="private public trackable identifiable"
+      else
+        words="" # No suggestions.
+      fi
+  else # GPX files.
+    words="$(find . -name '*.gpx')"
+  fi
+
+  COMPREPLY=( $(compgen -W "$words" -- "$current") )
+  return 0
+}
+
+complete -F _osmgpx osmgpx
