@@ -545,7 +545,8 @@ Commands:
         List all available modules.
 
     install <module>...
-        Install the given modules.
+        Install the given modules. If the first given module is 'all', it
+        installs all modules.
 
     help
         Show this text.
@@ -583,6 +584,11 @@ ed_cmd_list() {
 ed_cmd_install() {
   local nr_modules
   [[ "$1" ]] || ed_elog "No modules given."
+
+  # 'all' is a special module, it installs all modules.
+  if [[ "$1" == "all" ]]; then
+    set -- "${!MODULES[@]}"
+  fi
 
   # Check if exist given modules.
   for module in "$@" ; do
