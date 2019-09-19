@@ -18,7 +18,7 @@ _aenami() {
     words="$options"
   fi
 
-  COMPREPLY=( $(compgen -W "$words" -- "$current") )
+  mapfile -t COMPREPLY < <(compgen -W "$words" -- "$current")
   return 0
 }
 

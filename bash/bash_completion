@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
 for bc_file in ~/.bash_completion.d/* ; do
+  # shellcheck disable=SC1090
   [[ -f "$bc_file" ]] && . "$bc_file"
 done

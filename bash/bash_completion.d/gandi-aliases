@@ -6,10 +6,9 @@
 # All rights reserved. This file is licensed under the MIT license.
 
 _gandi_aliases() {
-  local current previous commands words
+  local current commands words
   COMPREPLY=()
   current="${COMP_WORDS[$COMP_CWORD]}"
-  previous="${COMP_WORDS[$COMP_CWORD - 1]}"
   commands="list add remove help"
 
   # It is a command.
@@ -17,7 +16,7 @@ _gandi_aliases() {
     words="$commands"
   fi
 
-  COMPREPLY=( $(compgen -W "$words" -- "$current") )
+  mapfile -t COMPREPLY < <(compgen -W "$words" -- "$current")
   return 0
 }
 

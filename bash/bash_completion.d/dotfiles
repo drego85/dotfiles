@@ -6,10 +6,9 @@
 # All rights reserved. This file is licensed under the MIT license.
 
 _dotfiles() {
-  local current previous commands words
+  local current commands words
   COMPREPLY=()
   current="${COMP_WORDS[$COMP_CWORD]}"
-  previous="${COMP_WORDS[$COMP_CWORD - 1]}"
   commands="list install help version"
 
   # It is a command.
@@ -22,7 +21,7 @@ _dotfiles() {
     fi
   fi
 
-  COMPREPLY=( $(compgen -W "$words" -- "$current") )
+  mapfile -t COMPREPLY < <(compgen -W "$words" -- "$current")
   return 0
 }
 
