@@ -402,12 +402,11 @@ MODULES["vim"]="prepare vim folder and link it to $HOME_PATH/.vim"
 ed_module_vim() {
   local plugins_path
 
-  # TODO: fix
-  ln -Tfs /home/emanuele/.dotfiles/vim /home/emanuele/.vim
+  ed_make_symlink "$REPO_PATH/vim" "$HOME_PATH/.vim"
 
-  plugins_path="$REPO_PATH/vim/pack/start"
+  plugins_path="$REPO_PATH/vim/pack/plugins/start/"
 
-  # Update and download all plugins.
+  # Download all plugins.
   git -C "$REPO_PATH" submodule update --init "$plugins_path/papercolor-theme"
   git -C "$REPO_PATH" submodule update --init "$plugins_path/vim-syntax-extra"
   git -C "$REPO_PATH" submodule update --init "$plugins_path/python-syntax"
@@ -421,9 +420,7 @@ ed_module_xfce4() {
 
   dest_path="$HOME_PATH/.config/xfce4"
 
-  # xfce4-terminal configuration.
-  # TODO: fix, same as vim module
-  ln -Tfs "$REPO_PATH/xfce4/xfce4-terminal" "$dest_path/terminal"
+  ed_make_symlink "$REPO_PATH/xfce4/xfce4-terminal" "$dest_path/terminal"
 }
 
 MODULES["xfwm4"]="install xfwm4 theme"
