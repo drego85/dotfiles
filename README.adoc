@@ -43,6 +43,12 @@ $ # install gpg keys...
 $ git remote set-url origin git@gitlab.com:ema-pe/dotfiles.git
 ----
 
+If you want to update git submodule to last commit, run this command:
+
+    git submodule foreach git pull origin master
+
+If there are new commits, you also need to commit this update.
+
 == Modules
 
 === bash
