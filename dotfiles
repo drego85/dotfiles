@@ -216,8 +216,6 @@ ed_make_backup() {
 
 # }}}}
 
-# Web commons {{{{
-
 # It is a wrapper to 'curl', to download files to some point. If there is a
 # problem, it will don't exit, instead it returns 1 (0 is success).
 #
@@ -237,7 +235,34 @@ ed_download() {
   return 0
 }
 
-# }}}}
+# Wrapper to 'xfconf-query'. It checks channel, property and value before run
+# 'xfconf-query'. It also avoid useless rewrite.
+#
+# Parameters:
+#   $1 -> channel;
+#   $2 -> Property;
+#   $3 -> Value (string).
+#
+# Example:
+#   ed_xfconf "xsettings" "/Net/IconThemeName" "Papirus-Dark"
+ed_xfconf() {
+  [[ ! "$1" || ! "$2" || ! "$3" ]] && ed_elog "Missing arguments for ed_xfconf"
+  local channel="$1"
+  local property="$2"
+  local value="$3"
+
+  local current
+  if ! current="$(xfconf-query --channel "$channel" --property "$property" 2>&1)"
+  then
+    ed_elog "xfconf-query: $current"
+  fi
+
+  if [[ "$current" == "$value" ]]; then
+      ed_wlog "xfconf-query: $value for $channel$property is already set!"
+    else
+      xfconf-query --channel "$channel" --property "$property" --set "$value"
+  fi 
+}
 
 # }}}
 
@@ -257,35 +282,21 @@ ed_module_packages() {
     sudo dnf install "$repository"
   fi
 
-
   ed_wlog "root requested to install packages!"
   sudo dnf install "pass" "thunderbird" "vlc" "youtube-dl" "telegram-desktop"
 }
 
 MODULES["gtk"]="enable Arc-Dark GTK+ theme"
 ed_module_gtk() {
-  # Activate the theme.
-  local current
-  current="$(xfconf-query --channel xsettings --property /Net/ThemeName)"
-  if [[ "$current" == "Arc-Dark" ]]; then
-      ed_wlog "Arc-Dark theme is already activated!"
-    else
-      xfconf-query --channel xsettings --property /Net/ThemeName --set Arc-Dark
-  fi
+  # Arc-Dark is already installed on Fedora.
+  ed_xfconf "xsettings" "/Net/ThemeName" "Arc-Dark"
 }
 
 MODULES["icon"]="install 'papirus-icon-theme' package and enable it"
 ed_module_icon() {
   sudo dnf install "papirus-icon-theme"
 
-  # Activate the icon theme.
-  local current
-  current="$(xfconf-query --channel xsettings --property /Net/IconThemeName)"
-  if [[ "$current" == "Papirus-Dark" ]]; then
-      ed_wlog "Papirus-Dark icon theme is already activated!"
-    else
-      xfconf-query --channel xsettings --property /Net/IconThemeName --set Papirus-Dark
-  fi
+  ed_xfconf "xsettings" "/Net/IconThemeName" "Papirus-Dark"
 }
 
 MODULES["bin"]="create symlinks for custom scripts on ~/.local/bin"
