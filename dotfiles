@@ -434,6 +434,24 @@ ed_module_xfce4() {
   ed_make_symlink "$REPO_PATH/xfce4/xfce4-terminal" "$dest_path/terminal"
 }
 
+MODULES["thunar"]="install Thunar configuration"
+ed_module_thunar() {
+  local channel="thunar"
+
+  ed_wlog "note that if you change Thunar config from GUI, the new configuration
+  is not updated on dotfiles. You need to update manually!"
+
+  # Big icons with filename's title below it.
+  ed_xfconf "$channel" "/default-view" "ThunarIconView"
+
+  # Show hidden files (starting with a dot).
+  ed_xfconf "$channel" "/last-show-hidden" "true"
+
+  # Icon zoom level.
+  ed_xfconf "$channel" "/last-icon-view-zoom-level" \
+    "THUNAR_ZOOM_LEVEL_150_PERCENT"
+}
+
 MODULES["xfwm4"]="install xfwm4 theme"
 ed_module_xfwm4() {
   local dest_path
