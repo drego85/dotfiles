@@ -210,6 +210,12 @@ greeter, it crashes. I don't know why.
 
 '''
 
+=== thunar
+
+This modules installs, via `xfconf-query`, my Thunar configuration. Note that if
+you change the configuration via Thunar GUI, the new configuration will not be
+synched to dotfiles. You need to manually update the configuration!
+
 === xfwm4
 
 This module installs my custom theme for Xfwm4. The theme has small borders and
