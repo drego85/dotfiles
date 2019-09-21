@@ -150,6 +150,9 @@ alias dot="dotfiles"
 # Download a website page ('-k': fix local links, '-p' download resources).
 alias web-archive="wget -p -k"
 
+# Prints all installed packages that requires the given package.
+alias why="rpm -q --whatrequires"
+
 # }}}
 
 # vim:foldmethod=marker
