@@ -368,7 +368,9 @@ ed_module_clean() {
   sudo dnf remove "gnome-keyring" "seahorse" "xfdashboard" "claws-mail" \
                   "xscreensaver-base" "xfburn" "geany" "pidgin" "asunder" \
                   "pragha" "parole" "dnfdragora" "abiword" "gnumeric" \
-                  "xfce4-dict" "orage" "xfce4-clipman-plugin" "firewall-config"
+                  "xfce4-dict" "orage" "xfce4-clipman-plugin" \
+                  "firewall-config" "cups"
+
 }
 
 MODULES["gpg"]="install GnuPG configuration and enable it via systemd --user"
