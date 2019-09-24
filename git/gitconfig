@@ -12,8 +12,6 @@
 [gpg]
     program = gpg2
 [alias]
-    # It's like 'ls -l'.
-    ll = log --pretty=format:\"%C(yellow)%h %ad%Cred%d %Creset%s%Cblue\" --decorate --date=format:%Y-%m-%d\\ %H:%M
     st = status
     cm = commit
     pu = push
@@ -21,3 +19,9 @@
 
     # To view the number of commits for each member.
     stats = shortlog -sn
+
+    # It's like 'ls -l'.
+    ll = log --pretty=format:\"%C(yellow)%h %ad%Cred%d %Creset%s%Cblue\" --decorate --date=format:%Y-%m-%d\\ %H:%M
+
+    # Update every submodule (needs a commit if there is an update!)
+    submodule-update = submodule foreach git pull origin master
