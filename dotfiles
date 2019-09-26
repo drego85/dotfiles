@@ -369,7 +369,7 @@ ed_module_clean() {
                   "xscreensaver-base" "xfburn" "geany" "pidgin" "asunder" \
                   "pragha" "parole" "dnfdragora" "abiword" "gnumeric" \
                   "xfce4-dict" "orage" "xfce4-clipman-plugin" \
-                  "firewall-config" "cups"
+                  "firewall-config" "cups" "catfish"
 
 }
 
