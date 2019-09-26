@@ -434,6 +434,20 @@ ed_module_xfce4() {
   dest_path="$HOME_PATH/.config/xfce4"
 
   ed_make_symlink "$REPO_PATH/xfce4/xfce4-terminal" "$dest_path/terminal"
+
+  # I use 'xfce4-panel-profiles' to make backup and restore my 'xfce4-panel'
+  # configuration. This program accepts only a tar file that contains the
+  # configuration.
+  local tar_conf
+
+  tar_conf="$(mktemp --suffix='.tar')"
+
+  tar -cf "$tar_conf" --directory "$REPO_PATH/xfce4/xfce4-panel" "config.txt"
+
+  ed_log "Loading xfce4-panel configuration..."
+  xfce4-panel-profiles load "$tar_conf"
+
+  rm --force "$tar_conf"
 }
 
 MODULES["thunar"]="install Thunar configuration"
