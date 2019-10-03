@@ -59,9 +59,6 @@ Available commands:
         It connects to Sapienza's Wifi network, using the username and password
         coded in the script (the password is retrieved with 'pass').
 
-    logout
-        It disconnects from Sapienza's Wifi network.
-
     check
         It prints "connected" or "disconnected" if there is an Internet
         connection. By default is tries to connect to Sapienza's Web home page.
@@ -125,30 +122,6 @@ cmd_login() {
   notify-send --icon=network-wireless "Sapienza's WiFi" "Logged"
 }
 
-# It logouts from the Sapienza's Wifi network. It uses the ID provided by the
-# login function.
-cmd_logout() {
-  local logout_url="https://wifi-cont1.uniroma1.it:8003/"
-
-  # POST parameters.
-  local logout_id
-  logout_id="logout_id=$(cat $LOGOUT_ID_FILE)"
-  local zone="zone=wifi_sapienza"
-  local logout_command="logout=Logout"
-
-  local data="$logout_id&$zone&$logout_command"
-
-  wget --quiet --output-document /dev/null --post-data "$data" "$logout_url"
-
-  if [[ $(cmd_check_network) != "disconnected" ]]; then
-    notify-send --icon=network-error "Sapienza's Wifi" "Failed to logout"
-    error "Failed to logout"
-  fi
-
-  notify-send --icon=notification-network-wireless-disconnected \
-    "Sapienza's WiFi" "Logout"
-}
-
 #
 # END subcommands functions
 #
@@ -157,7 +130,6 @@ PROGRAM="${0##*/}"
 
 case "$1" in
   login)                cmd_login ;;
-  logout)               cmd_logout ;;
   check)                cmd_check_network ;;
   help)                 cmd_help ;;
   *)                    cmd_login ;;
