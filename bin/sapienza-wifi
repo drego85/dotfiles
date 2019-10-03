@@ -131,7 +131,7 @@ PROGRAM="${0##*/}"
 case "$1" in
   login)                cmd_login ;;
   check)                cmd_check_network ;;
-  help)                 cmd_help ;;
+  -h|--help|help)       cmd_help ;;
   *)                    cmd_login ;;
 esac
 
