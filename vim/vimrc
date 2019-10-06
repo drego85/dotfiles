@@ -2,7 +2,8 @@
 " 
 " My own VIM configuration.
 "
-" Script made by Emanuele Petriglia (ema-pe) <inbox@emanuelepetriglia.com>.
+" Copyright (c) 2019 Emanuele Petriglia (ema-pe) <inbox@emanuelepetriglia.com>.
+" All rights reserved. This script is licensed under the MIT license.
 
 " UI settings. {{{
 
@@ -272,6 +273,14 @@ endfunc
 
 " .. and bind it to a custom keybinding.
 nnoremap <Tab> :call ToggleNumber()<CR>
+
+" Load 'redact_pass', a 'pass' plugin to improve secutiry when editing a
+" password using VIM.
+try
+    source /usr/share/doc/pass/vim/redact_pass.vim
+catch
+    " Ignore it , 'pass' may be not installed.
+endtry
 
 " }}}
 

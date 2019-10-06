@@ -121,6 +121,8 @@ writing prose.
 * https://github.com/justinmk/vim-syntax-extra[*vim-syntax-extra*]: better C
 syntax highlighting.
 * https://github.com/tmhedberg/SimpylFold[*SimplylFold*]: better Python folding.
+* https://git.zx2c4.com/password-store/tree/contrib/vim[*redact_pass*]: improve
+security when editing a password file with VIM. It requires `pass` package.
 
 Both *goyo.vim* and *vim-pencil* are not automatically started with VIM, instead
 you need to run `vim -c Writing`.
