@@ -23,7 +23,7 @@ _osmgpx() {
         words="" # No suggestions.
       fi
   else # GPX files.
-    words="$(find . -name '*.gpx')"
+    words="$(compgen -A file -X '!*.gpx')"
   fi
 
   mapfile -t COMPREPLY < <(compgen -W "$words" -- "$current")
