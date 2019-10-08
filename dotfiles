@@ -107,39 +107,6 @@ ed_elog() {
 
 # Filesystem commons {{{{
 
-# Check if a given directory exists, if it doesn't exist it will create
-# the path with the directory.
-#
-# At the end of this function the path is certainly created.
-#
-# Parameters:
-#     $1 -> directory to check and create;
-#     $2 -> if "sudo" it creates the directory with root permissions.
-ed_make_dir() {
-  if [[ -z "$1" ]]; then
-    ed_elog "ed_make_dir: no given directory to create."
-  else
-    local directory="$1"
-  fi
-
-  if [[ "$2" == "sudo" ]]; then
-    local sudo="sudo"
-  fi
-
-  # $directory may exist but it is not necessary a directory.
-  if [[ -e "$directory" ]]; then
-    if [[ ! -d "$directory" ]]; then
-      ed_elog "Error: ed_make_dir: \"$directory\" already exists and it is not a directory"
-    fi
-  else
-    if [[ "$sudo" ]]; then
-      ed_wlog "root required to create directory \"$directory\""
-    fi
-
-    $sudo mkdir --parents --verbose "$directory"
-  fi
-}
-
 # It creates a simlink of a directory or file.
 #
 # Parameters:
@@ -303,7 +270,7 @@ MODULES["bin"]="create symlinks for custom scripts on ~/.local/bin"
 ed_module_bin() {
   local bin_path="$HOME_PATH/.local/bin"
 
-  ed_make_dir "$bin_path"
+  mkdir --parents "$bin_path"
 
   for script in "$REPO_PATH"/bin/* ; do
     ed_make_symlink "$script" "$bin_path/${script##*/}"
@@ -316,7 +283,7 @@ ed_module_git() {
 
   sudo dnf install "git"
 
-  ed_make_dir "$dest_path"
+  mkdir --parents "$dest_path"
 
   for config in "$REPO_PATH"/git/* ; do
     # Because git config are dotfiles, they starts with '.'.
@@ -387,7 +354,7 @@ ed_module_gpg() {
   local src_unit="/usr/share/doc/gnupg2/examples/systemd-user"
 
   # 3. Create symlinks for systemd unit files.
-  ed_make_dir "$dest_unit"
+  mkdir --parents "$dest_unit"
   for unit in "$src_unit"/*.{service,socket} ; do
     ed_make_symlink "$unit" "$dest_unit/${unit##*/}"
   done
@@ -475,7 +442,7 @@ ed_module_xfwm4() {
   git -C "$REPO_PATH" submodule update --init "xfwm4/thinble"
 
   dest_path="$HOME_PATH/.local/share/themes"
-  ed_make_dir "$dest_path"
+  mkdir --parents "$dest_path"
 
   ed_make_symlink "$REPO_PATH/xfwm4/thinble" "$dest_path/thinble"
 }
@@ -508,7 +475,7 @@ ed_module_font() {
   xz --decompress "$xz_file" ||
     ed_elog "Failed to decompress '$xz_file'" "$EXIT_FAILURE" "rf --force $xz_file"
 
-  ed_make_dir "$dest_path"
+  mkdir --parents "$dest_path"
 
   tar --extract --file "$tar_file" --directory "$dest_path" ||
     ed_elog "Failed to extract '$tar_file'" "$EXIT_FAILURE" "rf --force $tar_file"
@@ -537,7 +504,7 @@ ed_module_ruby() {
 
   # Install 
   ed_log "Install bundler configuration"
-  ed_make_dir "$HOME_PATH/.bundle"
+  mkdir --parents "$HOME_PATH/.bundle"
   ed_make_symlink "$REPO_PATH/ruby/bundle_config" "$HOME_PATH/.bundle/config"
 }
 
