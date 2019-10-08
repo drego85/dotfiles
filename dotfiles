@@ -150,37 +150,6 @@ ed_make_symlink() {
   fi
 }
 
-# It creates a backup of a given file, appeding '.bak' suffix.
-#
-# Parameters:
-#     $1 -> file path to copy;
-#     $2 -> if 'sudo' it creates the backup using root permissions.
-#
-# Example:
-#     $ ed_make_symlink file/path
-#     Backup created: file/path.bak
-ed_make_backup() {
-  local src dst sudo
-
-  [[ "$1" ]] || ed_elog "error: file path is empty"
-
-  src="$1"
-  dst="$1.bak"
-
-  sudo=""
-  [[ "$2" == "sudo" ]] && sudo="$2"
-
-  [[ -e "$dst" ]] && ed_wlog "$dst backup file already exist, overwriting it..."
-
-  [[ "$sudo" ]] && ed_wlog "root required to create symlink backup file '$dst'."
-
-  if $sudo cp --force "$src" "$dst" 2>/dev/null ; then
-    ed_log "created backup file '$dst' from '$src'."
-  else
-    ed_elog "failed to create backup file '$dst' from '$src'."
-  fi
-}
-
 # }}}}
 
 # It is a wrapper to 'curl', to download files to some point. If there is a
@@ -228,7 +197,7 @@ ed_xfconf() {
       ed_wlog "xfconf-query: $value for $channel$property is already set!"
     else
       xfconf-query --channel "$channel" --property "$property" --set "$value"
-  fi 
+  fi
 }
 
 # }}}
@@ -237,7 +206,6 @@ ed_xfconf() {
 
 MODULES["packages"]="install various packages"
 ed_module_packages() {
-  # Install RPM Fusion Free repository.
   local repository
   repository="https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm"
 
@@ -255,7 +223,6 @@ ed_module_packages() {
 
 MODULES["gtk"]="enable Arc-Dark GTK+ theme"
 ed_module_gtk() {
-  # Arc-Dark is already installed on Fedora.
   ed_xfconf "xsettings" "/Net/ThemeName" "Arc-Dark"
 }
 
@@ -302,8 +269,7 @@ ed_module_tlp() {
   dst="/etc/default/tlp"
 
   if [[ "$(readlink -f "$dst")" != "$src" ]] ; then
-    ed_make_backup "$dst" "sudo"
-    ed_make_symlink "$src" "$dst" "sudo"
+    sudo ln --backup --suffix '.bak' --symbolic "$src" "$dst"
   else
     ed_wlog "'$dst' is already a symlink to '$src'."
   fi
