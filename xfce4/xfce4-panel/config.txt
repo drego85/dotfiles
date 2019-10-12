@@ -2,7 +2,7 @@
 /panels [<1>]
 /panels/panel-1/disable-struts false
 /panels/panel-1/length uint32 100
-/panels/panel-1/plugin-ids [<1>, <3>, <15>, <4>, <6>, <5>]
+/panels/panel-1/plugin-ids [<1>, <3>, <15>, <4>, <6>, <2>, <5>]
 /panels/panel-1/position 'p=6;x=0;y=0'
 /panels/panel-1/position-locked true
 /panels/panel-1/size uint32 38
@@ -15,6 +15,8 @@
 /plugins/plugin-15 'separator'
 /plugins/plugin-15/expand true
 /plugins/plugin-15/style uint32 0
+/plugins/plugin-2 'pulseaudio'
+/plugins/plugin-2/enable-keyboard-shortcuts true
 /plugins/plugin-3 'tasklist'
 /plugins/plugin-3/flat-buttons true
 /plugins/plugin-3/include-all-workspaces true
@@ -29,7 +31,7 @@
 /plugins/plugin-5/digital-format '%d %b %H:%M'
 /plugins/plugin-6 'systray'
 /plugins/plugin-6/names-hidden @av []
-/plugins/plugin-6/names-ordered [<'ibus-ui-gtk3'>, <'xfce4-power-manager'>, <'networkmanager applet'>]
+/plugins/plugin-6/names-ordered [<'seapplet'>, <'thunar'>, <'vlc'>, <'task manager'>, <'xfce terminal'>, <'telegram-desktop'>, <'ibus-ui-gtk3'>, <'xfce4-power-manager'>, <'networkmanager applet'>]
 /plugins/plugin-6/show-frame false
 /plugins/plugin-6/size-max uint32 30
 /plugins/plugin-6/square-icons true
