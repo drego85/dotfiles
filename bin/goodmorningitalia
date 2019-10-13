@@ -26,7 +26,7 @@ readonly CURL_OPTS='--silent --show-error --location'
 readonly JETABLE_URL='https://www.jetable.org/en/confirm'
 readonly EMAIL="newsletter-goodmorningitalia@emanuelepetriglia.com"
 readonly ONE_MONTH='2592000'
-readonly DATA="email=$EMAIL&time=$ONE_MONTH"
+DATA="email=$EMAIL&time=$ONE_MONTH"
 
 # shellcheck disable=SC2086
 tmp_email="$(curl $CURL_OPTS "$JETABLE_URL" --data "$DATA" \
