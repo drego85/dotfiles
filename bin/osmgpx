@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 #
-#
 # This script is useful to do a batch upload of GPX tracks to OpenStreetMap,
 # filtering each file by removing GPX points closer to a given coordinate point
 # (for privacy reasons).
@@ -8,28 +7,19 @@
 # This script is tailored with my needs, so do not use it without have read
 # every line of code!
 #
-#
 # I use cURL instead of requests, because I failed to use requests to send a
 # valid request to OpenStreetMap.
 #
 # Only one warning: give your user name instead of you email, otherwise the
 # printed URL, of your uploaded file, will not work!
 #
-# Example usage:
-#   $ cd gpx_tracks
-#   gpx_tracks $ osmgpx -u 'username' -p 'pwd' --latitude '66.6666' \
-#                       --longitude '66.6666' --radius 400 \
-#                       --description 'My description' --tag 'love tag' \
-#                       --visibility public \
-#                       *.gpx
-#
 # Copyright (c) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.com>
 # All right reserved. This file is licensed under the MIT license.
 
-from sys import argv
-from argparse import ArgumentParser, FileType
+import sys
+from typing import List
+from dataclasses import dataclass
 import xml.etree.ElementTree as xml
-from getpass import getpass, GetPassWarning
 from tempfile import NamedTemporaryFile
 from subprocess import run, CalledProcessError
 import math
@@ -148,37 +138,31 @@ def filterGpxFile(gpx, point, radius):
     return out
 
 
-if __name__ == '__main__':
-    def _checkUserPwd(args, parser):
-        '''Checks if it is given the user name and password, otherwise it will
-        ask interactively.
-        '''
-        if not args.user:
-            try:
-                args.user = input('User name: ')
-            except EOFError:
-                parser.error('failed to get user name')
+class Osmgpx():
+    '''Main class that manages the application.'''
 
-        if not args.password:
-            try:
-                args.password = getpass()
-            except EOFError:
-                parser.error('failed to get password')
-            except GetPassWarning:
-                pass
+    def __init__(self, argv):
+        if len(argv) == 1 or \
+                (len(argv) >= 2 and (argv[1] == '--help' or argv[1] == '-h')):
+            self.__command_help()
+            sys.exit()
 
-    def _processGpxFiles(args, parser):
+        self.data = Data(argv[1:])
+
+    def run(self):
         '''Processes and uploads every GPX file.'''
         baseUrl = 'https://api.openstreetmap.org'
         gpxUrl = f'{baseUrl}/api/0.6/gpx/create'
-        linkUrl = f'{baseUrl}/user/{args.user}/traces'
+        linkUrl = f'{baseUrl}/user/{self.data.user}/traces'
 
-        for gpx in args.file:
+        for gpx in self.data.files:
             try:
+                gpx = open(gpx, 'rb')
                 print(f'Processing {gpx.name}...', end='')
                 out = filterGpxFile(gpx,
-                                    GeoPoint(args.latitude, args.longitude),
-                                    args.radius)
+                                    GeoPoint(self.data.latitude,
+                                             self.data.longitude),
+                                    self.data.radius)
                 print(' OK', end='')
                 gpx.close()
 
@@ -188,60 +172,91 @@ if __name__ == '__main__':
                 print(' Uploading GPX...', end='')
                 # I use cURL because I failed to use requests to send a valid
                 # request to OpenStreetMap.
-                tags = ' '.join(args.tag) if args.tag else ""
                 result = run(['curl', gpxUrl,
-                              '--user', f'{args.user}:{args.password}',
+                              '--user', f'{self.data.user}:{self.data.pwd}',
                               '-F', f'file=@{out.name}',
-                              '-F', f'description={args.description}',
-                              '-F', f'tags={tags}',
-                              '-F', f'visibility={args.visibility}'],
+                              '-F', f'description={self.data.description}',
+                              '-F', f'tags={self.data.tag}',
+                              '-F', f'visibility={self.data.visibility}'],
                              check=True,
                              capture_output=True)
 
                 # Direct link to the uploaded GPX file.
                 print(f' OK: {linkUrl}/{result.stdout.decode()}')
             except xml.ParseError as error:
-                parser.error(f'in file {gpx.name}: {error}')
+                sys.exit(f'Error in file {gpx.name}: {error}')
             except FileNotFoundError as error:
-                parser.error(error)
+                sys.exit(error)
             except CalledProcessError as error:
-                parser.error(f'failed to upload {gpx.name}: ' +
-                             error.stderr.decode())
+                sys.exit(f'Failed to upload {gpx.name}: '
+                         + error.stderr.decode())
 
-    description = '''This script is useful to do a batch upload of GPX tracks to
-    OpenStreetMap, filtering each file by removing GPX points closer to a given
-    coordinate point (for privacy reasons).'''
+    def __command_help(self):
+        '''Prints the help message on the standard output.'''
+        help_message = '''Usage: osmgpx [--help|-h] [FILE]...
 
-    epilog = 'This script requires \'curl\' binary to run.'
+This script is useful to do a batch upload of GPX tracks to OpenStreetMap,
+filtering each file by removing GPX points closer to a given coordinate point
+(for privacy reasons).
 
-    parser = ArgumentParser(description=description, epilog=epilog)
+WARNING: This script is tailored to my needs, because it uses 'pass' to get use,
+password and all data required to send the GPX track. If you want to use it, you
+need to modify it.
 
-    parser.add_argument('-u', '--user',
-                        help='your OpenSteetMap username, NOT EMAIL! '
-                             '(if not provided will be asked)')
-    parser.add_argument('-p', '--password',
-                        help='your OpenStreetMap password (if not provided will'
-                             ' be asked)')
-    parser.add_argument('-r', '--radius', default=300, type=int,
-                        help='radius in meters in which remove GPX points '
-                             '(default 300)')
-    parser.add_argument('--latitude', required=True, type=float,
-                        help='latitude of source point')
-    parser.add_argument('--longitude', required=True, type=float,
-                        help='longitude of source point')
-    parser.add_argument('-d', '--description',
-                        help='description for uploaded GPX file (optional)')
-    parser.add_argument('-t', '--tag', nargs='+',
-                        help='tags for uploaded GPX file (optional)')
-    parser.add_argument('-v', '--visibility', choices=['private', 'public',
-                        'trackable', 'identifiable'], default='private',
-                        help='visibility of uploaded GPX file (default '
-                             'private)')
-    parser.add_argument('file', nargs='+', type=FileType('rb'),
-                        help='GPX file to process and upload to OpenStreetMap')
+Options:
+    -h, --help
+        Prints an help message and exit.
 
-    args = parser.parse_args(argv[1:]) # argv[0] is the program name.
+This scripts requires 'pass' (to retrieve secret data), and 'curl'.
+'''
 
-    _checkUserPwd(args, parser)
+        print(help_message, end='')
 
-    _processGpxFiles(args, parser)
+
+@dataclass(init=False)
+class Data:
+    '''This class contains all data required to send GPX track to
+    OpenStreetMap.'''
+
+    user: str # Username (not email).
+    pwd: str
+    radius: int # Radius in meters in which remove GPX points from a point.
+    latitude: float
+    longitude: float
+    description: str
+    tag: str
+    visibility: str # Visibility of uploaded GPX file.
+    files: List[str] # Files to process.
+
+    def __init__(self, files):
+        self.files = files
+
+        try:
+            result = run(['pass', 'other/openstreetmap.org'],
+                         capture_output=True,
+                         check=True)
+
+            output = result.stdout.decode().split('\n')
+
+            self.pwd = output[0]
+            self.user = output[2]
+
+            index = 3
+            while (output[index] != '----'): # Start of secret data.
+                index += 1
+
+            self.latitude = float(output[index + 1])
+            self.longitude = float(output[index + 2])
+            self.radius = int(output[index + 3])
+            self.description = output[index + 4]
+            self.tag = output[index + 5]
+            self.visibility = output[index + 6]
+        except CalledProcessError as error:
+            sys.exit(f'Failed to get secret data: {error.stderr.decode()}')
+        except FileNotFoundError:
+            sys.exit('Failed to find \'pass\' executable')
+
+
+if __name__ == '__main__':
+    app = Osmgpx(sys.argv)
+    app.run()
