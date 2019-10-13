@@ -31,7 +31,7 @@ reserved folder, which contains specific configuration files.
 
 You can directly download this repository and run the `dotfiles` script:
 
-$ git clone git@gitlab.com:ema-pe/dotfiles.git ~/.dotfiles
+    $ git clone git@gitlab.com:ema-pe/dotfiles.git ~/.dotfiles
 
 Or, if you don't have SSH keys installed:
 
@@ -183,13 +183,13 @@ The module also enables `gpg-agent` for SSH support. It is necessary to
 specify the environment variable `SSH_AUTH_SOCK` to point to `gpg-agent`
 socket. This line is already added in my custom `.bashrc` file:
 
-export SSH_AUTH_SOCK="/run/user/$(id -u)/gnupg/S.gpg-agent.ssh"
+    export SSH_AUTH_SOCK="/run/user/$(id -u)/gnupg/S.gpg-agent.ssh"
 
 I use Xfce as desktop environment. There is only one problem: it auto starts
 `ssh-agent`. I don't want it, so I kill it every time Xfce is started. This
 line is already added in my custom `.bash_profile` file:
 
-pkill ssh-agent
+    pkill ssh-agent
 
 This module also installs `pinentry-gtk`, because I don't like the default
 installed that uses ncurses.
@@ -222,11 +222,15 @@ applications are:
 * link:xfce4/xfce4-panel/config.txt[*xfce4-panel*]: my panel configuration;
 * link:xfce4/xfce4-terminal/[*xfce4-terminal*]: my terminal configuration.
 
+'''
+
 === thunar
 
 This module installs, via `xfconf-query`, my Thunar configuration. Note that if
 you change the configuration via Thunar GUI, the new configuration will not be
 synched to dotfiles. You need to manually update the configuration!
+
+'''
 
 === xfwm4
 
@@ -242,6 +246,8 @@ I don't know Ruby, but I use https://jekyllrb.com/[Jekyll] to build my
 https://www.emanuelepetriglia.com/[personal website], and it is written in Ruby.
 So my dotfiles consists a configuration for my development environment, it is
 not trivial with Fedora.
+
+'''
 
 === firefox
 
