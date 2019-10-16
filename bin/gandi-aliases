@@ -44,7 +44,8 @@ class GandiAliases():
         if len(argv) >= 2:
             command = argv[1]
 
-            if command == 'help':
+            # '--help' is for only backward support.
+            if command == 'help' or command == '--help':
                 self.__command_to_run = self.__command_help
             elif command == 'list':
                 self.__command_to_run = self.__command_list
