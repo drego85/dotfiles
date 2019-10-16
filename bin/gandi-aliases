@@ -21,6 +21,7 @@ import subprocess
 import sys
 import requests
 import json
+import re
 
 
 class GandiAliases():
@@ -60,6 +61,13 @@ class GandiAliases():
 
     def run(self):
         '''Run the script.'''
+        try:
+            for alias in self.__aliases_list:
+                if not self.__is_valid(alias):
+                    sys.exit(f'ERROR: \'{alias}\' is not a valid alias!')
+        except AttributeError: # The command wasn't 'add' or 'remove'!
+            pass
+
         # Prepare URL and API key to contact Gandi.net API.
         if self.__command_to_run != self.__command_help:
             api_key = self.__get_secret_data('shop/gandi.net')[4]
@@ -171,6 +179,15 @@ secret data), and 'requests' module, but is preinstalled on Fedora.
             sys.exit('ERROR: Failed to run \'pass\', it is installed?')
         except subprocess.CalledProcessError:
             sys.exit(f'ERROR: Failed to get secret data: pass: {result.stderr}')
+
+    @staticmethod
+    def __is_valid(alias):
+        '''Returns True if the given alias is valid, False otherwhise.'''
+        # This regex matches only the alias name, it does not match the entire
+        # email (for example 'myalias@emanuelepetriglia.com').
+        result = re.fullmatch(r'^[a-zA-Z0-9_.+-]+$', alias)
+
+        return True if result is not None else False
 
 
 if __name__ == '__main__':
