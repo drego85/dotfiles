@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
+#
 # My personal configuration of Bash. It contains my settings and some useful
 # scripts that I use ofter.
 #
-# Copyright (c) Emanuele Petriglia <inbox@emanuelepetriglia.com> 2018
-# This file is lincensed under the MIT license.
-#
 # This file is called every time a shell is started. It is also called by
 # '.bash_profile' only once.
+#
+# Copyright (c) Emanuele Petriglia <inbox@emanuelepetriglia.com> 2018-2019
+# This file is lincensed under the MIT license.
 
 # Bash settings {{{
 

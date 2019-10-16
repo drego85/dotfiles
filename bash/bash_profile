@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 #
-# Copyright (c) Emanuele Petriglia <inbox@emanuelepetriglia.com> 2018
-# This file is lincensed under the MIT license.
-#
 # This file is called only one time, when the environment is started.
+#
+# Copyright (c) Emanuele Petriglia <inbox@emanuelepetriglia.com> 2018-2019
+# This file is lincensed under the MIT license.
 
 # Get the aliases and functions
 if [ -f ~/.bashrc ]; then
