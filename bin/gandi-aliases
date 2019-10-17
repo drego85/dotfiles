@@ -171,7 +171,8 @@ secret data), and 'requests' module, but is preinstalled on Fedora.
         except requests.HTTPError as error:
             sys.exit(f'ERROR: Failed to send mailbox info: {error}')
 
-    def __get_secret_data(self, key):
+    @staticmethod
+    def __get_secret_data(key):
         ''' Retrieve a secret data file using 'pass'.'''
         try:
             result = subprocess.run(['pass', key],
