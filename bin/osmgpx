@@ -152,8 +152,9 @@ class Osmgpx():
     def run(self):
         '''Processes and uploads every GPX file.'''
         baseUrl = 'https://api.openstreetmap.org'
+        wwwUrl = 'https://www.openstreetmap.org'
         gpxUrl = f'{baseUrl}/api/0.6/gpx/create'
-        linkUrl = f'{baseUrl}/user/{self.data.user}/traces'
+        linkUrl = f'{wwwUrl}/user/{self.data.user}/traces'
 
         for gpx in self.data.files:
             try:
