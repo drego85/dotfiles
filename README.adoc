@@ -64,7 +64,12 @@ cusotm scripts.
 
 === bin
 
-This module links all custom scripts to `~/.local/bin`. These scripts are:
+This module install all scripts in link:bin[`bin`] directory to `~/.local/bin`.
+These scripts are written in various programming languages (Python, Bash) and
+they can require special software or libraries to run. Always read the entire
+script before use!
+
+Available scripts:
 
 * link:bin/backup[*backup*]: this script syncs some data from my laptop to my
 external HDD.
@@ -86,20 +91,9 @@ destinarion directory, copying all files except for FLAC files, that are
 converted to OGG using `ffmpeg`. The reason of this script is that my mobile
 phone has a limited space.
 * link:bin/osmgpx[*osmgpx*]: this script filters and uploads a list of GPX
-files. For each file it removes every close point of given point (for privacy
-reasons). It uses `cURL` to upload the GPX file to
-https://www.openstreetmap.org/[OpenStreetMap], because I failed to send a valid
-`POST` request with `requests`.
+files.
 * link:bin/ho[*ho*]: this script prints several information about an Ho Mobile
 (an italian low cost MVNO) account to the standard output.
-
-These script can be installed manually, each requires some software specified
-on the first lines.
-
-NOTE: Scripts are written in various languages (e.g. Python), not only in Bash!
-
-WARNING: Make sure that `~/.local/bin` has ben added to `PATH` if you run this
-module!
 
 '''
 
