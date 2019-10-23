@@ -149,9 +149,12 @@ class Osmgpx():
         self.data = Data(argv[1:])
         self.baseUrl = 'https://api.openstreetmap.org/api/0.6'
         self.wwwUrl = 'https://www.openstreetmap.org'
+        self.auth_data = requests.auth.HTTPBasicAuth(self.data.user,
+                                                     self.data.pwd)
 
     def run(self):
         self.data.user = self.__check_user()
+        self.data.files = self.__filter_duplicate_tracks()
         self.__process_tracks()
 
     def __check_user(self):
@@ -162,10 +165,9 @@ class Osmgpx():
         and it is necessary the user name.
         '''
         url = self.baseUrl + '/user/details'
-        auth_data = requests.auth.HTTPBasicAuth(self.data.user, self.data.pwd)
 
         try:
-            response = requests.get(url, auth=auth_data)
+            response = requests.get(url, auth=self.auth_data)
             response.raise_for_status()
 
             user = xml.fromstring(response.text)
@@ -173,6 +175,40 @@ class Osmgpx():
             return user.find('user').attrib['display_name']
         except (ConnectionError, requests.HTTPError) as error:
             sys.exit(f'Failed to get user details: {error}')
+
+    def __filter_duplicate_tracks(self):
+        '''Returns a filtered list of GPX tracks to upload to OSM.'''
+        # Note: I check file names to know if two tracks are the same.
+        url = self.baseUrl + '/user/gpx_files'
+        uploaded_tracks = set()
+
+        try:
+            response = requests.get(url, auth=self.auth_data)
+            response.raise_for_status()
+
+            tracks = xml.fromstring(response.text)
+
+            for gpx_file in tracks.findall('gpx_file'):
+                name = gpx_file.attrib['name']
+
+                # Remove random characters inside filename. Example:
+                # Before: 2016_03_28_08_05_Mon.gpxd33npkr8.gpx
+                # After:  2016_03_28_08_05_Mon.gpx
+                uploaded_tracks.add(name[:20] + name[32:])
+        except (ConnectionError, requests.HTTPError) as error:
+            sys.exit(f'Failed to get user\'s GPX tracks: {error}')
+
+        filtered_tracks = []
+
+        for filename in self.data.files:
+            # OSM converts all '-' to '_'.
+            if filename.replace('-', '_') in uploaded_tracks:
+                print(f'WARNING: \'{filename}\' has already uploaded!',
+                      file=sys.stderr)
+            else:
+                filtered_tracks.append(filename)
+
+        return filtered_tracks
 
     def __process_tracks(self):
         '''Processes and uploads every GPX file.'''
