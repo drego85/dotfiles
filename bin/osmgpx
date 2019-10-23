@@ -176,7 +176,7 @@ class Osmgpx():
 
     def __process_tracks(self):
         '''Processes and uploads every GPX file.'''
-        gpxUrl = f'{self.baseUrl}/create'
+        gpxUrl = f'{self.baseUrl}/gpx/create'
         linkUrl = f'{self.wwwUrl}/user/{self.data.user}/traces'
 
         for gpx in self.data.files:
@@ -243,7 +243,7 @@ class Data:
     '''This class contains all data required to send GPX track to
     OpenStreetMap.'''
 
-    user: str # Username (not email).
+    user: str # Username (or email).
     pwd: str
     radius: int # Radius in meters in which remove GPX points from a point.
     latitude: float
@@ -264,7 +264,7 @@ class Data:
             output = result.stdout.decode().split('\n')
 
             self.pwd = output[0]
-            self.user = output[2]
+            self.user = output[1]
 
             index = 3
             while (output[index] != '----'): # Start of secret data.
