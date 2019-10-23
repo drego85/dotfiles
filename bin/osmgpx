@@ -7,11 +7,8 @@
 # This script is tailored with my needs, so do not use it without have read
 # every line of code!
 #
-# I use cURL instead of requests, because I failed to use requests to send a
-# valid request to OpenStreetMap.
-#
-# Only one warning: give your user name instead of you email, otherwise the
-# printed URL, of your uploaded file, will not work!
+# I use cURL instead of requests to upload a GPX track, because I failed to use
+# the latter. Anyway I use requests for other tasks.
 #
 # Copyright (c) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.com>
 # All right reserved. This file is licensed under the MIT license.
@@ -23,6 +20,8 @@ import xml.etree.ElementTree as xml
 from tempfile import NamedTemporaryFile
 from subprocess import run, CalledProcessError
 import math
+
+import requests
 
 
 class GeoPoint():
@@ -148,13 +147,37 @@ class Osmgpx():
             sys.exit()
 
         self.data = Data(argv[1:])
+        self.baseUrl = 'https://api.openstreetmap.org/api/0.6'
+        self.wwwUrl = 'https://www.openstreetmap.org'
 
     def run(self):
+        self.data.user = self.__check_user()
+        self.__process_tracks()
+
+    def __check_user(self):
+        '''Returns user's display name.
+
+        This method is necessary because user may give email instead of user
+        name, but this script prints an HTTP link for each uploaded GPX file,
+        and it is necessary the user name.
+        '''
+        url = self.baseUrl + '/user/details'
+        auth_data = requests.auth.HTTPBasicAuth(self.data.user, self.data.pwd)
+
+        try:
+            response = requests.get(url, auth=auth_data)
+            response.raise_for_status()
+
+            user = xml.fromstring(response.text)
+            # It is always the first user.
+            return user.find('user').attrib['display_name']
+        except (ConnectionError, requests.HTTPError) as error:
+            sys.exit(f'Failed to get user details: {error}')
+
+    def __process_tracks(self):
         '''Processes and uploads every GPX file.'''
-        baseUrl = 'https://api.openstreetmap.org'
-        wwwUrl = 'https://www.openstreetmap.org'
-        gpxUrl = f'{baseUrl}/api/0.6/gpx/create'
-        linkUrl = f'{wwwUrl}/user/{self.data.user}/traces'
+        gpxUrl = f'{self.baseUrl}/create'
+        linkUrl = f'{self.wwwUrl}/user/{self.data.user}/traces'
 
         for gpx in self.data.files:
             try:
@@ -208,7 +231,8 @@ Options:
     -h, --help
         Prints an help message and exit.
 
-This scripts requires 'pass' (to retrieve secret data), and 'curl'.
+This scripts requires 'pass' (to retrieve secret data), 'curl' and Python module
+'requests'.
 '''
 
         print(help_message, end='')
