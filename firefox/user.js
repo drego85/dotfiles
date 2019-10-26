@@ -1,7 +1,7 @@
 /**
  * My custom preferences for Mozilla Firefox.
  *
- * For Firefox 66.
+ * Last revision for Firefox 70.
  *
  * WARNING: this file must be appended after ghacks-user.js file, because I use
  * these settings, but I also overwrite some of these.
@@ -21,47 +21,34 @@ user_pref("browser.startup.homepage", "https://start.duckduckgo.com/");
 
 
 /**
- * 0200: GEOLOCALIZATION
+ * 0200: LANGUAGE
  */
 
-/** 0201: disable geolocalization. **/
-user_pref("geo.enabled", false);
-
-/** 0202: disable geolocalization for search results. **/
-user_pref("browser.search.countryCode", "UK");
-user_pref("browser.search.region", "UK");
-
-/** 0205: set OS & APP locale. **/
-user_pref("intl.locale.requested", "en-UK");
-
-/** 0207: set language to match. **/
+/** 0207: set preferred languages for displaying web pages. **/
 user_pref("intl.accept_languages", "it-IT, it, en-UK, en");
 
 
 /**
- * 0300: AUTO UPDATING
+ * 0500: SYSTEM ADD-ONS / EXPERIMENTS
  */
 
-/** 0301b: enable auto-update checks for Firefox. **/
-user_pref("app.update.enabled", true);
-
-/* 0301b: enable auto-update checks for extensions. **/
-user_pref("extensions.update.enabled", true);
-
-/* 0302b: enable auto update installing for extensions. **/
-user_pref("extensions.update.autoUpdateDefault", true);
+/** 0515: disable uploading screenshots to the Screenshots server. **/
+user_pref("extensions.screenshots.upload-disabled", true);
 
 
 /**
  * 0700: HTTP* / TCP/IP / DNS / PROXY / SOCKS etc
  */
 
+/** 0701: enable IPv6. **/
+user_pref("network.dns.disableIPv6", false);
+
 /** 0707: disable DoH. **/
 user_pref("network.trr.mode", 5);
 
 
 /**
- * 0800: LOCATION BAR / SEARCH BAR / SUGGESTIONS / HISTORY / FORMS [SETUP]
+ * 0800: LOCATION BAR / SEARCH BAR / SUGGESTIONS / HISTORY / FORMS
  */
 
 /* 0801: enable location bar using search. **/
@@ -87,7 +74,7 @@ user_pref("signon.rememberSignons", false);
 
 
 /**
- * 1000: CACHE [SETUP]
+ * 1000: CACHE
  */
 
 /** 1003: RAM cache capacity. **/
@@ -103,9 +90,7 @@ user_pref("browser.sessionstore.max_windows_undo", 3);
  * 1400: FONTS
  */
 
-/** 1401: enable websites choosing fonts.
- * Note: I use uBlock Origin to block by default all fonts.
- */
+/** 1401: enable websites choosing fonts. */
 user_pref("browser.display.use_document_fonts", 1);
 
 
