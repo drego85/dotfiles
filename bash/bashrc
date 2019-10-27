@@ -34,6 +34,27 @@ export EDITOR=vim
 
 # Small scripts {{{
 
+# Generates a new journal entry and runs 'vim -c Writing'. Default date is
+# current, but you can specify a different one (like '2019-10-27')
+jour() {
+  local file custom_date
+
+  custom_date="$1"
+  if [[ ! "$custom_date" ]]; then
+    custom_date="$(date +%F)"
+  fi
+
+  file="$custom_date.md"
+  if [[ -f "$file" ]]; then
+    echo "File '$file' already exists!" >&2
+  else
+    echo "$custom_date" > "$file"
+    echo "==========" >> "$file"
+
+    vim -c Writing $file
+  fi
+}
+
 # Prints the closest IPv4 and IPv6 DNS resolvers in the OpenNIC network.
 opennic() {
   echo "Closest IPv4 (IP, name and reliability):"
