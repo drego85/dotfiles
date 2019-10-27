@@ -39,19 +39,15 @@ export EDITOR=vim
 jour() {
   local file custom_date
 
-  custom_date="$1"
-  if [[ ! "$custom_date" ]]; then
-    custom_date="$(date +%F)"
-  fi
-
+  custom_date="${1:-$(date +%F)}"
   file="$custom_date.md"
   if [[ -f "$file" ]]; then
     echo "File '$file' already exists!" >&2
   else
     echo "$custom_date" > "$file"
-    echo "==========" >> "$file"
+    echo "${custom_date//?/=}" >> "$file" # replace each char with '='
 
-    vim -c Writing $file
+    vim -c Writing "$file"
   fi
 }
 
