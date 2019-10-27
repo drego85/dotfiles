@@ -87,6 +87,14 @@ user_pref("browser.sessionstore.max_windows_undo", 3);
 
 
 /**
+ * 1200: HTTPS (SSL/TLS / OCSP / CERTS / HPKP / CIPHERS)
+ */
+
+/** 1212: set OCSP fetch failures to soft-fail. **/
+user_pref("security.OCSP.require", false);
+
+
+/**
  * 1400: FONTS
  */
 
