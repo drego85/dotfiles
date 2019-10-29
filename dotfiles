@@ -14,6 +14,8 @@
 
 # Global variables {{{
 
+set -e
+
 # Useful to display a prefix on logging messages.
 CURRENT_MODULE=""
 
@@ -101,6 +103,37 @@ ed_elog() {
   [[ "$3" ]] && "$3" # Run a command before exiting, if exists.
 
   exit "${2:-$EXIT_FAILURE}" # If $2 is unset or empty, set to default.
+}
+
+# }}}}
+
+# DNF / RPM {{{{
+
+# It installs the given packages via DNF.
+#
+# Parameters:
+#     $1 ... $n -> a list of packages to install.
+#
+# Example:
+#     ed_install "pass" "thunderbird" "vlc" "youtube-dl" "telegram-desktop"
+ed_install() {
+  if (( $# < 1 )); then
+    ed_elog "No given package to install."
+  fi
+
+  # Remove installed packages from the list.
+  declare -A packages
+  for package in "$@" ; do
+    if ! rpm --quiet --query "$package"; then
+      packages["$package"]=""
+    fi
+  done
+
+  # Install only missing packages (some packages may not exist).
+  if (( ${#packages[@]} != 0 )); then
+    ed_wlog "root requested to install these packages: ${!packages[*]}"
+    sudo dnf install "${!packages[@]}"
+  fi
 }
 
 # }}}}
@@ -217,8 +250,7 @@ ed_module_packages() {
     sudo dnf install "$repository"
   fi
 
-  ed_wlog "root requested to install packages!"
-  sudo dnf install "pass" "thunderbird" "vlc" "youtube-dl" "telegram-desktop"
+  ed_install "pass" "thunderbird" "vlc" "youtube-dl" "telegram-desktop"
 }
 
 MODULES["gtk"]="enable Arc-Dark GTK+ theme"
@@ -228,7 +260,7 @@ ed_module_gtk() {
 
 MODULES["icon"]="install 'papirus-icon-theme' package and enable it"
 ed_module_icon() {
-  sudo dnf install "papirus-icon-theme"
+  ed_install "papirus-icon-theme"
 
   ed_xfconf "xsettings" "/Net/IconThemeName" "Papirus-Dark"
 }
@@ -248,7 +280,7 @@ MODULES["git"]="install 'git' and link the configuration"
 ed_module_git() {
   local dest_path="$HOME_PATH"
 
-  sudo dnf install "git"
+  ed_install "git"
 
   mkdir --parents "$dest_path"
 
@@ -262,7 +294,7 @@ MODULES["tlp"]="install 'tlp', link the configuration and enable it"
 ed_module_tlp() {
   local src dst
 
-  sudo dnf install "tlp"
+  ed_install "tlp"
 
   # Create symlink (with backup).
   src="$REPO_PATH/tlp/tlp"
@@ -309,7 +341,7 @@ ed_module_clean() {
 MODULES["gpg"]="install GnuPG configuration and enable it via systemd --user"
 ed_module_gpg() {
   # 1. Install my favourite pinentry.
-  sudo dnf install "pinentry-gtk"
+  ed_install "pinentry-gtk"
 
   # 2. Create symlinks for configuration.
   for file in "$REPO_PATH"/gnupg/* ; do
@@ -458,11 +490,11 @@ ed_module_ruby() {
   ed_log "Installing C development tools and libraries (for native rubygems)"
   sudo dnf group install "C Development Tools and Libraries"
 
-  sudo dnf install "ruby"
-  sudo dnf install "ruby-devel"
+  ed_install "ruby"
+  ed_install "ruby-devel"
 
   # Necessary to build native gems.
-  sudo dnf install "redhat-rpm-config"
+  ed_install "ruby-devel"
 
   # Install bundler
   ed_log "Install bundler via rubygem"
@@ -476,7 +508,7 @@ ed_module_ruby() {
 
 MODULES["firefox"]="install firefox and custom user.js to 'emanuele' profile"
 ed_module_firefox() {
-  sudo dnf install "firefox"
+  ed_install "firefox"
 
   local firefox_path="$HOME_PATH/.mozilla/firefox"
 
