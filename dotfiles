@@ -484,28 +484,6 @@ ed_module_font() {
   fc-cache --verbose --force "$dest_path"
 }
 
-MODULES["ruby"]="install ruby (with bundler) and default config"
-ed_module_ruby() {
-  # FIXME
-  ed_log "Installing C development tools and libraries (for native rubygems)"
-  sudo dnf group install "C Development Tools and Libraries"
-
-  ed_install "ruby"
-  ed_install "ruby-devel"
-
-  # Necessary to build native gems.
-  ed_install "ruby-devel"
-
-  # Install bundler
-  ed_log "Install bundler via rubygem"
-  gem install --user-install --bindir /home/emanuele/bin bundler
-
-  # Install 
-  ed_log "Install bundler configuration"
-  mkdir --parents "$HOME_PATH/.bundle"
-  ed_make_symlink "$REPO_PATH/ruby/bundle_config" "$HOME_PATH/.bundle/config"
-}
-
 MODULES["firefox"]="install firefox and custom user.js to 'emanuele' profile"
 ed_module_firefox() {
   ed_install "firefox"
