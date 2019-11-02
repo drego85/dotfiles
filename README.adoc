@@ -228,9 +228,33 @@ synched to dotfiles. You need to manually update the configuration!
 
 === xfwm4
 
-This module installs my custom theme for Xfwm4. The theme has small borders and
-it is really minimal. You can found more information on its
-https://gitlab.com/ema-pe/backup-thinble-xfwm4-theme[repository].
+I use Thinble Xfwm theme. In my repository under link:xfwm4[xfwm4] diretory you
+can find the theme, but the original project is hosted on
+link:https://paldepind.deviantart.com/art/Thinble-362276066[DevianArt]. The
+following text is copied from DevianArt.
+
+Thinble is a Xfwm theme with no title bar and a thin border. It was created to
+be a good looking, simple and space efficient window theme for people who mainly
+manage their windows using key bindings.
+
+==== Features
+
+* Minimal and space efficient appearance;
+* No large title bar that is otherwise mostly just wasting space;
+* Border of a reasonable size for moving/resizing windows using the mouse;
+* Slightly darker border on active windows for distinguishing between them an
+  inactive windows;
+* Uses colors from your GTK-theme.
+
+==== Installation
+
+Copy link:xfwm4/thinble[`xfwm4/thinble`] directory to `~/.themes` for local
+installation or to `/usr/share/themes` for system-wide installation. Or better
+use my installer script!
+
+IMPORTANT: Make the title font very large, otherwise you might still be able to
+see the top of it in what is left of the title bar which does not look nice at
+all.
 
 '''
 

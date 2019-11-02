@@ -437,8 +437,6 @@ MODULES["xfwm4"]="install xfwm4 theme"
 ed_module_xfwm4() {
   local dest_path
 
-  git -C "$REPO_PATH" submodule update --init "xfwm4/thinble"
-
   dest_path="$HOME_PATH/.local/share/themes"
   mkdir --parents "$dest_path"
 
