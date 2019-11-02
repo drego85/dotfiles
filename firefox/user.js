@@ -43,9 +43,6 @@ user_pref("extensions.screenshots.upload-disabled", true);
 /** 0701: enable IPv6. **/
 user_pref("network.dns.disableIPv6", false);
 
-/** 0707: disable DoH. **/
-user_pref("network.trr.mode", 5);
-
 
 /**
  * 0800: LOCATION BAR / SEARCH BAR / SUGGESTIONS / HISTORY / FORMS
@@ -199,5 +196,7 @@ user_pref("browser.chrome.toolbar_tips", false);
 /** Increase mouse scroll speed. **/
 user_pref("mousewheel.default.delta_multiplier_y", 200);
 
+/** Disable DoH. **/
+user_pref("network.trr.mode", 5);
 
 user_pref("_user.js.parrot", "user settings loaded");
