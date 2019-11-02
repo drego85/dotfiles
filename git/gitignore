@@ -9,3 +9,6 @@
 
 # Ignore VIM netwhist config file.
 vim/.netrwhist
+
+# Ignore Python cache.
+__pycache__
