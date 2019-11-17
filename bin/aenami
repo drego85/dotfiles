@@ -47,14 +47,6 @@ class AlenaAenamiDownloader():
         images.'''
         sub = self.__extract_latest_submission()
 
-        print(f'Latest Alena Aenami\'s artwork is \'{sub.title}\' published ' +
-              f'on {sub.pubDate.isoformat()}')
-
-        for url in sub.images_url:
-            print(f'    - {url}')
-
-        print()
-
         self.__process_submission(sub)
 
     def __extract_latest_submission(self) -> Submission:
@@ -92,9 +84,8 @@ class AlenaAenamiDownloader():
             dest_file = Path(args.directory, url.split('/')[-1])
 
             if not self.force and dest_file.exists():
-                print(f'Skipping image {url} because {dest_file} exists...')
+                pass
             else:
-                print(f'Downloading image {url} in {dest_file}...')
                 self.__download_image(url, dest_file)
 
     def __download_image(self, url: str, dest_file: Path) -> None:
