@@ -21,27 +21,28 @@ import subprocess
 import sys
 import requests
 import json
+from typing import List, Callable, Set, Dict
 
 
 class GandiAliases():
     '''This class wraps the entire script.'''
 
-    def __init__(self, argv):
+    def __init__(self, argv: List[str]):
         '''Create a new GandiAliases object.
 
         Arguments:
             argv: a list of system command line arguments.
         '''
-        self.__aliases_list = []
-        self.__command_to_run = self.__command_help
-        self.__alias_list_required = {
+        self.__aliases_list: List[str] = []
+        self.__command_to_run: Callable[[], None] = self.__command_help
+        self.__alias_list_required: Set[Callable[[], None]] = {
                 self.__command_add,
                 self.__command_remove
                 }
 
         # Parse arguments.
         if len(argv) >= 2:
-            command = argv[1]
+            command: str = argv[1]
 
             # '--help' is for only backward support.
             if command == 'help' or command == '--help':
@@ -66,14 +67,15 @@ class GandiAliases():
         '''Run the script.'''
         if self.__command_to_run != self.__command_help:
             # Prepare URL and API key to contact Gandi.net API.
-            api_key = self.__get_secret_data('shop/gandi.net')[4]
-            email_id = \
+            api_key: str = self.__get_secret_data('shop/gandi.net')[4]
+            email_id: str = \
                 self.__get_secret_data('email/inbox@emanuelepetriglia.com')[3]
-            base_url = 'https://api.gandi.net/v5/email/mailboxes'
+            base_url: str = 'https://api.gandi.net/v5/email/mailboxes'
 
             # Default URL and headers.
-            self.__headers = {'Authorization': f'Apikey {api_key}'}
-            self.__url = f'{base_url}/emanuelepetriglia.com/{email_id}'
+            self.__headers: Dict[str, str] = {'Authorization':
+                                              f'Apikey {api_key}'}
+            self.__url: str = f'{base_url}/emanuelepetriglia.com/{email_id}'
 
         self.__command_to_run()
 
@@ -136,7 +138,7 @@ secret data), and 'requests' module, but is preinstalled on Fedora.
 
         self.__send_aliases_list(current_aliases)
 
-    def __get_aliases_list(self):
+    def __get_aliases_list(self) -> List[str]:
         '''Returns the aliases list.'''
         try:
             result = requests.get(self.__url, headers=self.__headers)
@@ -149,7 +151,7 @@ secret data), and 'requests' module, but is preinstalled on Fedora.
         except requests.HTTPError as error:
             sys.exit(f'ERROR: Failed to get mailbox info: {error}')
 
-    def __send_aliases_list(self, aliases_list):
+    def __send_aliases_list(self, aliases_list: List[str]):
         '''Send the aliases list 'aliases_list'.'''
         self.__headers['Content-Type'] = 'application/json'
 
@@ -172,8 +174,8 @@ secret data), and 'requests' module, but is preinstalled on Fedora.
             sys.exit(f'ERROR: Failed to send mailbox info: {error}')
 
     @staticmethod
-    def __get_secret_data(key):
-        ''' Retrieve a secret data file using 'pass'.'''
+    def __get_secret_data(key: str) -> str:
+        '''Retrieve a secret data file using 'pass'.'''
         try:
             result = subprocess.run(['pass', key],
                                     capture_output=True,
@@ -188,6 +190,6 @@ secret data), and 'requests' module, but is preinstalled on Fedora.
 
 
 if __name__ == '__main__':
-    app = GandiAliases(sys.argv)
+    app: GandiAliases = GandiAliases(sys.argv)
 
     app.run()
