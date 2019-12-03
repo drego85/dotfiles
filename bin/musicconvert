@@ -11,7 +11,8 @@
 #       destination: the destination directory;
 #       -s, --source src: source directory (default is current working
 #                         directory);
-#       -j, --jobs n: number of parallel FMPEG processes to convert FLAC files.
+#       -j, --jobs n: number of parallel FMPEG processes to convert FLAC files;
+#       -d, --dry-run: print the effects but do not touch files.
 #
 # Usage example:
 #   $ musicconvert --source ~/music /path/to/device/music --jobs 10
@@ -21,6 +22,7 @@
 # TODO:
 #   - Add counters? (converted files, copied files, ignored...)
 #   - Improve design?
+#   - Add optional typing?
 #
 # Copyright (c) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.com>
 # All right reserved. This file is licensed under the MIT license.
@@ -42,7 +44,7 @@ class MusicConvert():
     To start the sync, call 'start' method.
     '''
 
-    def __init__(self, src, dst, jobs=1):
+    def __init__(self, src, dst, jobs=1, dry=False):
         '''Create a MusicConvert object and check the given arguments.
 
         'src' is the source directory, 'dst' is the destination directory and
@@ -54,6 +56,9 @@ class MusicConvert():
         If 'src' doesn't exist, FileNotFoundError is raised.
 
         If 'src' or 'dst' are not directories, NotADirectoryError is raised.
+
+        If 'dry' is True, print the effects of this script, but do not touch any
+        file.
         '''
         self.src = os.path.abspath(src)
         self.dst = os.path.abspath(dst)
@@ -78,6 +83,7 @@ class MusicConvert():
             raise ValueError('jobs must be a positive value!')
 
         self.jobs = jobs
+        self.dry = dry
 
         # Each key is a ffmpeg process, the value is a path of original FLAC.
         self.__tasks = {}
@@ -133,7 +139,8 @@ class MusicConvert():
                     if os.path.isdir(src_path):
                         self.__filterOutdatedFiles(src_path, file.path)
                     else:
-                        rmtree(file.path, ignore_errors=True)
+                        if not self.dry:
+                            rmtree(file.path, ignore_errors=True)
                         print(f'Deleted untracked directory {file.path}')
                 else:
                     print(f'File {file.path} is ignored!')
@@ -141,7 +148,8 @@ class MusicConvert():
         # listdir is faster than scandir if you don't want file attributes.
         # If 'dst' is empty but 'src' exists, do not delete it.
         if len(os.listdir(dst)) == 0 and not os.path.isdir(src):
-            os.rmdir(dst)
+            if not self.dry:
+                os.rmdir(dst)
             print(f'Deleted empty directory {dst}')
 
     def __syncFiles(self, src, dst):
@@ -149,7 +157,8 @@ class MusicConvert():
         'dst' are copied/converted.
         '''
         try: # Better than 'os.makedirs' because I can check what happens.
-            os.mkdir(dst)
+            if not self.dry:
+                os.mkdir(dst)
             print(f'Created directory {dst}')
         except FileExistsError:
             pass
@@ -185,13 +194,17 @@ class MusicConvert():
             # -loglevel error - Show only errors.
             # -vn - Disable video recording;
             # -aq 5 - Set audio quality.
-            args = {'args': ['ffmpeg', '-hide_banner', '-loglevel',
-                             'error', '-i', src, '-vn', '-aq', '5', dst],
-                    'capture_output': True}
+            if self.dry:
+                args = {'args': ['echo'], 'capture_output': True}
+            else:
+                args = {'args': ['ffmpeg', '-hide_banner', '-loglevel',
+                                 'error', '-i', src, '-vn', '-aq', '5', dst],
+                        'capture_output': True}
             self.__tasks[self.__pool.submit(run, **args)] = src
         else:
             try:
-                copy(src, dst)
+                if not self.dry:
+                    copy(src, dst)
                 print(f'Copied {src}')
             except OSError as error:
                 raise RuntimeError(f'cannot copy {src} to {dst}: {error}')
@@ -202,7 +215,8 @@ class MusicConvert():
         '''
         def tryRemoveFile():
             if os.stat(src).st_mtime > os.stat(dst).st_mtime:
-                os.remove(dst)
+                if not self.dry:
+                    os.remove(dst)
                 print(f'Deleted old file {dst}')
 
         if os.path.isfile(src):
@@ -215,7 +229,8 @@ class MusicConvert():
             if os.path.isfile(src):
                 tryRemoveFile()
         else:
-            os.remove(dst)
+            if not self.dry:
+                os.remove(dst)
             print(f'Deleted untracked file {dst}')
 
 
@@ -237,11 +252,13 @@ if __name__ == '__main__':
                              'number of CPUs)',
                         metavar='n')
     parser.add_argument('destination', help='Destination directory')
+    parser.add_argument('-d', '--dry-run', action='store_true', dest='dry',
+                        help='Print only the effects, do not sync')
 
     args = parser.parse_args(argv[1:]) # argv[0] is the program name.
 
     try:
-        app = MusicConvert(args.source, args.destination, args.jobs)
+        app = MusicConvert(args.source, args.destination, args.jobs, args.dry)
 
         app.start()
     except (FileNotFoundError, ValueError, NotADirectoryError,
