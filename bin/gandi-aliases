@@ -21,7 +21,7 @@ import subprocess
 import sys
 import requests
 import json
-from typing import List, Callable, Set, Dict
+from typing import List
 
 
 class GandiAliases():
@@ -34,8 +34,8 @@ class GandiAliases():
             argv: a list of system command line arguments.
         '''
         self.__aliases_list: List[str] = []
-        self.__command_to_run: Callable[[], None] = self.__command_help
-        self.__alias_list_required: Set[Callable[[], None]] = {
+        self.__command_to_run = self.__command_help
+        self.__alias_list_required = {
                 self.__command_add,
                 self.__command_remove
                 }
@@ -63,23 +63,22 @@ class GandiAliases():
                and len(self.__aliases_list) == 0:
                 sys.exit("ERROR: You must give at leat one alias!")
 
-    def run(self):
+    def run(self) -> None:
         '''Run the script.'''
         if self.__command_to_run != self.__command_help:
             # Prepare URL and API key to contact Gandi.net API.
-            api_key: str = self.__get_secret_data('shop/gandi.net')[4]
-            email_id: str = \
+            api_key = self.__get_secret_data('shop/gandi.net')[4]
+            email_id = \
                 self.__get_secret_data('email/inbox@emanuelepetriglia.com')[3]
-            base_url: str = 'https://api.gandi.net/v5/email/mailboxes'
+            base_url = 'https://api.gandi.net/v5/email/mailboxes'
 
             # Default URL and headers.
-            self.__headers: Dict[str, str] = {'Authorization':
-                                              f'Apikey {api_key}'}
-            self.__url: str = f'{base_url}/emanuelepetriglia.com/{email_id}'
+            self.__headers = {'Authorization': f'Apikey {api_key}'}
+            self.__url = f'{base_url}/emanuelepetriglia.com/{email_id}'
 
         self.__command_to_run()
 
-    def __command_help(self):
+    def __command_help(self) -> None:
         '''Prints the help message on the standard output.'''
         help_message = '''Usage: gandi-aliases {help | list | add | remove} ...
 
@@ -109,12 +108,12 @@ secret data), and 'requests' module, but is preinstalled on Fedora.
 
         print(help_message, end='')
 
-    def __command_list(self):
+    def __command_list(self) -> None:
         '''Prints an aliases list on the standard output.'''
         for alias in self.__get_aliases_list():
             print(alias)
 
-    def __command_add(self):
+    def __command_add(self) -> None:
         '''Add the new aliases.'''
         current_aliases = self.__get_aliases_list()
 
@@ -126,7 +125,7 @@ secret data), and 'requests' module, but is preinstalled on Fedora.
 
         self.__send_aliases_list(current_aliases)
 
-    def __command_remove(self):
+    def __command_remove(self) -> None:
         '''Remove some aliases.'''
         current_aliases = self.__get_aliases_list()
 
@@ -145,13 +144,13 @@ secret data), and 'requests' module, but is preinstalled on Fedora.
 
             result.raise_for_status()
 
-            return result.json()['aliases']
+            return list(result.json()['aliases'])
         except requests.ConnectionError:
             sys.exit('ERROR: Failed to connect to \'https://api.gandi.net\'')
         except requests.HTTPError as error:
             sys.exit(f'ERROR: Failed to get mailbox info: {error}')
 
-    def __send_aliases_list(self, aliases_list: List[str]):
+    def __send_aliases_list(self, aliases_list: List[str]) -> None:
         '''Send the aliases list 'aliases_list'.'''
         self.__headers['Content-Type'] = 'application/json'
 
@@ -174,7 +173,7 @@ secret data), and 'requests' module, but is preinstalled on Fedora.
             sys.exit(f'ERROR: Failed to send mailbox info: {error}')
 
     @staticmethod
-    def __get_secret_data(key: str) -> str:
+    def __get_secret_data(key: str) -> List[str]:
         '''Retrieve a secret data file using 'pass'.'''
         try:
             result = subprocess.run(['pass', key],
@@ -182,7 +181,7 @@ secret data), and 'requests' module, but is preinstalled on Fedora.
                                     check=True)
 
             # It's a text file with '\n' line endings.
-            return result.stdout.decode().split('\n')
+            return list(result.stdout.decode().split('\n'))
         except FileNotFoundError:
             sys.exit('ERROR: Failed to run \'pass\', it is installed?')
         except subprocess.CalledProcessError:
