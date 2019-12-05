@@ -18,7 +18,7 @@ shellcheck_opts = --color=always --exclude=SC1091
 flake8_opts = --max-line-length=80 --extend-ignore=E261
 
 # Enable a more stricter typing cheking and disable cache file.
-mypy_opts = --strict --no-incremental
+mypy_opts = --strict --no-incremental --cache-dir=/dev/null
 
 # Get only the files that are written in Bash.
 bash_scripts = $(shell grep -rl -e "^\#!/usr/bin/env bash")
