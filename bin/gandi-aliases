@@ -147,7 +147,7 @@ secret data), and 'requests' module, but is preinstalled on Fedora.
 
             return result.json()['aliases']
         except requests.ConnectionError:
-            sys.exit('ERROR: Failed to connect to \'https://api.ganti.net\'')
+            sys.exit('ERROR: Failed to connect to \'https://api.gandi.net\'')
         except requests.HTTPError as error:
             sys.exit(f'ERROR: Failed to get mailbox info: {error}')
 
@@ -169,7 +169,7 @@ secret data), and 'requests' module, but is preinstalled on Fedora.
                 sys.exit(1)
 
         except requests.ConnectionError:
-            sys.exit('ERROR: Failed to connect to \'https://api.ganti.net\'')
+            sys.exit('ERROR: Failed to connect to \'https://api.gandi.net\'')
         except requests.HTTPError as error:
             sys.exit(f'ERROR: Failed to send mailbox info: {error}')
 
