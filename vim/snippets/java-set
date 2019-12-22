@@ -1,8 +1,0 @@
-/*
- * Sets X
- *
- * @param X to set
- */
-public void set(TYPE X) {
-    this.X = X;
-}
