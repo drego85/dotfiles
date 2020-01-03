@@ -422,9 +422,6 @@ ed_module_thunar() {
   ed_wlog "note that if you change Thunar config from GUI, the new configuration
   is not updated on dotfiles. You need to update manually!"
 
-  # Big icons with filename's title below it.
-  ed_xfconf "$channel" "/default-view" "ThunarIconView"
-
   # Show hidden files (starting with a dot).
   ed_xfconf "$channel" "/last-show-hidden" "true"
 
