@@ -415,6 +415,11 @@ ed_module_xfce4() {
   xfce4-panel-profiles load "$tar_conf"
 
   rm --force "$tar_conf"
+
+  # Font and size settings.
+  ed_xfconf "xsettings" "/Gtk/Fontname" "Sans 11"
+  ed_xfconf "xsettings" "/Gtk/MonospaceFontname" "Hack 11"
+  ed_xfconf "xsettings" "/Xft/DPI" "100"
 }
 
 MODULES["thunar"]="install Thunar configuration"
