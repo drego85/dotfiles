@@ -269,13 +269,13 @@ easy to customize it.
 Unfortunately Firefox needs to be customized from GUI instead on CLI, so there
 is not a real installer script. The steps to take are:
 
-. From an active Firefox session, create a new profile with name
-`default-release` (default profile that comes with Fedora). You can access to
-the page via `about:profiles`.
-. Switch to the new profile and delete the old one (if you want).
+. Open a new terminal window and run this command: `firefox --ProfileManager`.
+. Create a new user with this name: `default-release`.
 . Login to Firefox Sync (or download all extensions you want).
 . Customize Firefox GUI.
 . To set custom `user.js`, run my installer script.
+
+IMPORTANT: You need to create the default profile before run `dotfiles` script!
 
 ==== Extensions
 
