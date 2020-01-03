@@ -445,6 +445,11 @@ ed_module_xfwm4() {
   mkdir --parents "$dest_path"
 
   ed_make_symlink "$REPO_PATH/xfwm4/thinble" "$dest_path/thinble"
+
+  ed_xfconf "xfwm4" "/general/theme" "thinble"
+
+  # Make title font very large, so it is not displayed on the upper bar.
+  ed_xfconf "xfwm4" "/general/title_font" "Sans Bold 100"
 }
 
 MODULES["bash"]="link Bash configuration"
