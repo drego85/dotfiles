@@ -332,7 +332,7 @@ MODULES["clean"]="remove various packages that I don't use"
 ed_module_clean() {
   sudo dnf remove "gnome-keyring" "seahorse" "xfdashboard" "claws-mail" \
                   "xscreensaver-base" "xfburn" "geany" "pidgin" "asunder" \
-                  "pragha" "parole" "dnfdragora" "abiword" "gnumeric" \
+                  "pragha" "parole" "dnfdragora" "gnumeric" \
                   "xfce4-dict" "orage" "xfce4-clipman-plugin" \
                   "firewall-config" "cups" "catfish"
 
