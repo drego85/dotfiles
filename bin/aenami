@@ -17,7 +17,7 @@ import xml.etree.ElementTree as xml
 import re
 from typing import Tuple, List
 from datetime import datetime, date
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 from argparse import ArgumentParser, Namespace
 
@@ -27,9 +27,9 @@ import requests
 @dataclass
 class Submission():
     '''It represents an artwork submission.'''
-    title: str = None
-    pubDate: date = None
-    images_url: List[str] = field(default_factory=list)
+    title: str
+    pubDate: date
+    images_url: List[str]
 
 
 class AlenaAenamiDownloader():
@@ -52,7 +52,7 @@ class AlenaAenamiDownloader():
     def __extract_latest_submission(self) -> Submission:
         '''Returns a Submission instance of the latest Alena Aenami artwork from
         ArtStation.'''
-        # Use feed RSS because other methods require more work.
+        # I use feed RSS because other methods require more work.
         url = 'https://www.artstation.com/aenamiart.rss'
 
         response = requests.get(url)
@@ -65,17 +65,15 @@ class AlenaAenamiDownloader():
 
         item = xml.fromstring(response.text).find('channel').find('item')
 
-        sub = Submission()
-        sub.title = item.find('title').text
-        sub.pubDate = datetime.strptime(item.find('pubDate')
-                                            .text, '%a, %d %b %Y %X %z') \
-                              .date()
+        title = item.find('title').text
+        pubDate = datetime.strptime(item.find('pubDate')
+                                        .text, '%a, %d %b %Y %X %z').date()
         images = item.find('content:encoded', namespace).text
 
-        for raw in re.findall('src=[^?]*', images):
-            sub.images_url.append(raw[5:])  # Remove 'src="'.
+        # raw[5:] removes initial string 'src="'.
+        images_url = [raw[5:] for raw in re.findall('src=[^?]*', images)]
 
-        return sub
+        return Submission(title, pubDate, images_url)
 
     def __process_submission(self, sub: Submission) -> None:
         '''Process 'sub' and download, if necessary, all images.'''
