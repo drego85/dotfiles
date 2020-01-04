@@ -445,7 +445,6 @@ ed_module_xfce4() {
   ed_xfconf "$channel" "$prefix/<Super>h" "keyboard-shortcuts-help"
   ed_xfconf "$channel" "$prefix/<Super>q" "firefox-tmp"
   ed_xfconf "$channel" "$prefix/<Super>w" "firefox"
-  ed_xfconf "$channel" "$prefix/<Shift><Super>w" "firefox --private-window"
   ed_xfconf "$channel" "$prefix/<Super>m" "thunderbird"
 }
 
