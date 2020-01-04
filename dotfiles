@@ -395,6 +395,11 @@ ed_module_vim() {
   git -C "$REPO_PATH" submodule update --init "$plugins_path/vim-pencil"
 }
 
+MODULES["python"]="install Python extra stuff"
+ed_module_python() {
+  ed_install "python3-docs"
+}
+
 MODULES["xfce4"]="link configuration of various Xfce apps"
 ed_module_xfce4() {
   local dest_path src_path
