@@ -42,7 +42,7 @@ class AlenaAenamiDownloader():
         self.directory = directory
         self.force = force
 
-    def run(self):
+    def run(self) -> None:
         '''Extracts the latest Alena Aenami's artwork and downloads the
         images.'''
         sub = self.__extract_latest_submission()
@@ -118,8 +118,10 @@ def _checkArgs(default_dir=str) -> Tuple[ArgumentParser, Namespace]:
     # Check if directory exists.
     args.directory = Path(args.directory)
 
-    if not args.directory.is_dir():
-        parser.error(f'''directory {args.directory} does not exist.''')
+    try:
+        args.directory.mkdir(exist_ok=True)
+    except FileExistsError:
+        parser.error(f'''{args.directory} is not a directory.''')
 
     return parser, args
 
