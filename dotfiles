@@ -620,12 +620,18 @@ ed_cmd_install() {
   done
 
   nr_modules="$#"
-  ed_log "Installing $nr_modules modules..."
+  if (( nr_modules > 1 )); then
+    ed_log "Installing $nr_modules modules..."
+  fi
 
   while [[ "$1" ]]; do
     # Note that '$#' change every iteration, because of 'shift'. It is a counter
     # like this: (4/7) Installing module foo...
-    ed_log "($((nr_modules - $# + 1))/$nr_modules) Installing module $1..."
+    if (( nr_modules > 1 )); then
+      ed_log "($((nr_modules - $# + 1))/$nr_modules) Installing module $1..."
+    else
+      ed_log "Installing module $1..."
+    fi
 
     # The module name is also the suffix of the function.
     CURRENT_MODULE="$1" ed_module_"$1"
