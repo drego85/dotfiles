@@ -397,7 +397,7 @@ ed_module_vim() {
 
 MODULES["python"]="install Python extra stuff"
 ed_module_python() {
-  ed_install "python3-docs"
+  ed_install "python3-docs" "python3-mypy" "python3-flake8"
 }
 
 MODULES["xfce4"]="link configuration of various Xfce apps"
