@@ -422,7 +422,7 @@ ed_module_xfce4() {
   # Font and size settings.
   ed_xfconf "xsettings" "/Gtk/Fontname" "Sans 12"
   ed_xfconf "xsettings" "/Gtk/MonospaceFontname" "Hack 12"
-  ed_xfconf "xsettings" "/Xft/DPI" "105" "int"
+  ed_xfconf "xsettings" "/Xft/DPI" "100" "int"
 
   local channel prefix
   channel="xfce4-keyboard-shortcuts"
@@ -442,7 +442,6 @@ ed_module_xfce4() {
   ed_xfconf "$channel" "$prefix/<Super>s" "telegram-desktop"
   ed_xfconf "$channel" "$prefix/<Super>f" "thunar"
   ed_xfconf "$channel" "$prefix/<Super>x" "mousepad"
-  ed_xfconf "$channel" "$prefix/<Super>h" "keyboard-shortcuts-help"
   ed_xfconf "$channel" "$prefix/<Super>q" "firefox-tmp"
   ed_xfconf "$channel" "$prefix/<Super>w" "firefox"
   ed_xfconf "$channel" "$prefix/<Super>m" "thunderbird"
@@ -476,6 +475,8 @@ ed_module_xfwm4() {
 
   # Make title font very large, so it is not displayed on the upper bar.
   ed_xfconf "xfwm4" "/general/title_font" "Sans Bold 100"
+
+  # TODO: add Xfwm keyboard shortcuts.
 }
 
 MODULES["bash"]="link Bash configuration"
