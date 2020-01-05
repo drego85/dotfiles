@@ -81,8 +81,6 @@ email hosted on https://www.gandi.net/en[Gandi.net].
 subscribe a 30-days free trial on
 https://app.goodmorningitalia.it/[*goodmorningitalia.it*], an Italian
 newsletter.
-* link:bin/keyboard-shortcuts-help[*keyboard-shortcuts-help*]: this script shows
-a window with all my keyboard shortcuts.
 * link:bin/sapienza-wifi[*sapienza-wifi*]: this script automatically logins to
 the Sapienza's Wi-Fi network, without open a browser.
 * link:bin/screen-off[*screen-off*]: this simple script turns off the screen.
