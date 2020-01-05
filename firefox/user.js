@@ -1,10 +1,8 @@
 /**
- * My custom preferences for Mozilla Firefox.
+ * My custom preferences for Mozilla Firefox. This is for Firefox 70.
  *
- * Last revision for Firefox 70.
- *
- * WARNING: this file must be appended after ghacks-user.js file, because I use
- * these settings, but I also overwrite some of these.
+ * These settings must be appended after ghacks-user.js file. You can found it
+ * on GitHub: https://github.com/ghacksuserjs/ghacks-user.js
  */
 
 user_pref("_user.js.parrot", "syntax error @ BEGIN USER CUSTOMIZATIONS");
@@ -13,7 +11,7 @@ user_pref("_user.js.parrot", "syntax error @ BEGIN USER CUSTOMIZATIONS");
  * 0100: STARTUP
  */
 
-/** 0102: set start page to a custom URL. **/
+/** 0102: set start page to homepage. **/
 user_pref("browser.startup.page", 1);
 
 /** 0103: custom URL for start page. **/
@@ -21,8 +19,11 @@ user_pref("browser.startup.homepage", "https://start.duckduckgo.com/");
 
 
 /**
- * 0200: LANGUAGE
+ * 0200: GEOLOCATION / LANGUAGE / LOCALE
  */
+
+/** 0205: fix search region to IT (on ghack's it is set to US). **/
+user_pref("browser.search.region", "IT");
 
 /** 0207: set preferred languages for displaying web pages. **/
 user_pref("intl.accept_languages", "it-IT, it, en-UK, en");
@@ -175,9 +176,12 @@ user_pref("general.warnOnAboutConfig", false);
 /** Disable autocopy default. **/
 user_pref("clipboard.autocopy", false);
 
+/** Disable Pocket extension. **/
+user_pref("extensions.pocket.enabled", false);
+
 
 /**
- * Not documented by ghacks-userjs
+ * Not documented by ghacks-userjs.
  */
 
 /** Set DuckDuckGo as default search engine. **/
