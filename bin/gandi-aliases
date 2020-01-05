@@ -185,7 +185,8 @@ secret data), and 'requests' module, but is preinstalled on Fedora.
         except FileNotFoundError:
             sys.exit('ERROR: Failed to run \'pass\', it is installed?')
         except subprocess.CalledProcessError:
-            sys.exit(f'ERROR: Failed to get secret data: pass: {result.stderr}')
+            sys.exit('ERROR: Failed to get secret data: pass: ' +
+                     str(result.stderr))
 
 
 if __name__ == '__main__':
