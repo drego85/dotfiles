@@ -668,7 +668,7 @@ case "$COMMAND" in
   *) shift;                 ed_cmd_help "$@" ;;
 esac
 
-exit 0
+exit $EXIT_SUCCESS
 
 # }}}
 
