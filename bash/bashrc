@@ -162,9 +162,6 @@ alias writing="vim -c Writing"
 
 alias ..="cd .."
 
-# Alias for my dotfiles script manager.
-alias dot="dotfiles"
-
 # Download a website page ('-k': fix local links, '-p' download resources).
 alias web-archive="wget -p -k"
 
