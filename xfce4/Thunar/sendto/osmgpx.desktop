@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=OpenStreetMap
+Comment=Upload a GPX file to OpenStreetMap
+Type=Application
+Encoding=UTF-8
+Version=1.1
+Exec=osmgpx %F
+Icon=/usr/share/icons/Papirus-Dark/symbolic/actions/mark-location-symbolic.svg
+MimeType=application/gpx+xml;
