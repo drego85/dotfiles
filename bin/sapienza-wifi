@@ -115,11 +115,19 @@ cmd_login() {
   rm "$html_result"
 
   if [[ $(cmd_check_network) != "connected" ]]; then
-    notify-send --icon=network-error "Sapienza's Wifi" "Failed to login"
-    error "Failed to login"
+    if [[ -n "$(command -v notify-send)" ]]; then
+      notify-send --icon=network-error "Sapienza's Wifi" "Failed to login"
+      exit 1
+    else
+      error "Failed to login"
+    fi
   fi
 
-  notify-send --icon=network-wireless "Sapienza's WiFi" "Logged"
+  if [[ -n "$(command -v notify-send)" ]]; then
+    notify-send --icon=network-wireless "Sapienza's WiFi" "Logged"
+  else
+    echo "Succesfully logged on Sapienza's WiFi!"
+  fi
 }
 
 #
