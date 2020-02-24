@@ -85,7 +85,9 @@ cmd_check_network() {
 # It also save in a temporary file the logout ID, it will be used to logout.
 cmd_login() {
   # HTTPS otherwise curl will fail, gawk extracts the full redirect URL.
-  local login_url="$(curl 'http://uniroma1.it' --head --silent \
+  local login_url
+
+  login_url="$(curl 'http://uniroma1.it' --head --silent \
     | gawk '/Location/ { print substr($2, 1, index($2, "&") - 1) }')"
 
   # Extract zone data.
