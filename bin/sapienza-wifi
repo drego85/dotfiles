@@ -3,27 +3,24 @@
 # This script logins automatically to the Sapienza's WiFi network, without open
 # a broswer and insert manually the username and password.
 #
-# This script requires these programs:
-#   - wget: to do the connection (POST);
-#   - mktemp: to store temporary file during the login;
-#   - notify-sent: to send notification about the login/logout operation.
+# This script requires these programs to run:
+#   - curl: to send HTTP/HTTPS requests;
+#   - notify-send (optional): to send desktop notification on login operation.
 #   - pass (optional): to retrieve the password.
 #
-# I use `pass` to manage and store password, but you can insert your password
-# with the global variable `PASSWORD`.
+# I use `pass` to manage and store username and password, but you can insert
+# your data with the global variables "USERNAME" and "PASSWORD". You can set
+# them as a environment variables or here in the script.
 #
-# TODO:
-#   - Add error handling.
-#
-# Copyright (c) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.com>
+# Copyright (c) 2019-2020 Emanuele Petriglia <inbox@emanuelepetriglia.com>
 # All right reserved. This file is licensed under the MIT license.
 
 # Location of the password in the password store database.
 PASSWORD_LOCATION="university/uniroma1.it"
 
-# Login details.
-USERNAME="1798177"
-#PASSWORD="" # The password is retrieved only when login command is given.
+# Login details. I use "pass", so they're commented.
+#USERNAME=""
+#PASSWORD=""
 
 # Path and name of the file with logout ID, used to logout.
 LOGOUT_ID_FILE="/tmp/sapienza-wifi-logout-id"
@@ -95,13 +92,22 @@ cmd_login() {
   # Extract zone data.
   local zone="${login_url##*=}"
 
+  # Fallback using "pass" to retrive my data.
+  if [[ -z "$USERNAME" && -n "$(command -v pass)" ]]; then
+    USERNAME="$(pass $PASSWORD_LOCATION | sed -e 2p -e d)"
+  fi
+
+  if [[ -z "$PASSWORD" && -n "$(command -v pass)" ]]; then
+    PASSWORD="$(pass $PASSWORD_LOCATION | sed -e 1p -e d)"
+  fi
+
   # Temporary file to store HTML result of the request.
   local html_result
   html_result="$(mktemp)"
 
   curl --silent --output "$html_result" \
-       --data "auth_user=$USERNAME" \
-       --data "auth_pass=$(pass $PASSWORD_LOCATION | head -n 1)" \
+       --data "auth_user=${USERNAME:?Username is missing!}" \
+       --data "auth_pass=${PASSWORD:?Password is missing!}" \
        --data "zone=$zone" \
        --data "rediurl=https://www.uniroma1.it/it/" \
        --data "accept=Accetto+-+Accept" \
