@@ -81,8 +81,8 @@ email hosted on https://www.gandi.net/en[Gandi.net].
 subscribe a 30-days free trial on
 https://app.goodmorningitalia.it/[*goodmorningitalia.it*], an Italian
 newsletter.
-* link:bin/sapienza-wifi[*sapienza-wifi*]: this script automatically logins to
-the Sapienza's Wi-Fi network, without open a browser.
+* link:bin/sapienza-wifi[*sapienza-wifi*]: it is a shortcut to login on
+Sapienza's WiFi network, without opening a browser.
 * link:bin/screen-off[*screen-off*]: this simple script turns off the screen.
 * link:bin/musicconvert[*musicconvert*]: this script syncs my music library to a
 destinarion directory, copying all files except for FLAC files, that are
