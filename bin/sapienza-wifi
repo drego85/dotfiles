@@ -88,29 +88,24 @@ cmd_check_network() {
 # It logins to the Sapienza's Wifi network, using the username and the password.
 # It also save in a temporary file the logout ID, it will be used to logout.
 cmd_login() {
-  local login_url="https://wifi-cont1.uniroma1.it:8003/index.php?zone=wifi_sapienza"
+  # HTTPS otherwise curl will fail, gawk extracts the full redirect URL.
+  local login_url="$(curl 'http://uniroma1.it' --head --silent \
+    | gawk '/Location/ { print substr($2, 1, index($2, "&") - 1) }')"
 
-  # POST parameters.
-  local auth_user="auth_user=$USERNAME"
-  local auth_pass
-  auth_pass="auth_pass=$(pass $PASSWORD_LOCATION | head -n 1)"
-  local zone="zone=wifi_sapienza"
-  local redirurl="redirurl=wifi_sapienza"
-  local accept="accept=Accetto+-+Accept"
-
-  local data="$auth_user&$auth_pass&$zone&$redirurl&$accept"
+  # Extract zone data.
+  local zone="${login_url##*=}"
 
   # Temporary file to store HTML result of the request.
   local html_result
   html_result="$(mktemp)"
 
-  wget --output-document="$html_result" --quiet --post-data "$data" "$login_url"
-
-  # Extract the logout ID from the HTML response.
-  # It filters the 17th line (the one with login ID), then extracts all words
-  # and the last is the ID.
-  cat < "$html_result" | sed -n 17p | grep -oE '[[:alnum:]]+' | \
-                                                     tail -n 1 > $LOGOUT_ID_FILE
+  curl --silent --output "$html_result" \
+       --data "auth_user=$USERNAME" \
+       --data "auth_pass=$(pass $PASSWORD_LOCATION | head -n 1)" \
+       --data "zone=$zone" \
+       --data "rediurl=https://www.uniroma1.it/it/" \
+       --data "accept=Accetto+-+Accept" \
+       "$login_url"
 
   rm "$html_result"
 
