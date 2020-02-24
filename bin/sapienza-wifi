@@ -8,22 +8,19 @@
 #   - notify-send (optional): to send desktop notification on login operation.
 #   - pass (optional): to retrieve the password.
 #
-# I use `pass` to manage and store username and password, but you can insert
+# I use 'pass' to manage and store username and password, but you can insert
 # your data with the global variables "USERNAME" and "PASSWORD". You can set
 # them as a environment variables or here in the script.
 #
 # Copyright (c) 2019-2020 Emanuele Petriglia <inbox@emanuelepetriglia.com>
 # All right reserved. This file is licensed under the MIT license.
 
-# Location of the password in the password store database.
+# Location of password and username for Sapienza using 'pass'.
 PASSWORD_LOCATION="university/uniroma1.it"
 
 # Login details. I use "pass", so they're commented.
 #USERNAME=""
 #PASSWORD=""
-
-# Path and name of the file with logout ID, used to logout.
-LOGOUT_ID_FILE="/tmp/sapienza-wifi-logout-id"
 
 #
 # BEGIN helper functions
@@ -53,17 +50,19 @@ Usage:
 
 Available commands:
     login
-        It connects to Sapienza's Wifi network, using the username and password
-        coded in the script (the password is retrieved with 'pass').
+        It connects to Sapienza's WiFi network, using the username and password
+        retrived from 'pass' or variables (see below).
 
     check
         It prints "connected" or "disconnected" if there is an Internet
         connection. By default is tries to connect to Sapienza's Web home page.
 
-This script uses 'wget', 'mktemp', 'notify-send' and 'pass', they must be
-installed on the system.
+This scripts uses 'curl' to send HTTP/HTTPS requests. 'notify-send' is optional,
+'pass' is optional only if you provide the username and password in a different
+way.
 
-For more informations read the header of this script.
+To set custom username and password, without using 'pass', read the header of
+this script.
 _EOF
 }
 
