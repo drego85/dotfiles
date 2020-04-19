@@ -1,5 +1,5 @@
 /**
- * My custom preferences for Mozilla Firefox. This is for Firefox 70.
+ * My custom preferences for Mozilla Firefox. This is for Firefox 75
  *
  * These settings must be appended after ghacks-user.js file. You can found it
  * on GitHub: https://github.com/ghacksuserjs/ghacks-user.js
@@ -179,6 +179,7 @@ user_pref("clipboard.autocopy", false);
 /** Disable Pocket extension. **/
 user_pref("extensions.pocket.enabled", false);
 
+user_pref("browser.messaging-system.whatsNewPanel.enabled", false);
 
 /**
  * Not documented by ghacks-userjs.
@@ -202,5 +203,9 @@ user_pref("mousewheel.default.delta_multiplier_y", 200);
 
 /** Disable DoH. **/
 user_pref("network.trr.mode", 5);
+
+/** Enable dark theme for devtools. */
+user_pres("devtools.theme", "dark");
+
 
 user_pref("_user.js.parrot", "user settings loaded");
