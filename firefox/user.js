@@ -152,7 +152,6 @@ user_pref("privacy.clearOnShutdown.cache", false);
 user_pref("privacy.clearOnShutdown.cookies", false);
 user_pref("privacy.clearOnShutdown.sessions", false);
 user_pref("privacy.clearOnShutdown.offlineApps", false);
-user_pref("privacy.clearOnShutdown.sessions", false);
 
 
 /**
