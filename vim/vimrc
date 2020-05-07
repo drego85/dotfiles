@@ -144,6 +144,9 @@ augroup SpecificIndentations
 
     " For sh (bash) use only 2 spaces.
     autocmd Filetype sh setlocal ts=2 sw=2
+
+    " For HTML files, I prefere to keep long lines.
+    autocmd Filetype html setlocal textwidth=0
 augroup END
 
 " }}}
