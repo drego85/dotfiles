@@ -71,6 +71,8 @@ script before use!
 
 Available scripts:
 
+* link:bin/aenami[*aenami*]: a small Python script that downloads the lastest
+Alena Aenami's artwork from ArtStation.
 * link:bin/backup[*backup*]: this script syncs some data from my laptop to my
 external HDD.
 * link:bin/firefox-tmp[*firefox-tmp*]: this script launches a temporary Mozilla
@@ -81,17 +83,19 @@ email hosted on https://www.gandi.net/en[Gandi.net].
 subscribe a 30-days free trial on
 https://app.goodmorningitalia.it/[*goodmorningitalia.it*], an Italian
 newsletter.
-* link:bin/sapienza-wifi[*sapienza-wifi*]: it is a shortcut to login on
-Sapienza's WiFi network, without opening a browser.
-* link:bin/screen-off[*screen-off*]: this simple script turns off the screen.
+* link:bin/ho[*ho*]: this script prints several information about an Ho Mobile
+(an italian low cost MVNO) account to the standard output.
+* link:bin/md-to-adoc[*md-to-adoc*]: a small GAWK script that converts Markdown
+files to Asciidoctor. It converts only a small subset of Markdown functions.
 * link:bin/musicconvert[*musicconvert*]: this script syncs my music library to a
 destinarion directory, copying all files except for FLAC files, that are
 converted to OGG using `ffmpeg`. The reason of this script is that my mobile
 phone has a limited space.
 * link:bin/osmgpx[*osmgpx*]: this script filters and uploads a list of GPX
 files.
-* link:bin/ho[*ho*]: this script prints several information about an Ho Mobile
-(an italian low cost MVNO) account to the standard output.
+* link:bin/sapienza-wifi[*sapienza-wifi*]: it is a shortcut to login on
+Sapienza's WiFi network, without opening a browser.
+* link:bin/screen-off[*screen-off*]: this simple script turns off the screen.
 
 '''
 
