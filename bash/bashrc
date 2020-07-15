@@ -108,12 +108,10 @@ haste() {
   fi
 }
 
-# Prints to the standard output a list of dreams in a fixed format. The list is
-# filename ordered. The format is: "FILENAME - FIRST LINE OF THE DREAM". Usually
-# the first line of the dream is the title.
+# It prints a sorted list of dreams with filename and dream's title.
 list-dreams() {
-  for dream in *.md; do
-    printf "%s\t- %s\n" "${dream##*/}" "$(head -n 1 "$dream")"
+  for dream in *.adoc; do
+    printf "%-17s - %s\n" "${dream##*/}" "$(head -n 1 "$dream" | sed 's/= //')"
   done
 }
 
