@@ -16,6 +16,8 @@
 # Copyright (C) 2020 Emanuele Petriglia <inbox@emanuelepetriglia.com>
 # All right reserved. This file is licensed under the MIT License.
 
+@load "filefuncs"
+
 BEGIN {
     if (ARGC == 1) {
         print "Error: no files given!"
@@ -24,22 +26,46 @@ BEGIN {
 }
 
 BEGINFILE {
-    if ((filename_err = sub(/\.md$/, ".adoc", FILENAME)) == 0) {
+    DESTFILE = FILENAME
+    if ((filename_err = sub(/\.md$/, ".adoc", DESTFILE)) == 0) {
         print "Error: " FILENAME " is not a Markdown text file! Skipping..."
+        nextfile
+    }
+
+    # Do not overwrite existing converted file.
+    if (retval = stat(DESTFILE, destdata) == 0) {
+        print "Error: " FILENAME " has already been converted to " DESTFILE
         nextfile
     }
 }
 
 # Use Asciidoctor's header instead of Markdowns's with a bottom bar.
 FNR == 1 {
-    print "= " $0 > FILENAME
+    # Assume that a title cannot be longer than 100 characters
+    if (length($0) > 100) {
+        print "Error: " FILENAME " has not a title!"
+        nextfile
+    }
+
+    print "= " $0 > DESTFILE
 
     next
 }
 
 # Replace the bottom bar with custom Asciidoctor attributes.
 FNR == 2 {
-    print ":hardbreaks:" > FILENAME
+    # If there is not the title indicator (e.g. "======") in Markdown, there is
+    # not the tile!
+    if (index($0, "=") == 0) {
+        print "Error: " FILENAME " has not the title indicator!"
+
+        # Remove the new file because it is not well formatted.
+        system("rm " DESTFILE)
+
+        nextfile
+    }
+
+    print ":hardbreaks:" > DESTFILE
 
     next
 }
@@ -48,10 +74,10 @@ FNR == 2 {
 {
     sub(/\s\s$/, "", $0)
 
-    print $0 > FILENAME
+    print $0 > DESTFILE
 }
 
 ENDFILE {
     if (filename_err != 0)
-        close(FILENAME)
+        close(DESTFILE)
 }
