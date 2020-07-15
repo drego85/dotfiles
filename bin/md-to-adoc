@@ -16,6 +16,13 @@
 # Copyright (C) 2020 Emanuele Petriglia <inbox@emanuelepetriglia.com>
 # All right reserved. This file is licensed under the MIT License.
 
+BEGIN {
+    if (ARGC == 1) {
+        print "Error: no files given!"
+        exit 1
+    }
+}
+
 BEGINFILE {
     if ((filename_err = sub(/\.md$/, ".adoc", FILENAME)) == 0) {
         print "Error: " FILENAME " is not a Markdown text file! Skipping..."
