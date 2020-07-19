@@ -110,6 +110,9 @@ haste() {
 
 # It prints a sorted list of dreams with filename and dream's title.
 list-dreams() {
+  # If there are not "*.adoc" documents, do not run the for.
+  shopt -s failglob
+
   for dream in *.adoc; do
     printf "%-17s - %s\n" "${dream##*/}" "$(head -n 1 "$dream" | sed 's/= //')"
   done
