@@ -1,5 +1,5 @@
 [General]
-LoadColor=#985a20
+LoadColor=#985a21
 Name=Emanuele
 
 [Background]
@@ -37,5 +37,5 @@ TabWidth=40
 
 [Text]
 Color=#000000
-Font="FreeSerif,17,-1,5,50,0,0,0,0,0"
+Font="FreeSerif,18,-1,5,50,0,0,0,0,0"
 Misspelled=#ff0000
