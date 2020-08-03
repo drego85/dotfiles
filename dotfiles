@@ -256,6 +256,25 @@ ed_module_packages() {
   ed_install "pass" "thunderbird" "vlc" "youtube-dl" "telegram-desktop"
 }
 
+MODULES["focuswriter"]="install and configure FocusWriter"
+ed_module_focuswriter() {
+  ed_install "focuswriter"
+
+  local dst_theme_path dst_conf_path src_path
+
+  dst_theme_path="$HOME_PATH/.local/share/GottCode/FocusWriter"
+  dst_conf_path="$HOME_PATH/.config/GottCode"
+  src_path="$REPO_PATH/focuswriter"
+
+  # Theme.
+  ed_make_symlink "$src_path/emanuele.theme" \
+                  "$dst_theme_path/Themes/emanuele.theme"
+
+  # Settings.
+  ed_make_symlink "$src_path/focuswriter.conf" \
+                  "$dst_conf_path/FocusWriter.conf"
+}
+
 MODULES["gtk"]="enable Arc-Dark GTK+ theme"
 ed_module_gtk() {
   ed_xfconf "xsettings" "/Net/ThemeName" "Arc-Dark"

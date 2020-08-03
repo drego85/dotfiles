@@ -125,6 +125,19 @@ you need to run `vim -c Writing`.
 
 '''
 
+=== focuswriter
+
+link:https://gottcode.org/focuswriter[FocusWriter] is a simple, distraction free
+text editor. I use it to write short stories and novels, with a custom theme and
+configuration.
+
+This modules will install `focuswriter`, and copy my configuration and custom
+theme.
+
+WARNING: My custom theme and configuration have my username hard-coded!
+
+'''
+
 === tlp
 
 TLP is a useful package to manage power and extends battery life. It works well
