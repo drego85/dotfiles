@@ -422,8 +422,8 @@ ed_module_python() {
   ed_install "python3-docs" "python3-mypy" "python3-flake8"
 }
 
-MODULES["xfce4"]="link configuration of various Xfce apps"
-ed_module_xfce4() {
+MODULES["xfce4-terminal"]="link configuration of xfce4-terminal"
+ed_module_xfce4-terminal() {
   local dest_path src_path
 
   dest_path="$HOME_PATH/.config/xfce4/terminal"
@@ -431,7 +431,10 @@ ed_module_xfce4() {
 
   ed_make_symlink "$src_path/terminalrc" "$dest_path"
   ed_make_symlink "$src_path/colorschemes" "$dest_path"
+}
 
+MODULES["xfce4"]="link configuration of various Xfce apps"
+ed_module_xfce4() {
   # I use 'xfce4-panel-profiles' to make backup and restore my 'xfce4-panel'
   # configuration. This program accepts only a tar file that contains the
   # configuration.
