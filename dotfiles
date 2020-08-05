@@ -260,6 +260,9 @@ MODULES["focuswriter"]="install and configure FocusWriter"
 ed_module_focuswriter() {
   ed_install "focuswriter"
 
+  # Fonts.
+  ed_install "gnu-free-serif-fonts"
+
   local dst_theme_path dst_conf_path src_path
 
   dst_theme_path="$HOME_PATH/.local/share/GottCode/FocusWriter"
