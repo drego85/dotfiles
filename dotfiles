@@ -33,7 +33,7 @@ readonly COMMAND="$1"
 
 # Target of this script.
 readonly TARGET_DISTRIBUTION="Fedora"
-readonly TARGET_VERSION=31
+readonly TARGET_VERSION=32
 
 # Associative array of available modules (module name -> module description).
 declare -A MODULES
