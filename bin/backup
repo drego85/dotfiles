@@ -39,7 +39,6 @@ backup_folder() {
   [[ "$src" ]] || error "Missing source directory!"
   [[ "$dst" ]] || error "Missing destination directory!"
 
-
   rsync --archive --delete --verbose "$src" "$dst"
 }
 
@@ -51,6 +50,5 @@ backup_folder() {
 # Backup objectives
 #
 
-backup_folder "$HOME/Music/"                "$hdd/music/"
 backup_folder "$HOME/Documents/gps_tracks/" "$hdd/file/gps_tracks/"
 backup_folder "$HOME/Documents/writing/"    "$hdd/file/writing/"
