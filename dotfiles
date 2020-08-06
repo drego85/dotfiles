@@ -638,7 +638,7 @@ ed_cmd_list() {
   # Formatting like this: module name     - module description
   sorted_modules="$(echo "${!MODULES[*]}" | tr " " "\n" | sort | tr "\n" " ")"
   for module in $sorted_modules ; do
-    printf "%-13s - %s\n" "$module" "${MODULES["$module"]}"
+    printf "%-14s - %s\n" "$module" "${MODULES["$module"]}"
   done
 }
 
