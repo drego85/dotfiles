@@ -556,6 +556,11 @@ ed_module_font() {
   fc-cache --verbose --force "$dest_path"
 }
 
+MODULES["bluetooth"]="disable bluetooth service"
+ed_module_bluetooth() {
+  sudo systemctl disable bluetooth.service
+}
+
 MODULES["firefox"]="install firefox and custom user.js to 'emanuele' profile"
 ed_module_firefox() {
   ed_install "firefox"
