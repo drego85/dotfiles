@@ -363,34 +363,12 @@ ed_module_clean() {
 
 }
 
-MODULES["gpg"]="install GnuPG configuration and enable it via systemd --user"
+MODULES["gpg"]="install GnuPG configuration"
 ed_module_gpg() {
-  # 1. Install my favourite pinentry.
   ed_install "pinentry-gtk"
 
-  # 2. Create symlinks for configuration.
   for file in "$REPO_PATH"/gnupg/* ; do
     ed_make_symlink "$file" "$HOME_PATH/.gnupg/${file##*/}"
-  done
-
-  local dest_unit="$HOME_PATH/.config/systemd/user"
-  local src_unit="/usr/share/doc/gnupg2/examples/systemd-user"
-
-  # 3. Create symlinks for systemd unit files.
-  mkdir --parents "$dest_unit"
-  for unit in "$src_unit"/*.{service,socket} ; do
-    ed_make_symlink "$unit" "$dest_unit/${unit##*/}"
-  done
-
-  # 4. Enable systemd unit files.
-  systemctl --user daemon-reload
-
-  local socket
-  for full_socket in "$src_unit"/*.socket ; do
-    socket="${full_socket##*/}"
-
-    systemctl --user enable "$socket"
-    systemctl --user start "$socket"
   done
 }
 
