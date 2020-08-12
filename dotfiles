@@ -321,15 +321,11 @@ ed_module_tlp() {
 
   ed_install "tlp"
 
-  # Create symlink (with backup).
-  src="$REPO_PATH/tlp/tlp"
-  dst="/etc/default/tlp"
+  # Create symlink.
+  src="$REPO_PATH/tlp/tlp.conf"
+  dst="/etc/tlp.d/00-emanuele.conf"
 
-  if [[ "$(readlink -f "$dst")" != "$src" ]] ; then
-    sudo ln --backup --suffix '.bak' --symbolic "$src" "$dst"
-  else
-    ed_wlog "'$dst' is already a symlink to '$src'."
-  fi
+  ed_make_symlink "$src" "$dst" "sudo"
 
   # Before enabling tlp, you need to fix a SELinux policy.
   local policy="$REPO_PATH/tlp/fix-tlp"
