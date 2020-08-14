@@ -2,12 +2,12 @@
 module fix-tlp 1.0;
 
 require {
-	type user_home_dir_t;
-	type tlp_t;
-	type user_home_t;
-	class capability { dac_override dac_read_search };
-	class dir search;
-	class file { open read };
+    type user_home_dir_t;
+    type tlp_t;
+    type user_home_t;
+    class capability { dac_override dac_read_search };
+    class dir search;
+    class file { open read ioctl };
 }
 
 #============= tlp_t ==============
@@ -19,3 +19,4 @@ allow tlp_t user_home_t:dir search;
 
 allow tlp_t user_home_t:file read;
 allow tlp_t user_home_t:file open;
+allow tlp_t user_home_t:file ioctl;
