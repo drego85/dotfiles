@@ -1,0 +1,58 @@
+#!/usr/bin/env python
+#
+# This Python script converts a ODT file to a text file.
+#
+# I use ODT files to write fictional stories, but after I've done, I need to
+# convert the ODF file to a simple text file. So this script simply extracts all
+# paragraphs and print them on a text file. Please note that I do not format the
+# text, so I can extract with only selecting paragraph elements, because I use
+# Asciidoctor formatting inside the text.
+#
+# You can run it by givin a ODT file as command line argument.
+#
+# WARNING: This script is tailored to my needs, so don't use it!
+#
+# Copyright (c) 2020 Emanuele Petriglia <inbox@emanuelepetriglia.com> All rights
+# reserved. This file is licensed under the MIT license.
+
+import sys
+import zipfile
+import xml.etree.ElementTree as et
+
+xml_ns = {'text': 'urn:oasis:names:tc:opendocument:xmlns:text:1.0',
+          'office': 'urn:oasis:names:tc:opendocument:xmlns:office:1.0',
+          'style': 'urn:oasis:names:tc:opendocument:xmlns:style:1.0',
+          'fo': 'urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0'}
+
+if len(sys.argv) < 2:
+    print("No file given.", file=sys.stderr)
+    exit(1)
+
+if len(sys.argv) > 2:
+    print("Too many arguments given.", file=sys.stderr)
+    exit(1)
+
+input = sys.argv[1]
+
+try:
+    with zipfile.ZipFile(input) as zip, zip.open('content.xml') as file:
+        xml = et.parse(file)
+except (KeyError, zipfile.BadZipFile):
+    print("Not a OpenDocument file.", file=sys.stderr)
+    exit(1)
+
+elems = './office:body/office:text/text:p'
+
+# Get the new filename (eg. example.odt -> example.adoc).
+if input.endswith('.odt'):
+    output = input[:-3] + 'adoc'
+else:
+    print('Filename suffix is not \'.odt\'', file=sys.stderr)
+    exit(1)
+
+with open(output, 'w') as out:
+    for paragraph in xml.getroot().findall(elems, xml_ns):
+        if paragraph.text == None: # Blank line.
+            print(file=out)
+        else:
+            print(paragraph.text, file=out)
