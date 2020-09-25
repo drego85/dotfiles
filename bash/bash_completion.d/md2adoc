@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#
+# Bash completion for 'md2adoc' script.
+#
+# Copyright (c) 2020 Emanuele Petriglia <inbox@emanuelepetriglia.com>
+# All rights reserved. This file is licensed under the MIT license.
+
+complete -G '*.md' md2adoc
