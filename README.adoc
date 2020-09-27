@@ -85,8 +85,6 @@ https://app.goodmorningitalia.it/[*goodmorningitalia.it*], an Italian
 newsletter.
 * link:bin/ho[*ho*]: this script prints several information about an Ho Mobile
 (an italian low cost MVNO) account to the standard output.
-* link:bin/md-to-adoc[*md-to-adoc*]: a small GAWK script that converts Markdown
-files to Asciidoctor. It converts only a small subset of Markdown functions.
 * link:bin/odt-to-adoc[*odt-to-adoc*]: a small Python script that converts a
 subset of an ODT file to pure text file.
 * link:bin/musicconvert[*musicconvert*]: this script syncs my music library to a
@@ -98,6 +96,10 @@ files.
 * link:bin/sapienza-wifi[*sapienza-wifi*]: it is a shortcut to login on
 Sapienza's WiFi network, without opening a browser.
 * link:bin/screen-off[*screen-off*]: this simple script turns off the screen.
+* link:bin/md2adoc[*md2adoc*]: a small GAWK script that converts a Markdown file
+to Asciidoc.
+* link:bin/adoc2latex[*adoc2latex*]: a small GAWK script that converts an
+Asciidoc file to LaTeX.
 
 '''
 
