@@ -5,4 +5,11 @@
 # Copyright (c) 2020 Emanuele Petriglia <inbox@emanuelepetriglia.com>
 # All rights reserved. This file is licensed under the MIT license.
 
-complete -G '*.md' md2adoc
+_md2adoc() {
+  local current
+  current="${COMP_WORDS[$COMP_CWORD]}"
+  mapfile -t COMPREPLY < <(compgen -W "$(compgen -G '*.md')" -- "$current")
+  return 0
+}
+
+complete -F _md2adoc md2adoc
