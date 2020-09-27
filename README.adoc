@@ -85,8 +85,6 @@ https://app.goodmorningitalia.it/[*goodmorningitalia.it*], an Italian
 newsletter.
 * link:bin/ho[*ho*]: this script prints several information about an Ho Mobile
 (an italian low cost MVNO) account to the standard output.
-* link:bin/odt-to-adoc[*odt-to-adoc*]: a small Python script that converts a
-subset of an ODT file to pure text file.
 * link:bin/musicconvert[*musicconvert*]: this script syncs my music library to a
 destinarion directory, copying all files except for FLAC files, that are
 converted to OGG using `ffmpeg`. The reason of this script is that my mobile
@@ -100,6 +98,8 @@ Sapienza's WiFi network, without opening a browser.
 to Asciidoc.
 * link:bin/adoc2latex[*adoc2latex*]: a small GAWK script that converts an
 Asciidoc file to LaTeX.
+* link:bin/odt2adoc[*odt2adoc*]: a small Python script that extracts text from
+an OpenDocument file to a pure text file.
 
 '''
 
