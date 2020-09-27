@@ -74,16 +74,6 @@ BEGINFILE {
     if (!(retval = stat(DESTFILE, destdata)))
         skip("cannot overwrite '" DESTFILE "'.")
 
-    FILE_OPENED = 1
-
-    print "\\documentclass[12pt,a4paper]{article}" > DESTFILE
-    print "\\usepackage[utf8]{inputenc}" > DESTFILE
-    print "\\usepackage[italian]{babel}" > DESTFILE
-    print "\\usepackage[T1]{fontenc}" > DESTFILE
-    print > DESTFILE
-    print "\\usepackage{librebaskerville}" > DESTFILE
-    print > DESTFILE
-
     # Any Asciidoctor document starts with a block of contigous lines that
     # defines some useful metadata. Only the document title and author are
     # mandatory.
@@ -155,6 +145,17 @@ SECTION_HEADER && FNR > 2 {
 }
 
 !SECTION_HEADER && !SECTION_BODY {
+    FILE_OPENED = 1
+
+    print "\\documentclass[12pt,a4paper]{article}" > DESTFILE
+    print "\\usepackage[utf8]{inputenc}" > DESTFILE
+    print "\\usepackage[italian]{babel}" > DESTFILE
+    print "\\usepackage[T1]{fontenc}" > DESTFILE
+    print > DESTFILE
+    print "\\usepackage{librebaskerville}" > DESTFILE
+    print > DESTFILE
+
+
     print "\\title{" TITLE "}" > DESTFILE
     print "\\author{" AUTHOR "}" > DESTFILE
 
@@ -238,11 +239,11 @@ SECTION_BODY {
 }
 
 ENDFILE {
-    # ENDFILE rules are executed also with 'nextfile' command.
-    if (!INVALID_SOURCE)
-        print "\\end{document}" > DESTFILE
-
     if (FILE_OPENED) {
+        # ENDFILE rules are executed also with 'nextfile' command.
+        if (!INVALID_SOURCE)
+            print "\\end{document}" > DESTFILE
+
         close(DESTFILE)
 
         if (INVALID_SOURCE)
