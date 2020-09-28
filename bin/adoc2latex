@@ -152,9 +152,12 @@ SECTION_HEADER && FNR > 2 {
     print "\\usepackage[italian]{babel}" > DESTFILE
     print "\\usepackage[T1]{fontenc}" > DESTFILE
     print > DESTFILE
+    print "% Center the headings for all sectional units" > DESTFILE
+    print "\\usepackage[center]{titlesec}" > DESTFILE
+    print > DESTFILE
+    print "% I like this font!" > DESTFILE
     print "\\usepackage{librebaskerville}" > DESTFILE
     print > DESTFILE
-
 
     print "\\title{" TITLE "}" > DESTFILE
     print "\\author{" AUTHOR "}" > DESTFILE
@@ -219,7 +222,20 @@ SECTION_BODY {
 
         print_blank_line()
 
-        print "\\section{" groups[1] "}" > DESTFILE
+        # Some chapters have a leading number and I don't want it. As example,
+        # with "== 10 - My chapter" the chapter name is "My chapter", not "10 -
+        # My chapter".
+        if (match(groups[1], /^[[:digit:]]+ - (.+)$/, title))
+            section = title[1]
+        else
+            section = groups[1]
+
+        # Sections are always unnumbered!
+        print "\\section*{" section "}" > DESTFILE
+
+        # Unnumbered sections are not displayed inside ToC.
+        if (ENABLE_TOC)
+            print "\\addcontentsline{toc}{section}{" section "}" > DESTFILE
 
         next
     }
