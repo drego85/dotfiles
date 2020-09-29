@@ -158,6 +158,11 @@ SECTION_HEADER && FNR > 2 {
     print "% I like this font!" > DESTFILE
     print "\\usepackage{librebaskerville}" > DESTFILE
     print > DESTFILE
+    print "% I asked to some friends if they like the default spacing between" > DESTFILE
+    print "% lines, but they replied that it is too small, so I increased it" > DESTFILE
+    print "\\usepackage{setspace}" > DESTFILE
+    print "\\onehalfspacing" > DESTFILE
+    print > DESTFILE
 
     print "\\title{" TITLE "}" > DESTFILE
     print "\\author{" AUTHOR "}" > DESTFILE
