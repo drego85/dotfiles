@@ -113,7 +113,7 @@ list-dreams() {
   # If there are not "*.adoc" documents, do not run the for.
   shopt -s failglob
 
-  gawk -e 'FNR == 1 { sub(".adoc", "", FILENAME); sub("= ", "", $0); printf "%-12s - %s\n", FILENAME, $0 }' *.adoc
+  gawk -e 'FNR == 1 { sub(".adoc", "", FILENAME); sub("= ", "", $0); printf "%-12s - %s\n", FILENAME, $0 }' -- *.adoc
 }
 
 # }}}
