@@ -43,6 +43,9 @@ BEGINFILE {
 }
 
 FNR == 1 {
+    # Remove UTF-8 BOM.
+    sub(/^\xef\xbb\xbf/, "")
+
     TITLE = $0
 }
 
