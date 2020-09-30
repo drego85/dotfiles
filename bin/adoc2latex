@@ -152,6 +152,9 @@ SECTION_HEADER && FNR > 2 {
     print "\\usepackage[italian]{babel}" > DESTFILE
     print "\\usepackage[T1]{fontenc}" > DESTFILE
     print > DESTFILE
+    print "% Add links to all sections." > DESTFILE
+    print "\\usepackage[hidelinks]{hyperref}" > DESTFILE
+    print > DESTFILE
     print "% Center the headings for all sectional units" > DESTFILE
     print "\\usepackage[center]{titlesec}" > DESTFILE
     print > DESTFILE
@@ -235,6 +238,8 @@ SECTION_BODY {
         else
             section = groups[1]
 
+        # Add link to this section.
+        print "\\phantomsection" > DESTFILE
         # Sections are always unnumbered!
         print "\\section*{" section "}" > DESTFILE
 
