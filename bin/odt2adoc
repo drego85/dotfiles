@@ -50,4 +50,4 @@ for input in sys.argv[1:]:
             if paragraph.text == None: # Blank line.
                 print(file=out)
             else:
-                print(paragraph.text, file=out)
+                print("".join(paragraph.itertext()), file=out)
