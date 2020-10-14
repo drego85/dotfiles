@@ -20,3 +20,6 @@
 [submodule "vim/pack/plugins/start/simplylfold"]
 	path = vim/pack/plugins/start/simplylfold
 	url = https://github.com/tmhedberg/SimpylFold.git
+[submodule "vim/pack/plugins/start/vim-asciidoctor"]
+	path = vim/pack/plugins/start/vim-asciidoctor
+	url = https://github.com/habamax/vim-asciidoctor.git

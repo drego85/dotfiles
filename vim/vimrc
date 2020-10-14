@@ -215,6 +215,17 @@ endtry
 
 " }}}
 
+" vim-asciidoc plugin's settings {{{
+"
+" I use vim-asciidoc plugin to have a better support for Asciidoc files in VIM.
+"
+" vim-asciidoc: https://github.com/habamax/vim-asciidoctor
+
+" Fold all sections, that in Asciidoc are headers.
+let g:asciidoctor_folding = 1
+
+" }}}
+
 " Writing mode {{{
 "
 " This mode helps to write prose with VIM. It can be enabled using "Writing"
