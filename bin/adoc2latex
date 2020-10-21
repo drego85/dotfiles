@@ -105,7 +105,7 @@ BEGINFILE {
 #
 
 FNR == 1 {
-    if (!match($0, /^= ([[:alnum:] ]*)/, groups)) {
+    if (!match($0, /^= ([[:alnum:] ']*)/, groups)) {
         print "Error: " FILENAME " doesn't have title! Skipping..."
         nextfile
     }
