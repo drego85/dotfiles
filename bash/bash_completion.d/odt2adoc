@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 #
-# Bash completion for 'md2adoc' script.
+# Bash completion for 'odt2adoc' script.
 #
 # Copyright (c) 2020 Emanuele Petriglia <inbox@emanuelepetriglia.com>
 # All rights reserved. This file is licensed under the MIT license.
 
-_md2adoc() {
+_odt2adoc() {
   local current
   current="${COMP_WORDS[$COMP_CWORD]}"
-  mapfile -t COMPREPLY < <(compgen -W "$(compgen -G '*.md')" -- "$current")
+  mapfile -t COMPREPLY < <(compgen -W "$(compgen -G '*.odt')" -- "$current")
   return 0
 }
 
-complete -F _md2adoc md2adoc
+complete -F _odt2adoc odt2adoc
