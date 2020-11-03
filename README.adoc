@@ -91,11 +91,7 @@ converted to OGG using `ffmpeg`. The reason of this script is that my mobile
 phone has a limited space.
 * link:bin/osmgpx[*osmgpx*]: this script filters and uploads a list of GPX
 files.
-* link:bin/sapienza-wifi[*sapienza-wifi*]: it is a shortcut to login on
-Sapienza's WiFi network, without opening a browser.
 * link:bin/screen-off[*screen-off*]: this simple script turns off the screen.
-* link:bin/md2adoc[*md2adoc*]: a small GAWK script that converts a Markdown file
-to Asciidoc.
 * link:bin/adoc2latex[*adoc2latex*]: a small GAWK script that converts an
 Asciidoc file to LaTeX.
 * link:bin/odt2adoc[*odt2adoc*]: a small Python script that extracts text from
@@ -108,7 +104,7 @@ an OpenDocument file to a pure text file.
 I use VIM as my text editor for programming and writing. I found it very
 productive and efficient.
 
-My link:vim/vimrc[vimrc] file is well documented, i also use some plugins:
+My link:vim/vimrc[vimrc] file is well documented, I also use some plugins:
 
 * https://github.com/junegunn/goyo.vim[*goyo.vim*]: for writing without
 distractions.
@@ -123,6 +119,8 @@ syntax highlighting.
 * https://github.com/tmhedberg/SimpylFold[*SimplylFold*]: better Python folding.
 * https://git.zx2c4.com/password-store/tree/contrib/vim[*redact_pass*]: improve
 security when editing a password file with VIM. It requires `pass` package.
+* https://github.com/habamax/vim-asciidoctor[*vim-asciidoctor*]: better Asciidoc
+syntax highlighting and also support for folding.
 
 Both *goyo.vim* and *vim-pencil* are not automatically started with VIM, instead
 you need to run `vim -c Writing`.
