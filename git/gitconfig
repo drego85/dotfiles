@@ -9,8 +9,6 @@
     gpgSign = true
 [push]
     default = simple
-[gpg]
-    program = gpg2
 [alias]
     st = status
     cm = commit
