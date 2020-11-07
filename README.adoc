@@ -241,6 +241,12 @@ This module installs, via `xfconf-query`, my Thunar configuration. Note that if
 you change the configuration via Thunar GUI, the new configuration will not be
 synched to dotfiles. You need to manually update the configuration!
 
+I use some custom send-to actions, they are basically a wrapper to the original
+scripts:
+
+* link:xfce4/Thunar/send-to/osmgpx.desktop[*osmgpx*]: a shortcut to
+link:bin/osmgpx[`osmgpx`] script.
+
 '''
 
 === xfwm4
