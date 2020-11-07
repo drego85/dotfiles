@@ -225,13 +225,22 @@ greeter, it crashes. I don't know why.
 
 === xfce4
 
-This module installs my configuration of Xfce desktop enviroment. Not all Xfce4
-modules are configured via dotfiles, because is not easy (they don't have a
-plain text configuration file, instead they use `xfconf`). The supported
-applications are:
+This modules installs my configuration of Xfce desktop environment. Some
+applications, like `xfce4-terminal` or `thunar` are configured by a different
+module.
 
-* link:xfce4/xfce4-panel/config.txt[*xfce4-panel*]: my panel configuration;
-* link:xfce4/xfce4-terminal/[*xfce4-terminal*]: my terminal configuration.
+It is difficult to configure Xfce applications, because they do not use a plain
+text configuration, instead they use `xfconf`.
+
+This modules install my `xfce4-panel` configuration, font and size settings for
+GTK applications, application shortcuts and `xfce4-desktop`.
+
+'''
+
+=== xfce4-terminal
+
+This module installs my custom theme, but it doesn't activate it. Other settings
+are not touched.
 
 '''
 

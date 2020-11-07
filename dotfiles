@@ -449,6 +449,7 @@ ed_module_xfce4() {
   ed_xfconf "$channel" "$prefix/<Super>q" "firefox-tmp"
   ed_xfconf "$channel" "$prefix/<Super>w" "firefox"
   ed_xfconf "$channel" "$prefix/<Super>m" "thunderbird"
+  ed_xfconf "$channel" "$prefix/<Super>r" "xfce4-appfinder --collapsed"
 
   # Disable icons on desktop.
   ed_xfconf "xfce4-desktop" "/desktop-icons/style" "0" "int"
