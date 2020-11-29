@@ -233,7 +233,33 @@ It is difficult to configure Xfce applications, because they do not use a plain
 text configuration, instead they use `xfconf`.
 
 This modules install my `xfce4-panel` configuration, font and size settings for
-GTK applications, application shortcuts and `xfce4-desktop`.
+GTK applications and `xfce4-desktop`.
+
+'''
+
+=== xfce4-keyboard-shortcuts
+
+This module installs my custom application shortcuts to Xfce. It is a distinct
+module because I change often these keybindings. These are the shortcuts (for an
+updated list always check the source code!):
+
+* _<Super>v_: `vlc`
+* _<Super>r_: `xfce4-appfinder --disable-server --collapsed`
+* _<Super>u_: `xfce4-taskmanager`
+* _<Super>e_: `xfce4-terminal --drop-down`
+* _<Super>t_: `xfce4-terminal --maximize`
+* _<Super>l_: `screen-off`
+* _<Shift>Print_: `xfce4-screenshooter --window`
+* _<Primary>Print_: `xfce4-screenshooter --region`
+* _<Alt>Print_: `xfce4-screenshooter --region`
+* _Print_: `xfce4-screenshooter --fullscreen`
+* _<Super>s_: `telegram-desktop`
+* _<Super>f_: `thunar`
+* _<Super>x_: `mousepad`
+* _<Super>q_: `firefox-tmp`
+* _<Super>w_: `firefox`
+* _<Super>m_: `thunderbird`
+* _<Super>r_: `xfce4-appfinder --collapsed`
 
 '''
 
