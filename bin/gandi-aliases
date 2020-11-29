@@ -80,30 +80,31 @@ class GandiAliases():
 
     def __command_help(self) -> None:
         '''Prints the help message on the standard output.'''
-        help_message = '''Usage: gandi-aliases {help | list | add | remove} ...
+        help_message = '''Usage: gandi-aliases <command> [<args>]
 
-This script is useful to manage email aliases for 'inbox@emanuelepetriglia.com'.
-It uses Gandi API, the script is tailored for my use cases, because it uses
-'pass(1)' to retrieve API key and email ID.
+gandi-aliases is an useful script to manage email aliases for
+'inbox@emanuelepetriglia.com' email account. It uses Gandi API and it is
+tailored to my needs (for example it uses 'pass' to retrieve API key and email
+private ID).
 
 Commands:
     list
         Retrieve the email aliases for 'inbox@emanuelepetriglia.com' and
         print them to stdout.
 
-    add <ALIAS> ...
+    add <alias> ...
         Add new aliases for 'inbox@emanuelepetriglia.com'. If a given alias
         if invalid or a duplicate, it will fail and don't update aliases list.
 
-    remove <ALIAS> ...
+    remove <alias> ...
         Remove aliases from 'inbox@emanuelepetriglia.com'. If a given alias
         doesn't exist, it will fail and don't update aliases list.
 
     help
         Show this message and exit.
 
-This scripts needs Python 3.6 to run, it also requires 'pass' (to retrieve
-secret data), and 'requests' module, but is preinstalled on Fedora.
+This scripts requires at least Python 3.6 to run, it also requires 'pass' (to
+retrieve secret data), and 'requests' module.
 '''
 
         print(help_message, end='')
