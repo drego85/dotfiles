@@ -2,7 +2,7 @@
 #
 # Bash completion for 'dotfiles' script.
 #
-# Copyright (c) 2019 Emanuele Petriglia <inbox@emanuelepetriglia.com>
+# Copyright (c) 2019-2020 Emanuele Petriglia <inbox@emanuelepetriglia.com>
 # All rights reserved. This file is licensed under the MIT license.
 
 _dotfiles() {
@@ -16,7 +16,7 @@ _dotfiles() {
     words="$commands"
   else # It is a module.
     if [[ "${COMP_WORDS[1]}" == "install" ]]; then # 'install' command.
-      words="$(dotfiles list | tail --lines +2 | cut --delimiter '-' --field 1)"
+      words="$(dotfiles list | tail --lines +2 | cut --delimiter ' ' --field 1)"
       words="all $words" # 'all' is a special module.
     fi
   fi
