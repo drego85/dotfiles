@@ -39,7 +39,7 @@ backup_folder() {
   [[ "$src" ]] || error "Missing source directory!"
   [[ "$dst" ]] || error "Missing destination directory!"
 
-  rsync --archive --delete --verbose "$src" "$dst"
+  rsync --human-readable --archive --delete --verbose "$src" "$dst"
 }
 
 [[ "$(command -v rsync)" ]] || error "Missing rsync command! Is it installed?"
