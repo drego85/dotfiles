@@ -260,8 +260,9 @@ MODULES["focuswriter"]="install and configure FocusWriter"
 ed_module_focuswriter() {
   ed_install "focuswriter"
 
-  # Fonts.
+  # Basic fonts and spelling.
   ed_install "gnu-free-serif-fonts"
+  ed_install "hunspell-it"
 
   local dst_theme_path dst_conf_path src_path
 
