@@ -183,8 +183,6 @@ ed_make_symlink() {
   fi
 }
 
-# }}}}
-
 # It is a wrapper to 'curl', to download files to some point. If there is a
 # problem, it will don't exit, instead it returns 1 (0 is success).
 #
@@ -235,6 +233,8 @@ ed_xfconf() {
     xfconf-query --channel "$channel" --property "$property" --set "$value"
   fi
 }
+
+# }}}}
 
 # }}}
 
